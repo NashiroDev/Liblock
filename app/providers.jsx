@@ -12,13 +12,13 @@ import {
   ledgerWallet,
 } from "@rainbow-me/rainbowkit/wallets";
 import { configureChains, createConfig, mainnet, WagmiConfig } from "wagmi";
-import { polygonMumbai, sepolia, lineaTestnet, optimism } from "wagmi/chains";
+import { polygonMumbai, sepolia, lineaTestnet, optimism, zkSync } from "wagmi/chains";
 import { publicProvider } from "wagmi/providers/public";
 
 const projectId = "temp/getFromWalletConnect";
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
-  [mainnet, optimism, polygonMumbai, sepolia, lineaTestnet],
+  [mainnet, optimism, zkSync, sepolia],
   [publicProvider()]
 );
 
