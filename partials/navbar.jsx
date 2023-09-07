@@ -25,7 +25,7 @@ export default function Navbar() {
               </li>
             </ul>
           </div>
-          <form className="form-inline">
+          <form className="form-inline ms-2">
             <ul className="navbar-nav">
               <li className="nav-item">
                 <input className="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" />
@@ -35,8 +35,15 @@ export default function Navbar() {
               </li>
             </ul>
           </form>
-          <ul className="navbar-nav ml-4">
-            <li><ConnectButton /></li>
+          <ul className="navbar-nav ms-4">
+            <li><ConnectButton 
+              accountStatus={{
+                smallScreen: 'avatar',
+                largeScreen: 'full',
+              }}
+              showBalance={false}
+              />
+            </li>
           </ul>
         </div>
       </nav>
