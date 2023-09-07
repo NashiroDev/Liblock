@@ -1,6 +1,6 @@
-"use client";
-
-import { ConnectButton } from "@rainbow-me/rainbowkit"
+"use client"
+import Navbar from "../partials/navbar"
+import Footer from "../partials/footer"
 
 export default function Home() {
   return (
@@ -10,60 +10,6 @@ export default function Home() {
       <Footer />
     </div>
   );
-}
-
-function Navbar() {
-  return (
-    <nav className="navbar navbar-expand-lg navbar-light bg-secondary">
-      <div className="container">
-        <a className="navbar-brand text-info" href="/"><img className="nav-img" src="/assets/logo-no-background.svg" alt="Liblock" /></a>
-        <div className="navbar-collapse" id="navbarNavDropdown">
-          <ul className="navbar-nav">
-            <li className="nav-item active">
-              <a className="nav-link text-light" href="/articles">Articles</a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link text-light" href="/proposals">Proposals</a>
-            </li>
-            <li className="nav-item dropdown">
-              <button className="nav-link dropdown-toggle text-light" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" onClick={handleLinkClick}>
-                Links
-              </button>
-              <div className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                <a className="dropdown-item" href="#">Twitter</a>
-                <a className="dropdown-item" href="#">Discord</a>
-                <a className="dropdown-item" href="#">Contracts</a>
-              </div>
-            </li>
-          </ul>
-        </div>
-        <form className="form-inline">
-          <ul className="navbar-nav">
-            <li className="nav-item">
-              <input className="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" />
-            </li>
-            <li className="nav-item ms-2">
-              <button className="btn btn-primary my-2 my-sm-0" type="submit">Search</button>
-            </li>
-          </ul>
-        </form>
-        <ul className="navbar-nav ml-4">
-          <li><ConnectButton /></li>
-        </ul>
-      </div>
-    </nav>
-  );
-}
-
-function Footer() {
-  return (
-    <footer className="text-center text-lg-start bg-secondary">
-      <div className="text-center text-white p-3 text-light">
-        © 2023 Copyright :
-        <a className="text-white" href="https://github.com/NashiroDev"> Nathan Pauchon</a>
-      </div>
-    </footer>
-  )
 }
 
 function Body() {
@@ -281,8 +227,4 @@ function Themes() {
       </div>
     </section>
   )
-}
-
-function handleLinkClick() {
-  console.log("tempest");
 }
