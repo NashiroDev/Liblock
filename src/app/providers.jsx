@@ -12,18 +12,18 @@ import {
   ledgerWallet,
 } from "@rainbow-me/rainbowkit/wallets";
 import { configureChains, createConfig, WagmiConfig } from "wagmi";
-import { goerli } from "wagmi/chains";
+import { goerli, sepolia } from "wagmi/chains";
 import { publicProvider } from "wagmi/providers/public";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 
 const projectId = "be4bc7e4028ce5d2783be18884044fa7"; // from walletconnect
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
-  [goerli],
+  [goerli, sepolia],
   [
-    alchemyProvider({ alchemyId: 's_IL_eYOapWUzea-e-O5U4N4r3XZ4mLa' }),
+    alchemyProvider({ apiKey: process.env.REACT_APP_ALCHEMY_ID }),
     publicProvider()
-  ]
+  ],
 );
 
 const { wallets } = getDefaultWallets({

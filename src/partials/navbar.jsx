@@ -41,7 +41,6 @@ export default function Navbar() {
                 smallScreen: 'avatar',
                 largeScreen: 'full',
               }}
-              showBalance={false}
               />
             </li>
           </ul>
