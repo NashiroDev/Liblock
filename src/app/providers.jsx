@@ -11,15 +11,19 @@ import {
   trustWallet,
   ledgerWallet,
 } from "@rainbow-me/rainbowkit/wallets";
-import { configureChains, createConfig, mainnet, WagmiConfig } from "wagmi";
-import { sepolia, optimism, zkSync } from "wagmi/chains";
+import { configureChains, createConfig, WagmiConfig } from "wagmi";
+import { goerli, sepolia } from "wagmi/chains";
 import { publicProvider } from "wagmi/providers/public";
+import { alchemyProvider } from "wagmi/providers/alchemy";
 
-const projectId = "temp/getFromWalletConnect";
+const projectId = "be4bc7e4028ce5d2783be18884044fa7"; // from walletconnect
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
-  [mainnet, optimism, zkSync, sepolia],
-  [publicProvider()]
+  [goerli, sepolia],
+  [
+    alchemyProvider({ apiKey: process.env.REACT_APP_ALCHEMY_ID }),
+    publicProvider()
+  ],
 );
 
 const { wallets } = getDefaultWallets({
