@@ -21,7 +21,7 @@ const projectId = "be4bc7e4028ce5d2783be18884044fa7"; // from walletconnect
 const { chains, publicClient, webSocketPublicClient } = configureChains(
   [goerli, sepolia],
   [
-    alchemyProvider({ apiKey: process.env.REACT_APP_ALCHEMY_ID }),
+    alchemyProvider({ apiKey: 's_IL_eYOapWUzea-e-O5U4N4r3XZ4mLa' }),
     publicProvider()
   ],
 );

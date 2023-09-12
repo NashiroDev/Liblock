@@ -17,32 +17,28 @@ export default function Delegate() {
 
   const { delegateData, isDelegateLoading, isDelegateSuccess, write } = useContractWrite(config);
 
-  useEffect(() => {
-    console.log("delegateData:", delegateData);
-    console.log("isDelegateLoading:", isDelegateLoading);
-    console.log("isDelegateSuccess", isDelegateSuccess);
-    console.log("___________");
-  }, [delegateData, isDelegateLoading, isDelegateSuccess]);
-
   const handleSubmit = (e) => {
     e.preventDefault();
     write();
   };
 
   return (
-    <section>
-      <h3 className="container mt-4">Delegate</h3>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          value={address}
-          onChange={(e) => setAddress(e.target.value)}
-          placeholder="Enter address"
-          required
-        />
-        <button type="submit" disabled={!write} className="button primary-button">
-          Delegate
-        </button>
+    <section className="container mt-4">
+      <h3>Delegate</h3>
+      <form onSubmit={handleSubmit} className="d-flex justify-content-center">
+        <div className="input-group mb-3">
+          <input
+            type="text"
+            value={address}
+            onChange={(e) => setAddress(e.target.value)}
+            placeholder="Enter address"
+            required
+            className="form-control"
+          />
+          <button type="submit" disabled={!write} className="btn btn-primary">
+            Delegate
+          </button>
+        </div>
       </form>
       {isDelegateLoading && <div>Check wallet</div>}
       {isDelegateSuccess && <div>Transaction: {JSON.stringify(delegateData)}</div>}
