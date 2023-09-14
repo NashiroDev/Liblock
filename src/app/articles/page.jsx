@@ -1,5 +1,8 @@
+"use client"
 import Navbar from "../../partials/navbar"
 import Footer from "../../partials/footer"
+import React, { useState } from "react"
+import GetArticles from "../hooks/seekArticles"
 
 export default function Index() {
     return (
@@ -12,59 +15,56 @@ export default function Index() {
 }
 
 function DisplayArticles() {
+
+    // const [currentPage, setCurrentPage] = useState(1);
+    // const articlesPerPage = 5;
+
+    // // Calculate the index of the first and last article of the current page
+    // const indexOfLastArticle = currentPage * articlesPerPage;
+    // const indexOfFirstArticle = indexOfLastArticle - articlesPerPage;
+
+    // const [tag, setTag] = useState('');
+    // const [keyword, setKeyword] = useState('');
+    // const [order, setOrder] = useState('');
+
+    // // Get the articles to be displayed on the current page
+    // const currentArticles = articleList.slice(indexOfFirstArticle, indexOfLastArticle);
+
+    // const handleTagChange = (e) => {
+    //     setTag(e.target.value);
+    // };
+
+    // const handleKeywordChange = (e) => {
+    //     setKeyword(e.target.value);
+    // };
+
+    // const handleOrderChange = (e) => {
+    //     setOrder(e.target.value);
+    // };
+
+    // const handleNextPage = () => {
+    //     setCurrentPage(currentPage + 1);
+    // };
+
+    // const handlePreviousPage = () => {
+    //     setCurrentPage(currentPage - 1);
+    // };
+
+    // const handleSubmit = (e) => {
+    //     e.preventDefault();
+    //     // Logic for filtering and searching articles based on the form inputs
+    //     console.log('Tag:', tag);
+    //     console.log('Keyword:', keyword);
+    //     console.log('Order:', order);
+    // };
+
     return (
         <section>
-            <div class="page-head">
-                <img src="./assets/article-banner.png" class="img-fluid" alt="missing"/>
+            <div className="page-head">
+                <img src="./assets/article-banner.png" className="img-fluid" alt="missing" />
                 <h2>Articles</h2>
             </div>
-            <div class="container">
-                <div class="page-body row row-cols-4 mt-4 mb-6">
-                    <div class="col-md-3 ms-4 mb-4 temp-class">
-                        <p>Form filter, search & tag search is here</p>
-                    </div>
-                    <div class="col-3 ms-4 card mt-4">
-                        <img src="./assets/logo-color.svg" class="card-img-top" alt="..." />
-                        <div class="card-body">
-                            <h5 class="card-title">Title test</h5>
-                            <p class="card-text">This is a test content</p>
-                            <a href="#" class="btn btn-primary">Read</a>
-                        </div>
-                    </div>
-                    <div class="col-3 ms-4 card mt-4">
-                        <img src="./assets/logo-color.svg" class="card-img-top" alt="..." />
-                        <div class="card-body">
-                            <h5 class="card-title">Title test</h5>
-                            <p class="card-text">This is a test content</p>
-                            <a href="#" class="btn btn-primary">Read</a>
-                        </div>
-                    </div>
-                    <div class="col-3 ms-4 card mt-4">
-                        <img src="./assets/logo-color.svg" class="card-img-top" alt="..." />
-                        <div class="card-body">
-                            <h5 class="card-title">Title test</h5>
-                            <p class="card-text">This is a test content</p>
-                            <a href="#" class="btn btn-primary">Read</a>
-                        </div>
-                    </div>
-                    <div class="col-3 ms-4 card mt-4">
-                        <img src="./assets/logo-color.svg" class="card-img-top" alt="..." />
-                        <div class="card-body">
-                            <h5 class="card-title">Title test</h5>
-                            <p class="card-text">This is a test content</p>
-                            <a href="#" class="btn btn-primary">Read</a>
-                        </div>
-                    </div>
-                    <div class="col-3 ms-4 card mt-4">
-                        <img src="./assets/logo-color.svg" class="card-img-top" alt="..." />
-                        <div class="card-body">
-                            <h5 class="card-title">Title test</h5>
-                            <p class="card-text">This is a test content</p>
-                            <a href="#" class="btn btn-primary">Read</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <GetArticles />
         </section>
-    )
+    );
 }

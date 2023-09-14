@@ -1,9 +1,6 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 @import "./styles/index.scss";
 @import "./styles/_navbar.scss";
+@import "./styles/_footer.scss";
 @import "./styles/articles.scss";
 @import "./styles/proposals.scss";
 
