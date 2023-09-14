@@ -2,7 +2,7 @@
 import { useAccount, useContractReads } from 'wagmi';
 import { useContractWrite, usePrepareContractWrite, useWaitForTransaction } from "wagmi";
 import { useState, useEffect } from "react";
-import tokenContract from "../../../contracts/contract.json";
+import tokenContract from "../../../contracts/Liblock.json";
 
 export default function Delegate() {
   const libContract = "0xf2c06D8B5986eB79473CFfF70ABfc2E5986F4EB6"
@@ -47,8 +47,6 @@ export default function Delegate() {
   const result_0 = (BigInt(data[0].result) / (BigInt(10n) ** BigInt(18n))).toString();
   const result_1 = (BigInt(data[1].result) / (BigInt(10n) ** BigInt(18n))).toString();
   const result_2 = data[2].result;
-
-  console.log(data);
 
   const { delegateData, isDelegateLoading, isDelegateSuccess, write } = useContractWrite(config);
 
