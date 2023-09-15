@@ -1,10 +1,11 @@
+
 "use client"
 
 import { useContractRead } from 'wagmi';
 import { useState } from "react";
 import tokenContract from "../../../contracts/Proposal.json";
 
-export default function GetArticles() {
+export default function GetProposals() {
     const proposalContract = "0x12eB4a41Dd1E628C147429b797959F416e8eC906"
 
     const { data: counterData } = useContractRead({
@@ -14,19 +15,19 @@ export default function GetArticles() {
     });
 
     const counter = counterData.toString();
-    let articlesList = []
+    let ProposalsList = []
 
     for (let i = 0; i < counter; i++) {
-        const { data: articleData } = useContractRead({
+        const { data: ProposalData } = useContractRead({
             address: proposalContract,
             abi: tokenContract.abi,
             functionName: 'readProposal',
             args: [i]
         });
-        if (articleData !== undefined && articleData[3]) {
-            articleData[5] = articleData[5].toString();
-            articleData.push(i)
-            articlesList.push(articleData);
+        if (ProposalData !== undefined && !ProposalData[3]) {
+            ProposalData[5] = ProposalData[5].toString();
+            ProposalData.push(i)
+            ProposalsList.push(ProposalData);
         };
     };
 
@@ -49,42 +50,42 @@ export default function GetArticles() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Logic for filtering and searching articles based on the form inputs
+        // Logic for filtering and searching Proposals based on the form inputs
         console.log('Tag:', tag);
         console.log('Keyword:', keyword);
         console.log('Order:', order);
     };
 
-    if (keyword != '' && articlesList) {
-        let articlesListFilter = []
-        for (let i = 0; i < articlesList.length; i++) {
-            if (articlesList[i][0].includes(keyword)) {
-                articlesListFilter.push(articlesList[i])
+    if (keyword != '' && ProposalsList) {
+        let ProposalsListFilter = []
+        for (let i = 0; i < ProposalsList.length; i++) {
+            if (ProposalsList[i][0].includes(keyword)) {
+                ProposalsListFilter.push(ProposalsList[i])
             }
         }
-        articlesList = articlesListFilter
-    }    
+        ProposalsList = ProposalsListFilter
+    }
 
     if (order != '') {
         if (order === 'asc') {
-            const articlesListOrder = [...articlesList].sort((a, b) => a[5] - b[5])
-            articlesList = articlesListOrder
+            const ProposalsListOrder = [...ProposalsList].sort((a, b) => a[5] - b[5])
+            ProposalsList = ProposalsListOrder
         } else if (order === 'desc') {
-            const articlesListOrder = [...articlesList].sort((a, b) => b[5] - a[5])
-            articlesList = articlesListOrder
+            const ProposalsListOrder = [...ProposalsList].sort((a, b) => b[5] - a[5])
+            ProposalsList = ProposalsListOrder
         }
-        
+
     }
 
     const startIndex = (page - 1) * 11;
     const endIndex = page * 11;
 
-    const paginatedArticles = articlesList.slice(startIndex, endIndex);
+    const paginatedProposals = ProposalsList.slice(startIndex, endIndex);
 
     return (
-        <div className="container">
-            <div className="page-body row row-cols-4 mt-4 mb-6">
-                <div className="col-md-3 ms-4 mb-4 p-2 card">
+        <div className="container-fluid">
+            <div className="page-body row row-cols-4 mt-4 mb-6 justify-content-center">
+                <div className="col-md-3 ms-2 mb-4 card">
                     <form onSubmit={handleSubmit}>
                         <div className="form-group mb-2">
                             <label htmlFor="tag">Tag:</label>
@@ -118,19 +119,25 @@ export default function GetArticles() {
                                 <option value="desc">Latest</option>
                             </select>
                         </div>
-                        <button type="submit" className="btn btn-secondary mb-4">Search</button>
+                        <button type="submit" className="btn btn-primary mb-4">Search</button>
                     </form>
                 </div>
-                {paginatedArticles.map((result, index) => (
-                    <div key={index} className="col-3 ms-4 card mt-4">
-                        <img src="./assets/logo-color.svg" className="card-img-top" alt="..." />
+                {paginatedProposals.map((result, index) => (
+                    <div key={index} className="card col proposal-card ms-2">
+                        <div className="card-header">
+                            <p>Proposed by : <strong>{result[2].slice(0, 6)}...{result[2].slice(36, 42)}</strong><span className="badge bg-success text-light ms-4">{result[3] ? 'Refused' : 'On going'}</span></p>
+                        </div>
                         <div className="card-body">
-                            <h5 className="card-title text-align-center mx-auto">{result[0].slice(0, 30)}</h5>
-                            <p className="card-text text-align-center">{result[1].slice(0, 107)}...</p>
-                            <p className='d-flex justify-content-center lh-1'>By : {result[2].slice(0, 6)}...{result[2].slice(36, 42)}</p>
-                            <div className="d-flex justify-content-center">
-                                <a href="#" className="btn btn-primary">Read</a>
+                            <h5 className="card-title">{result[0]}</h5>
+                            <div className="badge-section mt-2">
+                                <span className="badge bg-warning text-light ms-2">BTC</span>
                             </div>
+                            <div className="progress mt-2">
+                                <div className="progress-bar-striped bg-success d-flex justify-content-center" style={{ width: 70 }}>70%</div>
+                                <div className="progress-bar-striped bg-warning d-flex justify-content-center" style={{ width: 5 }}>5%</div>
+                                <div className="progress-bar-striped bg-danger d-flex justify-content-center" style={{ width: 25 }}>25%</div>
+                            </div>
+                            <a href="#" className="btn btn-secondary mt-2">See more and vote</a>
                         </div>
                     </div>
                 ))}
@@ -141,7 +148,7 @@ export default function GetArticles() {
                         Previous Page
                     </button>
                 )}
-                {endIndex < articlesList.length && (
+                {endIndex < ProposalsList.length && (
                     <button onClick={() => setPage(page + 1)} className="btn btn-secondary ms-2">
                         Next Page
                     </button>
