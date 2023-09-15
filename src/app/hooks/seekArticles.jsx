@@ -1,21 +1,14 @@
-// readProposal(uint256 proposalId)
 
 // proposals[proposalId].adopted = true;
 
-// uint256 public articleIDCounter;
 "use client"
 
-import { useContractRead, useContractInfiniteReads, paginatedIndexesConfig } from 'wagmi';
-import { useState, useEffect } from "react";
+import { useContractRead } from 'wagmi';
+import { useState } from "react";
 import tokenContract from "../../../contracts/Proposal.json";
 
 export default function GetArticles() {
     const proposalContract = "0x12eB4a41Dd1E628C147429b797959F416e8eC906"
-
-    const proposalReader = {
-        address: proposalContract,
-        abi: tokenContract.abi,
-    };
 
     const { data: counterData } = useContractRead({
         address: proposalContract,
@@ -23,38 +16,26 @@ export default function GetArticles() {
         functionName: 'articleIDCounter',
     });
 
-    console.log(counterData)
-
-    const { data: articleData, fetchNextPage } = useContractInfiniteReads({
-        cacheKey: 'articles',
-        ...paginatedIndexesConfig(
-            (start) => {
-                return [
-                    {
-                        ...proposalReader,
-                        functionName: 'readProposal',
-                        args: [index],
-                    },
-                ]
-            },
-            { start: 0, perPage: 4, direction: 'increment' },
-        ),
-    });
-
-    const articles = articleData.pages;
+    const counter = counterData.toString();
     let articlesList = []
 
-    for (const article of articles) {
-        if (article[0] !== undefined) {
-            if (article[0].status === 'success') {
-                articlesList.push(article[0].result);
-            };
-        }
-    }
+    for (let i = 0; i < counter; i++) {
+        const { data: articleData } = useContractRead({
+            address: proposalContract,
+            abi: tokenContract.abi,
+            functionName: 'readProposal',
+            args: [i]
+        });
+        if (articleData !== undefined && articleData[3]) {
+            articleData[5] = articleData[5].toString();
+            articlesList.push(articleData);
+        };
+    };
 
     const [tag, setTag] = useState('');
     const [keyword, setKeyword] = useState('');
     const [order, setOrder] = useState('');
+    const [page, setPage] = useState(1);
 
     const handleTagChange = (e) => {
         setTag(e.target.value);
@@ -76,11 +57,31 @@ export default function GetArticles() {
         console.log('Order:', order);
     };
 
-    useEffect(() => {
-        fetchNextPage();
-    }, []);
+    if (keyword != '' && articlesList) {
+        let articlesListFilter = []
+        for (let i = 0; i < articlesList.length; i++) {
+            if (articlesList[i][0].includes(keyword)) {
+                articlesListFilter.push(articlesList[i])
+            }
+        }
+        articlesList = articlesListFilter
+    }    
 
-    console.log(articleData)
+    if (order != '') {
+        if (order === 'asc') {
+            const articlesListOrder = [...articlesList].sort((a, b) => a[5] - b[5])
+            articlesList = articlesListOrder
+        } else if (order === 'desc') {
+            const articlesListOrder = [...articlesList].sort((a, b) => b[5] - a[5])
+            articlesList = articlesListOrder
+        }
+        
+    }
+
+    const startIndex = (page - 1) * 11;
+    const endIndex = page * 11;
+
+    const paginatedArticles = articlesList.slice(startIndex, endIndex);
 
     return (
         <div className="container">
@@ -115,37 +116,38 @@ export default function GetArticles() {
                                 value={order}
                                 onChange={handleOrderChange}
                             >
-                                <option value="">Select Order</option>
-                                <option value="asc">Ascending</option>
-                                <option value="desc">Descending</option>
-                                <option value="random">Random</option>
+                                <option value="asc">Oldest</option>
+                                <option value="desc">Latest</option>
                             </select>
                         </div>
                         <button type="submit" className="btn btn-secondary mb-4">Search</button>
                     </form>
                 </div>
-                {articlesList.map((result, index) => (
+                {paginatedArticles.map((result, index) => (
                     <div key={index} className="col-3 ms-4 card mt-4">
-                        <img src="./assets/logo-color.svg" class="card-img-top" alt="..." />
+                        <img src="./assets/logo-color.svg" className="card-img-top" alt="..." />
                         <div className="card-body">
-                            <h5 className="card-title">{result[0]}</h5>
-                            <p className="card-text">{result[1].slice(0, 150)}</p>
-                            <a href="#" class="btn btn-primary">Read</a>
+                            <h5 className="card-title text-align-center mx-auto">{result[0].slice(0, 30)}</h5>
+                            <p className="card-text text-align-center">{result[1].slice(0, 107)}...</p>
+                            <p className='d-flex justify-content-center lh-1'>By : {result[2].slice(0, 6)}...{result[2].slice(36, 42)}</p>
+                            <div className="d-flex justify-content-center">
+                                <a href="#" className="btn btn-primary">Read</a>
+                            </div>
                         </div>
                     </div>
                 ))}
             </div>
             <div className="d-flex justify-content-center m-4">
-                {/* {currentPage > 1 && (
-                    <button onClick={handlePreviousPage} className="btn btn-secondary ms-2">
+                {page > 1 && (
+                    <button onClick={() => setPage(page - 1)} className="btn btn-secondary ms-2">
                         Previous Page
                     </button>
                 )}
-                {articleList.length > indexOfLastArticle && (
-                    <button onClick={handleNextPage} className="btn btn-secondary ms-2">
+                {endIndex < articlesList.length && (
+                    <button onClick={() => setPage(page + 1)} className="btn btn-secondary ms-2">
                         Next Page
                     </button>
-                )} */}
+                )}
             </div>
         </div>
     )
