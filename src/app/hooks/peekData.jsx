@@ -1,5 +1,5 @@
 "use client"
-
+import Link from "next/link"
 import { useContractRead } from 'wagmi';
 import { useState } from "react";
 import tokenContract from "../../../contracts/Proposal.json";
@@ -45,7 +45,7 @@ export function GetFewArticles() {
             <div className="container">
                 <div className="d-flex align-items-center">
                     <h4>Last articles :</h4>
-                    <a className="link-info ms-2" href="/articles">View all</a>
+                    <Link className="link-info ms-2" href="/articles">View all</Link>
                 </div>
                 <div className="d-flex mt-4">
                     <ul className="pagination justify-content-center align-items-center">
@@ -65,7 +65,7 @@ export function GetFewArticles() {
                                         <span className="badge bg-warning text-light ms-2">Dapps</span>
                                         <span className="badge bg-warning text-light ms-2">L2</span>
                                     </div>
-                                    <a href="#" className="btn btn-primary mt-2">Read</a>
+                                    <Link href={`/articles/read/${result[6]}`} className="btn btn-primary mt-2">Read</Link>
                                 </div>
                             </div>
                         ))}
@@ -122,7 +122,7 @@ export function GetFewProposals() {
             <div className="container">
                 <div className="d-flex align-items-center">
                     <h4>Deliberating articles :</h4>
-                    <a className="link-info ms-2" href="/proposals">View all</a>
+                    <Link className="link-info ms-2" href="/proposals">View all</Link>
                 </div>
                 <div className="d-flex mt-4">
                     <ul className="pagination justify-content-center align-items-center">
@@ -142,7 +142,7 @@ export function GetFewProposals() {
                                         <div className="progress-bar-striped bg-warning" style={{ width: 45 }}></div>
                                         <div className="progress-bar-striped bg-danger" style={{ width: 98 }}></div>
                                     </div>
-                                    <a href="#" className="btn btn-primary mt-2">See and vote</a>
+                                    <Link href={`/proposals/read/${result[6]}`} className="btn btn-primary mt-2">See and vote</Link>
                                 </div>
                             </div>
                         ))}
