@@ -23,11 +23,11 @@ export function GetFewArticles() {
             functionName: 'readProposal',
             args: [i]
         });
-        if (articleData !== undefined && !articleData[3]) {
+        if (articleData !== undefined && !articleData[3]) { /** Later remove "!" */
             articleData[5] = articleData[5].toString();
             articleData.push(i)
             articlesList.push(articleData);
-            if (articlesList.length > 10) {
+            if (articlesList.length > 11) {
                 break;
             }
         };
