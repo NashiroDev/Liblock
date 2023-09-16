@@ -14,7 +14,7 @@ export default function GetProposals() {
         functionName: 'articleIDCounter',
     });
 
-    const counter = counterData.toString();
+    const counter = counterData ? counterData.toString() : '';
     let ProposalsList = []
 
     for (let i = 0; i < counter; i++) {

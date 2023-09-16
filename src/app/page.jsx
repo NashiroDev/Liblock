@@ -1,7 +1,8 @@
+"use client"
 import Navbar from "../partials/navbar"
 import Footer from "../partials/footer"
 import Themes from "../partials/themes"
-import { Articles, Proposals } from "../partials/preview/articles"
+import { GetFewArticles, GetFewProposals} from "./hooks/peekData"
 
 export default function Home() {
   return (
@@ -17,8 +18,8 @@ function Body() {
   return (
     <div>
       <BodyTop />
-      <Articles />
-      <Proposals />
+      <GetFewArticles />
+      <GetFewProposals />
       <Themes />
     </div>
   )

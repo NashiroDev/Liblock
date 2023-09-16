@@ -13,7 +13,7 @@ export default function GetArticles() {
         functionName: 'articleIDCounter',
     });
 
-    const counter = counterData.toString();
+    const counter = counterData ? counterData.toString() : '';
     let articlesList = []
 
     for (let i = 0; i < counter; i++) {
