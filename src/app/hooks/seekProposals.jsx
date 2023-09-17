@@ -3,6 +3,7 @@
 
 import { useContractRead } from 'wagmi';
 import { useState } from "react";
+import Link from "next/link";
 import tokenContract from "../../../contracts/Proposal.json";
 
 export default function GetProposals() {
@@ -137,7 +138,7 @@ export default function GetProposals() {
                                 <div className="progress-bar-striped bg-warning d-flex justify-content-center" style={{ width: 5 }}>5%</div>
                                 <div className="progress-bar-striped bg-danger d-flex justify-content-center" style={{ width: 25 }}>25%</div>
                             </div>
-                            <a href="#" className="btn btn-secondary mt-2">See more and vote</a>
+                            <Link href={`/articles/read/${result[0]}/${result[6]}`} className="btn btn-secondary mt-2">See more and vote</Link>
                         </div>
                     </div>
                 ))}

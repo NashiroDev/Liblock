@@ -2,6 +2,7 @@
 
 import { useContractRead } from 'wagmi';
 import { useState } from "react";
+import Link from "next/link";
 import tokenContract from "../../../contracts/Proposal.json";
 
 export default function GetArticles() {
@@ -129,7 +130,7 @@ export default function GetArticles() {
                             <p className="card-text text-align-center">{result[1].slice(0, 107)}...</p>
                             <p className='d-flex justify-content-center lh-1'>By : {result[2].slice(0, 6)}...{result[2].slice(36, 42)}</p>
                             <div className="d-flex justify-content-center">
-                                <a href="#" className="btn btn-primary">Read</a>
+                                <Link href={`/articles/read/${result[0]}/${result[6]}`} className="btn btn-primary">Read</Link>
                             </div>
                         </div>
                     </div>
