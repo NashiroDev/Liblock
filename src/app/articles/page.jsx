@@ -1,20 +1,9 @@
 "use client"
-import Navbar from "../../partials/navbar"
-import Footer from "../../partials/footer"
+
 import React from "react"
 import GetArticles from "../hooks/seekArticles"
 
 export default function Index() {
-    return (
-        <div>
-            <Navbar />
-            <DisplayArticles />
-            <Footer />
-        </div>
-    )
-}
-
-function DisplayArticles() {
     return (
         <section>
             <div className="page-head">

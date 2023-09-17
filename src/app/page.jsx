@@ -1,15 +1,11 @@
 "use client"
-import Navbar from "../partials/navbar"
-import Footer from "../partials/footer"
 import Themes from "../partials/themes"
 import { GetFewArticles, GetFewProposals} from "./hooks/peekData"
 
 export default function Home() {
   return (
     <div>
-      <Navbar />
       <Body />
-      <Footer />
     </div>
   );
 }

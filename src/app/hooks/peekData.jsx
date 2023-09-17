@@ -1,6 +1,5 @@
 "use client"
 import Link from "next/link"
-import { useContractRead } from 'wagmi';
 import { useState } from "react";
 import ReadArticle,{ ReadAny } from "./read"
 import tokenContract from "../../../contracts/Proposal.json";
