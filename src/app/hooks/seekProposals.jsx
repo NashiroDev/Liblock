@@ -4,31 +4,34 @@
 import { useContractRead } from 'wagmi';
 import { useState } from "react";
 import Link from "next/link";
+import ReadArticle, { ReadAny } from "./read"
 import tokenContract from "../../../contracts/Proposal.json";
 
 export default function GetProposals() {
     const proposalContract = "0x12eB4a41Dd1E628C147429b797959F416e8eC906"
 
-    const { data: counterData } = useContractRead({
-        address: proposalContract,
-        abi: tokenContract.abi,
-        functionName: 'articleIDCounter',
-    });
+    // const { data: counterData } = useContractRead({
+    //     address: proposalContract,
+    //     abi: tokenContract.abi,
+    //     functionName: 'articleIDCounter',
+    // });
+    const counterData = ReadAny(proposalContract, tokenContract.abi, 'articleIDCounter')
 
-    const counter = counterData ? counterData.toString() : '';
-    let ProposalsList = []
+    const counter = counterData ? counterData.toString() : '1';
+    let proposalsList = []
 
     for (let i = 0; i < counter; i++) {
-        const { data: ProposalData } = useContractRead({
-            address: proposalContract,
-            abi: tokenContract.abi,
-            functionName: 'readProposal',
-            args: [i]
-        });
-        if (ProposalData !== undefined && !ProposalData[3]) {
-            ProposalData[5] = ProposalData[5].toString();
-            ProposalData.push(i)
-            ProposalsList.push(ProposalData);
+        // const { data: proposalData } = useContractRead({
+        //     address: proposalContract,
+        //     abi: tokenContract.abi,
+        //     functionName: 'readProposal',
+        //     args: [i]
+        // });
+        const proposalData = ReadArticle(i)
+        if (proposalData !== undefined && !proposalData[3]) {
+            proposalData[5] = proposalData[5].toString();
+            proposalData.push(i)
+            proposalsList.push(proposalData);
         };
     };
 
@@ -57,23 +60,23 @@ export default function GetProposals() {
         console.log('Order:', order);
     };
 
-    if (keyword != '' && ProposalsList) {
-        let ProposalsListFilter = []
-        for (let i = 0; i < ProposalsList.length; i++) {
-            if (ProposalsList[i][0].includes(keyword)) {
-                ProposalsListFilter.push(ProposalsList[i])
+    if (keyword != '' && proposalsList) {
+        let proposalsListFilter = []
+        for (let i = 0; i < proposalsList.length; i++) {
+            if (proposalsList[i][0].includes(keyword)) {
+                proposalsListFilter.push(proposalsList[i])
             }
         }
-        ProposalsList = ProposalsListFilter
+        proposalsList = proposalsListFilter
     }
 
     if (order != '') {
         if (order === 'asc') {
-            const ProposalsListOrder = [...ProposalsList].sort((a, b) => a[5] - b[5])
-            ProposalsList = ProposalsListOrder
+            const proposalsListOrder = [...proposalsList].sort((a, b) => a[5] - b[5])
+            proposalsList = proposalsListOrder
         } else if (order === 'desc') {
-            const ProposalsListOrder = [...ProposalsList].sort((a, b) => b[5] - a[5])
-            ProposalsList = ProposalsListOrder
+            const proposalsListOrder = [...proposalsList].sort((a, b) => b[5] - a[5])
+            proposalsList = proposalsListOrder
         }
 
     }
@@ -81,7 +84,7 @@ export default function GetProposals() {
     const startIndex = (page - 1) * 11;
     const endIndex = page * 11;
 
-    const paginatedProposals = ProposalsList.slice(startIndex, endIndex);
+    const paginatedProposals = proposalsList.slice(startIndex, endIndex);
 
     return (
         <div className="container-fluid">
@@ -149,7 +152,7 @@ export default function GetProposals() {
                         Previous Page
                     </button>
                 )}
-                {endIndex < ProposalsList.length && (
+                {endIndex < proposalsList.length && (
                     <button onClick={() => setPage(page + 1)} className="btn btn-secondary ms-2">
                         Next Page
                     </button>

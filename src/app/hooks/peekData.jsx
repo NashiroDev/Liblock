@@ -2,28 +2,31 @@
 import Link from "next/link"
 import { useContractRead } from 'wagmi';
 import { useState } from "react";
+import ReadArticle,{ ReadAny } from "./read"
 import tokenContract from "../../../contracts/Proposal.json";
 
 export function GetFewArticles() {
     const proposalContract = "0x12eB4a41Dd1E628C147429b797959F416e8eC906"
 
-    const { data: counterData } = useContractRead({
-        address: proposalContract,
-        abi: tokenContract.abi,
-        functionName: 'articleIDCounter',
-    });
+    // const { data: counterData } = useContractRead({
+    //     address: proposalContract,
+    //     abi: tokenContract.abi,
+    //     functionName: 'articleIDCounter',
+    // });
+    const counterData = ReadAny(proposalContract, tokenContract.abi, 'articleIDCounter')
 
     const counter = counterData ? counterData.toString() : 1;
     let articlesList = []
 
     for (let i = counter-1; i != 0; i--) {
-        const { data: articleData } = useContractRead({
-            address: proposalContract,
-            abi: tokenContract.abi,
-            functionName: 'readProposal',
-            args: [i]
-        });
-        if (articleData !== undefined && !articleData[3]) { /** Later remove "!" */
+        // const { data: articleData } = useContractRead({
+        //     address: proposalContract,
+        //     abi: tokenContract.abi,
+        //     functionName: 'readProposal',
+        //     args: [i]
+        // });
+        const articleData = ReadArticle(i)
+        if (articleData && !articleData[3]) { /** Later remove "!" */
             articleData[5] = articleData[5].toString();
             articleData.push(i)
             articlesList.push(articleData);
@@ -84,23 +87,25 @@ export function GetFewArticles() {
 export function GetFewProposals() {
     const proposalContract = "0x12eB4a41Dd1E628C147429b797959F416e8eC906"
 
-    const { data: counterData } = useContractRead({
-        address: proposalContract,
-        abi: tokenContract.abi,
-        functionName: 'articleIDCounter',
-    });
+    // const { data: counterData } = useContractRead({
+    //     address: proposalContract,
+    //     abi: tokenContract.abi,
+    //     functionName: 'articleIDCounter',
+    // });
+    const counterData = ReadAny(proposalContract, tokenContract.abi, 'articleIDCounter')
 
     const counter = counterData ? counterData.toString() : 1;
     let proposalsList = []
 
     for (let i = counter-1; i != 0; i--) {
-        const { data: proposalData } = useContractRead({
-            address: proposalContract,
-            abi: tokenContract.abi,
-            functionName: 'readProposal',
-            args: [i]
-        });
-        if (proposalData !== undefined && !proposalData[3]) {
+        // const { data: proposalData } = useContractRead({
+        //     address: proposalContract,
+        //     abi: tokenContract.abi,
+        //     functionName: 'readProposal',
+        //     args: [i]
+        // });
+        const proposalData = ReadArticle(i)
+        if (proposalData && !proposalData[3]) {
             proposalData[5] = proposalData[5].toString();
             proposalData.push(i)
             proposalsList.push(proposalData);

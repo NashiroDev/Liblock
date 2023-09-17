@@ -15,8 +15,24 @@ export default function ReadArticle(id:string): any {
 
     if (isLoading) {
         // Return a loading state or placeholder
-        return ["Loading", "Loading", "Loading"]
+        return false
     }
 
     return articleData
+}
+
+export function ReadAny(_address:any, _tokenContract:any, _functionName:any): any {
+
+    const { data, isLoading } = useContractRead({
+        address: _address,
+        abi: _tokenContract,
+        functionName: _functionName,
+    });
+
+    if (isLoading) {
+        // Return a loading state or placeholder
+        return false
+    }
+
+    return data
 }

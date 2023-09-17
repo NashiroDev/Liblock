@@ -3,28 +3,31 @@
 import { useContractRead } from 'wagmi';
 import { useState } from "react";
 import Link from "next/link";
+import ReadArticle, { ReadAny } from "./read"
 import tokenContract from "../../../contracts/Proposal.json";
 
 export default function GetArticles() {
     const proposalContract = "0x12eB4a41Dd1E628C147429b797959F416e8eC906"
 
-    const { data: counterData } = useContractRead({
-        address: proposalContract,
-        abi: tokenContract.abi,
-        functionName: 'articleIDCounter',
-    });
+    // const { data: counterData } = useContractRead({
+    //     address: proposalContract,
+    //     abi: tokenContract.abi,
+    //     functionName: 'articleIDCounter',
+    // });
+    const counterData = ReadAny(proposalContract, tokenContract.abi, 'articleIDCounter')
 
-    const counter = counterData ? counterData.toString() : '';
+    const counter = counterData ? counterData.toString() : '1';
     let articlesList = []
 
     for (let i = 0; i < counter; i++) {
-        const { data: articleData } = useContractRead({
-            address: proposalContract,
-            abi: tokenContract.abi,
-            functionName: 'readProposal',
-            args: [i]
-        });
-        if (articleData !== undefined && articleData[3]) {
+        // const { data: articleData } = useContractRead({
+        //     address: proposalContract,
+        //     abi: tokenContract.abi,
+        //     functionName: 'readProposal',
+        //     args: [i]
+        // });
+        const articleData = ReadArticle(i)
+        if (articleData && articleData[3]) {
             articleData[5] = articleData[5].toString();
             articleData.push(i)
             articlesList.push(articleData);
