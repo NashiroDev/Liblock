@@ -65,7 +65,7 @@ export function GetFewArticles() {
                                         <span className="badge bg-warning text-light ms-2">Dapps</span>
                                         <span className="badge bg-warning text-light ms-2">L2</span>
                                     </div>
-                                    <Link href={`/articles/read/${result[6]}`} className="btn btn-primary mt-2">Read</Link>
+                                    <Link href={`/articles/read/${result[0]}/${result[6]}`} className="btn btn-primary mt-2">Read</Link>
                                 </div>
                             </div>
                         ))}
@@ -142,7 +142,7 @@ export function GetFewProposals() {
                                         <div className="progress-bar-striped bg-warning" style={{ width: 45 }}></div>
                                         <div className="progress-bar-striped bg-danger" style={{ width: 98 }}></div>
                                     </div>
-                                    <Link href={`/proposals/read/${result[6]}`} className="btn btn-primary mt-2">See and vote</Link>
+                                    <Link href={`/proposals/read/${result[0]}/${result[6]}`} className="btn btn-primary mt-2">See and vote</Link>
                                 </div>
                             </div>
                         ))}
