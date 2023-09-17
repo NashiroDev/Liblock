@@ -1,3 +1,4 @@
+
 "use client"
 
 import { useState } from "react";
@@ -5,7 +6,7 @@ import Link from "next/link";
 import ReadArticle, { ReadAny } from "./read"
 import tokenContract from "../../../contracts/Proposal.json";
 
-export default function GetArticles() {
+export default function GetProposals() {
     const proposalContract = "0x12eB4a41Dd1E628C147429b797959F416e8eC906"
 
     // const { data: counterData } = useContractRead({
@@ -16,20 +17,20 @@ export default function GetArticles() {
     const counterData = ReadAny(proposalContract, tokenContract.abi, 'articleIDCounter')
 
     const counter = counterData ? counterData.toString() : '1';
-    let articlesList = []
+    let proposalsList = []
 
     for (let i = 0; i < counter; i++) {
-        // const { data: articleData } = useContractRead({
+        // const { data: proposalData } = useContractRead({
         //     address: proposalContract,
         //     abi: tokenContract.abi,
         //     functionName: 'readProposal',
         //     args: [i]
         // });
-        const articleData = ReadArticle(i)
-        if (articleData && articleData[3]) {
-            articleData[5] = articleData[5].toString();
-            articleData.push(i)
-            articlesList.push(articleData);
+        const proposalData = ReadArticle(i)
+        if (proposalData !== undefined && !proposalData[3]) {
+            proposalData[5] = proposalData[5].toString();
+            proposalData.push(i)
+            proposalsList.push(proposalData);
         };
     };
 
@@ -52,42 +53,42 @@ export default function GetArticles() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Logic for filtering and searching articles based on the form inputs
+        // Logic for filtering and searching Proposals based on the form inputs
         console.log('Tag:', tag);
         console.log('Keyword:', keyword);
         console.log('Order:', order);
     };
 
-    if (keyword != '' && articlesList) {
-        let articlesListFilter = []
-        for (let i = 0; i < articlesList.length; i++) {
-            if (articlesList[i][0].includes(keyword)) {
-                articlesListFilter.push(articlesList[i])
+    if (keyword != '' && proposalsList) {
+        let proposalsListFilter = []
+        for (let i = 0; i < proposalsList.length; i++) {
+            if (proposalsList[i][0].includes(keyword)) {
+                proposalsListFilter.push(proposalsList[i])
             }
         }
-        articlesList = articlesListFilter
-    }    
+        proposalsList = proposalsListFilter
+    }
 
     if (order != '') {
         if (order === 'asc') {
-            const articlesListOrder = [...articlesList].sort((a, b) => a[5] - b[5])
-            articlesList = articlesListOrder
+            const proposalsListOrder = [...proposalsList].sort((a, b) => a[5] - b[5])
+            proposalsList = proposalsListOrder
         } else if (order === 'desc') {
-            const articlesListOrder = [...articlesList].sort((a, b) => b[5] - a[5])
-            articlesList = articlesListOrder
+            const proposalsListOrder = [...proposalsList].sort((a, b) => b[5] - a[5])
+            proposalsList = proposalsListOrder
         }
-        
+
     }
 
     const startIndex = (page - 1) * 11;
     const endIndex = page * 11;
 
-    const paginatedArticles = articlesList.slice(startIndex, endIndex);
+    const paginatedProposals = proposalsList.slice(startIndex, endIndex);
 
     return (
-        <div className="container">
-            <div className="page-body row row-cols-4 mt-4 mb-6">
-                <div className="col-md-3 ms-4 mb-4 p-2 card">
+        <div className="container-fluid">
+            <div className="page-body row row-cols-4 mt-4 mb-6 justify-content-center">
+                <div className="col-md-3 ms-2 mb-4 card">
                     <form onSubmit={handleSubmit}>
                         <div className="form-group mb-2">
                             <label htmlFor="tag">Tag:</label>
@@ -121,19 +122,25 @@ export default function GetArticles() {
                                 <option value="desc">Latest</option>
                             </select>
                         </div>
-                        <button type="submit" className="btn btn-secondary mb-4">Search</button>
+                        <button type="submit" className="btn btn-primary mb-4">Search</button>
                     </form>
                 </div>
-                {paginatedArticles.map((result, index) => (
-                    <div key={index} className="col-3 ms-4 card mt-4">
-                        <img src="./assets/logo-color.svg" className="card-img-top" alt="..." />
+                {paginatedProposals.map((result, index) => (
+                    <div key={index} className="card col proposal-card ms-2">
+                        <div className="card-header">
+                            <p>Proposed by : <strong>{result[2].slice(0, 6)}...{result[2].slice(36, 42)}</strong><span className="badge bg-success text-light ms-4">{result[3] ? 'Refused' : 'On going'}</span></p>
+                        </div>
                         <div className="card-body">
-                            <h5 className="card-title text-align-center mx-auto">{result[0].slice(0, 30)}</h5>
-                            <p className="card-text text-align-center">{result[1].slice(0, 107)}...</p>
-                            <p className='d-flex justify-content-center lh-1'>By : {result[2].slice(0, 6)}...{result[2].slice(36, 42)}</p>
-                            <div className="d-flex justify-content-center">
-                                <Link href={`/articles/read/${result[0]}/${result[6]}`} className="btn btn-primary">Read</Link>
+                            <h5 className="card-title">{result[0]}</h5>
+                            <div className="badge-section mt-2">
+                                <span className="badge bg-warning text-light ms-2">BTC</span>
                             </div>
+                            <div className="progress mt-2">
+                                <div className="progress-bar-striped bg-success d-flex justify-content-center" style={{ width: 70 }}>70%</div>
+                                <div className="progress-bar-striped bg-warning d-flex justify-content-center" style={{ width: 5 }}>5%</div>
+                                <div className="progress-bar-striped bg-danger d-flex justify-content-center" style={{ width: 25 }}>25%</div>
+                            </div>
+                            <Link href={`/proposals/read/${result[0]}/${result[6]}`} className="btn btn-secondary mt-2 justify-content-center d-flex">See more</Link>
                         </div>
                     </div>
                 ))}
@@ -144,7 +151,7 @@ export default function GetArticles() {
                         Previous Page
                     </button>
                 )}
-                {endIndex < articlesList.length && (
+                {endIndex < proposalsList.length && (
                     <button onClick={() => setPage(page + 1)} className="btn btn-secondary ms-2">
                         Next Page
                     </button>
