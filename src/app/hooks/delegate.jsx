@@ -37,7 +37,7 @@ export default function Delegate() {
     args: [connectedUserAddress],
   }
 
-  const { data } = useContractReads({
+  const { data, isLoading } = useContractReads({
     contracts: [
       liblockBalanceOf,
       liblockGetVotes,
@@ -45,11 +45,11 @@ export default function Delegate() {
     ],
   });
 
-  const result_0 = (BigInt(data[0].result) / (BigInt(10n) ** BigInt(18n))).toString();
-  const result_1 = (BigInt(data[1].result) / (BigInt(10n) ** BigInt(18n))).toString();
-  const result_2 = data[2].result;
+  const result_0 = !isLoading ? (BigInt(data[0].result) / (BigInt(10n) ** BigInt(18n))).toString() : "loading";
+  const result_1 = !isLoading ? (BigInt(data[1].result) / (BigInt(10n) ** BigInt(18n))).toString() : "loading";
+  const result_2 = !isLoading ? data[2].result : "loading";
 
-  const { delegateData, isDelegateLoading, isDelegateSuccess, write } = useContractWrite(config);
+  const { data: txnData, isLoading: isDelegationLoading, isSuccess, write } = useContractWrite(config);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -74,13 +74,13 @@ export default function Delegate() {
           </button>
         </div>
       </form>
-      <div className="ms-4 mt-4">
+      {isDelegationLoading && <div>Transaction require your approval, please see your wallet</div>}
+      {isSuccess && <div>Transaction submited!<br/>Hash : {txnData.hash}</div>}
+      <div className="ms-4 mt-4 mb-4">
         <h5>Connected address $LIB token balance : {result_0} LIB</h5>
         <h5>Connected address votes weight : {result_1} LIB</h5>
         <h5>Connected address current delegatee : {result_2}</h5>
       </div>
-      {isDelegateLoading && <div>Check wallet</div>}
-      {isDelegateSuccess && <div>Transaction: {JSON.stringify(delegateData)}</div>}
     </section>
   );
 }
