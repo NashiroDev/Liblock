@@ -51,8 +51,8 @@ export function GetFewArticles() {
                 </div>
                 <div className="d-flex mt-4">
                     <ul className="pagination justify-content-center align-items-center">
-                        <li className="page-item">{page > 1 && (
-                            <button onClick={() => setPage(page - 1)} className="btn btn-secondary ms-2">
+                        <li className="page-item">{(
+                            <button onClick={() => setPage(page - 1)} disabled={page <= 1} className="btn btn-secondary ms-2">
                                 Prev
                             </button>
                         )}</li>
@@ -71,8 +71,8 @@ export function GetFewArticles() {
                                 </div>
                             </div>
                         ))}
-                        <li className="page-item ms-4">{endIndex < articlesList.length && (
-                            <button onClick={() => setPage(page + 1)} className="btn btn-secondary ms-2">
+                        <li className="page-item ms-4">{(
+                            <button onClick={() => setPage(page + 1)} disabled={endIndex >= articlesList.length} className="btn btn-secondary ms-2">
                                 Next
                             </button>
                         )}</li>
@@ -130,8 +130,8 @@ export function GetFewProposals() {
                 </div>
                 <div className="d-flex mt-4">
                     <ul className="pagination justify-content-center align-items-center">
-                        <li className="page-item">{page > 1 && (
-                            <button onClick={() => setPage(page - 1)} className="btn btn-secondary ms-2">
+                        <li className="page-item">{(
+                            <button onClick={() => setPage(page - 1)} disabled={page <= 1} className="btn btn-secondary ms-2">
                                 Prev
                             </button>
                         )}</li>
@@ -150,8 +150,8 @@ export function GetFewProposals() {
                                 </div>
                             </div>
                         ))}
-                        <li className="page-item ms-4">{endIndex < proposalsList.length && (
-                            <button onClick={() => setPage(page + 1)} className="btn btn-secondary ms-2">
+                        <li className="page-item ms-4">{(
+                            <button onClick={() => setPage(page + 1)} disabled={endIndex >= proposalsList.length} className="btn btn-secondary ms-2">
                                 Next
                             </button>
                         )}</li>
