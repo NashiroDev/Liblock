@@ -1,5 +1,3 @@
-"use client"
-
 import { useContractRead } from 'wagmi';
 import tokenContract from "../../../contracts/Proposal.json";
 

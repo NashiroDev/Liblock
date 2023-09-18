@@ -6,6 +6,7 @@ import tokenContract from "../../../contracts/Proposal.json";
 
 export function GetFewArticles() {
     const proposalContract = "0x12eB4a41Dd1E628C147429b797959F416e8eC906"
+    const [page, setPage] = useState(1);
 
     // const { data: counterData } = useContractRead({
     //     address: proposalContract,
@@ -35,8 +36,6 @@ export function GetFewArticles() {
         };
     };
 
-    const [page, setPage] = useState(1);
-
     const startIndex = (page - 1) * 3;
     const endIndex = page * 3;
 
@@ -50,9 +49,9 @@ export function GetFewArticles() {
                     <Link className="link-info ms-2" href="/articles">View all</Link>
                 </div>
                 <div className="d-flex mt-4">
-                    <ul className="pagination justify-content-center align-items-center">
-                        <li className="page-item">{page > 1 && (
-                            <button onClick={() => setPage(page - 1)} className="btn btn-secondary ms-2">
+                    <ul className="pagination justify-content-center align-items-center article-carousel">
+                        <li className="page-item">{(
+                            <button onClick={() => setPage(page - 1)} disabled={page <= 1} className="btn btn-secondary ms-2">
                                 Prev
                             </button>
                         )}</li>
@@ -71,8 +70,8 @@ export function GetFewArticles() {
                                 </div>
                             </div>
                         ))}
-                        <li className="page-item ms-4">{endIndex < articlesList.length && (
-                            <button onClick={() => setPage(page + 1)} className="btn btn-secondary ms-2">
+                        <li className="page-item ms-4">{(
+                            <button onClick={() => setPage(page + 1)} disabled={endIndex >= articlesList.length} className="btn btn-secondary ms-2">
                                 Next
                             </button>
                         )}</li>
@@ -85,6 +84,7 @@ export function GetFewArticles() {
 
 export function GetFewProposals() {
     const proposalContract = "0x12eB4a41Dd1E628C147429b797959F416e8eC906"
+    const [page, setPage] = useState(1);
 
     // const { data: counterData } = useContractRead({
     //     address: proposalContract,
@@ -114,8 +114,6 @@ export function GetFewProposals() {
         };
     };
 
-    const [page, setPage] = useState(1);
-
     const startIndex = (page - 1) * 3;
     const endIndex = page * 3;
 
@@ -129,9 +127,9 @@ export function GetFewProposals() {
                     <Link className="link-info ms-2" href="/proposals">View all</Link>
                 </div>
                 <div className="d-flex mt-4">
-                    <ul className="pagination justify-content-center align-items-center">
-                        <li className="page-item">{page > 1 && (
-                            <button onClick={() => setPage(page - 1)} className="btn btn-secondary ms-2">
+                    <ul className="pagination justify-content-center align-items-center article-carousel">
+                        <li className="page-item">{(
+                            <button onClick={() => setPage(page - 1)} disabled={page <= 1} className="btn btn-secondary ms-2">
                                 Prev
                             </button>
                         )}</li>
@@ -150,8 +148,8 @@ export function GetFewProposals() {
                                 </div>
                             </div>
                         ))}
-                        <li className="page-item ms-4">{endIndex < proposalsList.length && (
-                            <button onClick={() => setPage(page + 1)} className="btn btn-secondary ms-2">
+                        <li className="page-item ms-4">{(
+                            <button onClick={() => setPage(page + 1)} disabled={endIndex >= proposalsList.length} className="btn btn-secondary ms-2">
                                 Next
                             </button>
                         )}</li>
