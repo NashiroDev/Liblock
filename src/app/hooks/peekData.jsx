@@ -6,6 +6,7 @@ import tokenContract from "../../../contracts/Proposal.json";
 
 export function GetFewArticles() {
     const proposalContract = "0x12eB4a41Dd1E628C147429b797959F416e8eC906"
+    const [page, setPage] = useState(1);
 
     // const { data: counterData } = useContractRead({
     //     address: proposalContract,
@@ -34,8 +35,6 @@ export function GetFewArticles() {
             }
         };
     };
-
-    const [page, setPage] = useState(1);
 
     const startIndex = (page - 1) * 3;
     const endIndex = page * 3;
@@ -85,6 +84,7 @@ export function GetFewArticles() {
 
 export function GetFewProposals() {
     const proposalContract = "0x12eB4a41Dd1E628C147429b797959F416e8eC906"
+    const [page, setPage] = useState(1);
 
     // const { data: counterData } = useContractRead({
     //     address: proposalContract,
@@ -113,8 +113,6 @@ export function GetFewProposals() {
             }
         };
     };
-
-    const [page, setPage] = useState(1);
 
     const startIndex = (page - 1) * 3;
     const endIndex = page * 3;
