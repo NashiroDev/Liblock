@@ -9,7 +9,8 @@ interface pageProps {
 
 const page: FC<pageProps> = ({ params }) => {
 
-    const articleData = ReadArticle(params.slug[1]) ? ReadArticle(params.slug[1]) :  ["loading", "loading", "loading"]
+    let articleData = ReadArticle(params.slug[1])
+    articleData = articleData ? articleData : ["loading", "loading", "loading"]
 
     return (
         <section className="container mb-4">
