@@ -1,0 +1,20 @@
+.notif-pop-loading {
+    z-index: 50;
+    .card {
+        background-color: #2c95bedc;
+    }
+}
+
+.notif-pop-success {
+    z-index: 50;
+    .card {
+        background-color: #1d8025dc;
+    }
+}
+
+.notif-pop-error {
+    z-index: 50;
+    .card {
+        background-color: #d95525da;
+    }
+}
