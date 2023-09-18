@@ -50,7 +50,7 @@ export function GetFewArticles() {
                     <Link className="link-info ms-2" href="/articles">View all</Link>
                 </div>
                 <div className="d-flex mt-4">
-                    <ul className="pagination justify-content-center align-items-center">
+                    <ul className="pagination justify-content-center align-items-center article-carousel">
                         <li className="page-item">{(
                             <button onClick={() => setPage(page - 1)} disabled={page <= 1} className="btn btn-secondary ms-2">
                                 Prev
@@ -129,7 +129,7 @@ export function GetFewProposals() {
                     <Link className="link-info ms-2" href="/proposals">View all</Link>
                 </div>
                 <div className="d-flex mt-4">
-                    <ul className="pagination justify-content-center align-items-center">
+                    <ul className="pagination justify-content-center align-items-center article-carousel">
                         <li className="page-item">{(
                             <button onClick={() => setPage(page - 1)} disabled={page <= 1} className="btn btn-secondary ms-2">
                                 Prev
