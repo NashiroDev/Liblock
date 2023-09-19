@@ -5,7 +5,7 @@ import ReadArticle,{ ReadAny } from "./read"
 import tokenContract from "../../../contracts/Proposal.json";
 
 export function GetFewArticles() {
-    const proposalContract = "0x12eB4a41Dd1E628C147429b797959F416e8eC906"
+    const proposalContract = "0x426ed6a38a15645bd24AAFe92579dDd0896d33Cd"
     const [page, setPage] = useState(1);
 
     // const { data: counterData } = useContractRead({
@@ -13,12 +13,12 @@ export function GetFewArticles() {
     //     abi: tokenContract.abi,
     //     functionName: 'articleIDCounter',
     // });
-    const counterData = ReadAny(proposalContract, tokenContract.abi, 'articleIDCounter')
+    const counterData = ReadAny(proposalContract, tokenContract.abi, 'proposalCount')
 
     const counter = counterData ? counterData.toString() : 1;
     let articlesList = []
 
-    for (let i = counter-1; i != 0; i--) {
+    for (let i = counter; i > 0; i--) {
         // const { data: articleData } = useContractRead({
         //     address: proposalContract,
         //     abi: tokenContract.abi,
@@ -26,9 +26,12 @@ export function GetFewArticles() {
         //     args: [i]
         // });
         const articleData = ReadArticle(i)
-        if (articleData && !articleData[3]) { /** Later remove "!" */
-            articleData[5] = articleData[5].toString();
-            articleData.push(i)
+        if (articleData && !articleData[4]) { /** Later remove "!" */
+            articleData[0] = articleData[0].toString();
+            articleData[6] = articleData[6].toString();
+            articleData[7] = articleData[7].toString();
+            articleData[8] = articleData[8].toString();
+            articleData[9] = articleData[9].toString();
             articlesList.push(articleData);
             if (articlesList.length > 11) {
                 break;
@@ -59,14 +62,14 @@ export function GetFewArticles() {
                             <div key={index} className="col-3 ms-4 card">
                                 <img src="./assets/logo-color.svg" className="card-img-top" alt="..." />
                                 <div className="card-body">
-                                    <h5 className="card-title">{result[0]}</h5>
-                                    <p className="card-text">{result[1].slice(0, 107)}...</p>
-                                    <p className="card-text">By : {result[2].slice(0, 6)}...{result[2].slice(36, 42)}</p>
+                                    <h5 className="card-title">{result[1]}</h5>
+                                    <p className="card-text">{result[2].slice(0, 107)}...</p>
+                                    <p className="card-text">By : {result[3].slice(0, 6)}...{result[3].slice(36, 42)}</p>
                                     <div className="badge-section mt-2">
                                         <span className="badge bg-warning text-light ms-2">Dapps</span>
                                         <span className="badge bg-warning text-light ms-2">L2</span>
                                     </div>
-                                    <Link href={`/articles/read/${result[0]}/${result[6]}`} className="btn btn-primary mt-2">Read</Link>
+                                    <Link href={`/articles/read/${result[1]}/${result[0]}`} className="btn btn-primary mt-2">Read</Link>
                                 </div>
                             </div>
                         ))}
@@ -83,7 +86,7 @@ export function GetFewArticles() {
 }
 
 export function GetFewProposals() {
-    const proposalContract = "0x12eB4a41Dd1E628C147429b797959F416e8eC906"
+    const proposalContract = "0x426ed6a38a15645bd24AAFe92579dDd0896d33Cd"
     const [page, setPage] = useState(1);
 
     // const { data: counterData } = useContractRead({
@@ -91,12 +94,12 @@ export function GetFewProposals() {
     //     abi: tokenContract.abi,
     //     functionName: 'articleIDCounter',
     // });
-    const counterData = ReadAny(proposalContract, tokenContract.abi, 'articleIDCounter')
+    const counterData = ReadAny(proposalContract, tokenContract.abi, 'proposalCount')
 
     const counter = counterData ? counterData.toString() : 1;
     let proposalsList = []
 
-    for (let i = counter-1; i != 0; i--) {
+    for (let i = counter; i != 0; i--) {
         // const { data: proposalData } = useContractRead({
         //     address: proposalContract,
         //     abi: tokenContract.abi,
@@ -104,7 +107,7 @@ export function GetFewProposals() {
         //     args: [i]
         // });
         const proposalData = ReadArticle(i)
-        if (proposalData && !proposalData[3]) {
+        if (proposalData && !proposalData[4]) {
             proposalData[5] = proposalData[5].toString();
             proposalData.push(i)
             proposalsList.push(proposalData);
@@ -137,14 +140,14 @@ export function GetFewProposals() {
                             <div key={index} className="col-3 ms-4 card">
                                 <img src="./assets/logo-color.svg" className="card-img-top" alt="..." />
                                 <div className="card-body">
-                                    <h5 className="card-title">{result[0]}</h5>
-                                    <p className="card-text">Proposer : {result[2].slice(0, 6)}...{result[2].slice(36, 42)}</p>
+                                    <h5 className="card-title">{result[1]}</h5>
+                                    <p className="card-text">Proposer : {result[3].slice(0, 6)}...{result[3].slice(36, 42)}</p>
                                     <div className="progress mt-2">
                                         <div className="progress-bar-striped bg-success" style={{ width: 50 }}></div>
                                         <div className="progress-bar-striped bg-warning" style={{ width: 45 }}></div>
                                         <div className="progress-bar-striped bg-danger" style={{ width: 98 }}></div>
                                     </div>
-                                    <Link href={`/proposals/read/${result[0]}/${result[6]}`} className="btn btn-primary mt-2">See and vote</Link>
+                                    <Link href={`/proposals/read/${result[1]}/${result[0]}`} className="btn btn-primary mt-2">See and vote</Link>
                                 </div>
                             </div>
                         ))}

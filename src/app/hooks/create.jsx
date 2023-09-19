@@ -6,7 +6,7 @@ import { useState } from "react";
 import tokenContract from "../../../contracts/Proposal.json";
 
 export default function CreateProposal() {
-    const proposalContract = "0x12eB4a41Dd1E628C147429b797959F416e8eC906"
+    const proposalContract = "0x426ed6a38a15645bd24AAFe92579dDd0896d33Cd"
     const { address: connectedUserAddress } = useAccount();
 
     const [title, setTitle] = useState("");

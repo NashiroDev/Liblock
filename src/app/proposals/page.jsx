@@ -1,5 +1,3 @@
-import Navbar from "../../partials/navbar"
-import Footer from "../../partials/footer"
 import GetProposals from "../hooks/seekProposals"
 
 export default function Index() {
