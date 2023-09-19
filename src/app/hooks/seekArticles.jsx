@@ -6,19 +6,19 @@ import ReadArticle, { ReadAny } from "./read"
 import tokenContract from "../../../contracts/Proposal.json";
 
 export default function GetArticles() {
-    const proposalContract = "0x12eB4a41Dd1E628C147429b797959F416e8eC906"
+    const proposalContract = "0x426ed6a38a15645bd24AAFe92579dDd0896d33Cd"
 
     // const { data: counterData } = useContractRead({
     //     address: proposalContract,
     //     abi: tokenContract.abi,
     //     functionName: 'articleIDCounter',
     // });
-    const counterData = ReadAny(proposalContract, tokenContract.abi, 'articleIDCounter')
+    const counterData = ReadAny(proposalContract, tokenContract.abi, 'proposalCount')
 
     const counter = counterData ? counterData.toString() : '1';
     let articlesList = []
 
-    for (let i = 0; i < counter; i++) {
+    for (let i = 1; i <= counter; i++) {
         // const { data: articleData } = useContractRead({
         //     address: proposalContract,
         //     abi: tokenContract.abi,
@@ -26,9 +26,12 @@ export default function GetArticles() {
         //     args: [i]
         // });
         const articleData = ReadArticle(i)
-        if (articleData && articleData[3]) {
-            articleData[5] = articleData[5].toString();
-            articleData.push(i)
+        if (articleData && articleData[4]) {
+            articleData[0] = articleData[0].toString();
+            articleData[6] = articleData[6].toString();
+            articleData[7] = articleData[7].toString();
+            articleData[8] = articleData[8].toString();
+            articleData[9] = articleData[9].toString();
             articlesList.push(articleData);
         };
     };
@@ -128,11 +131,11 @@ export default function GetArticles() {
                     <div key={index} className="col-3 ms-4 card mt-4">
                         <img src="./assets/logo-color.svg" className="card-img-top" alt="..." />
                         <div className="card-body">
-                            <h5 className="card-title text-align-center mx-auto">{result[0].slice(0, 30)}</h5>
-                            <p className="card-text text-align-center">{result[1].slice(0, 107)}...</p>
-                            <p className='d-flex justify-content-center lh-1'>By : {result[2].slice(0, 6)}...{result[2].slice(36, 42)}</p>
+                            <h5 className="card-title text-align-center mx-auto">{result[1].slice(0, 30)}</h5>
+                            <p className="card-text text-align-center">{result[2].slice(0, 107)}...</p>
+                            <p className='d-flex justify-content-center lh-1'>By : {result[3].slice(0, 6)}...{result[3].slice(36, 42)}</p>
                             <div className="d-flex justify-content-center">
-                                <Link href={`/articles/read/${result[0]}/${result[6]}`} className="btn btn-primary">Read</Link>
+                                <Link href={`/articles/read/${result[1]}/${result[0]}`} className="btn btn-primary">Read</Link>
                             </div>
                         </div>
                     </div>

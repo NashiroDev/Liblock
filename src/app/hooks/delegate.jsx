@@ -1,53 +1,31 @@
 "use client"
 
-import { useAccount, useContractReads } from 'wagmi';
+import { useAccount } from 'wagmi';
 import { useContractWrite, usePrepareContractWrite } from "wagmi";
 import { useState } from "react";
+import { ReadAnyArgs } from "./read"
 import tokenContract from "../../../contracts/Liblock.json";
 
 export default function Delegate() {
-  const libContract = "0xf2c06D8B5986eB79473CFfF70ABfc2E5986F4EB6"
+  const libContract = "0xd8bD9d1d5d3a3672348dF21Eb0541f7c920d4310"
 
+  const connectedUserAddress = useAccount()
   const [address, setAddress] = useState("");
-  const { address: connectedUserAddress } = useAccount();
 
   const { config } = usePrepareContractWrite({
     address: libContract,
     abi: tokenContract.abi,
-    functionName: "delegateFrom",
-    args: [connectedUserAddress, address],
+    functionName: "delegate",
+    args: [address],
   });
 
-  const liblockBalanceOf = {
-    address: libContract,
-    abi: tokenContract.abi,
-    functionName: 'balanceOf',
-    args: [connectedUserAddress],
-  }
-  const liblockGetVotes = {
-    address: libContract,
-    abi: tokenContract.abi,
-    functionName: 'getVotes',
-    args: [connectedUserAddress],
-  }
-  const liblockDelegates = {
-    address: libContract,
-    abi: tokenContract.abi,
-    functionName: 'delegates',
-    args: [connectedUserAddress],
-  }
+  const liblockBalanceOf = ReadAnyArgs(libContract, tokenContract.abi, 'balanceOf', connectedUserAddress.address)
+  const liblockGetVotes = ReadAnyArgs(libContract, tokenContract.abi, 'getVotes', connectedUserAddress.address)
+  const liblockDelegates = ReadAnyArgs(libContract, tokenContract.abi, 'delegates', connectedUserAddress.address)
 
-  const { data, isLoading } = useContractReads({
-    contracts: [
-      liblockBalanceOf,
-      liblockGetVotes,
-      liblockDelegates,
-    ],
-  });
-
-  const result_0 = !isLoading ? (BigInt(data[0].result) / (BigInt(10n) ** BigInt(18n))).toString() : "loading";
-  const result_1 = !isLoading ? (BigInt(data[1].result) / (BigInt(10n) ** BigInt(18n))).toString() : "loading";
-  const result_2 = !isLoading ? data[2].result : "loading";
+  const result_0 = liblockBalanceOf ? (BigInt(liblockBalanceOf) / (BigInt(10n) ** BigInt(18n))).toString() : "0";
+  const result_1 = liblockGetVotes ? (BigInt(liblockGetVotes) / (BigInt(10n) ** BigInt(18n))).toString() : "0";
+  const result_2 = liblockDelegates ? liblockDelegates : "loading";
 
   const { data: txnData, isLoading: isDelegationLoading, isSuccess, isError, write } = useContractWrite(config);
 
@@ -65,7 +43,7 @@ export default function Delegate() {
             type="text"
             value={address}
             onChange={(e) => setAddress(e.target.value)}
-            placeholder="Enter address"
+            placeholder="Type delegatee address"
             required
             className="form-control"
           />
@@ -74,7 +52,7 @@ export default function Delegate() {
           </button>
         </div>
       </form>
-      <div class="toast-container">
+      <div className="toast-container">
         {isDelegationLoading &&
           <div className="notif-pop-loading position-fixed bottom-0 end-0 m-4 p-2 w-25">
             <div className="card p-2">

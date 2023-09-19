@@ -7,19 +7,19 @@ import ReadArticle, { ReadAny } from "./read"
 import tokenContract from "../../../contracts/Proposal.json";
 
 export default function GetProposals() {
-    const proposalContract = "0x12eB4a41Dd1E628C147429b797959F416e8eC906"
+    const proposalContract = "0x426ed6a38a15645bd24AAFe92579dDd0896d33Cd"
 
     // const { data: counterData } = useContractRead({
     //     address: proposalContract,
     //     abi: tokenContract.abi,
     //     functionName: 'articleIDCounter',
     // });
-    const counterData = ReadAny(proposalContract, tokenContract.abi, 'articleIDCounter')
+    const counterData = ReadAny(proposalContract, tokenContract.abi, 'proposalCount')
 
     const counter = counterData ? counterData.toString() : '1';
     let proposalsList = []
 
-    for (let i = 0; i < counter; i++) {
+    for (let i = 1; i <= counter; i++) {
         // const { data: proposalData } = useContractRead({
         //     address: proposalContract,
         //     abi: tokenContract.abi,
@@ -27,9 +27,12 @@ export default function GetProposals() {
         //     args: [i]
         // });
         const proposalData = ReadArticle(i)
-        if (proposalData !== undefined && !proposalData[3]) {
-            proposalData[5] = proposalData[5].toString();
-            proposalData.push(i)
+        if (proposalData !== undefined && !proposalData[4]) {
+            proposalData[0] = proposalData[0].toString();
+            proposalData[6] = proposalData[6].toString();
+            proposalData[7] = proposalData[7].toString();
+            proposalData[8] = proposalData[8].toString();
+            proposalData[9] = proposalData[9].toString();
             proposalsList.push(proposalData);
         };
     };
@@ -128,10 +131,10 @@ export default function GetProposals() {
                 {paginatedProposals.map((result, index) => (
                     <div key={index} className="card col proposal-card ms-2">
                         <div className="card-header">
-                            <p>Proposed by : <strong>{result[2].slice(0, 6)}...{result[2].slice(36, 42)}</strong><span className="badge bg-success text-light ms-4">{result[3] ? 'Refused' : 'On going'}</span></p>
+                            <p>Proposed by : <strong>{result[3].slice(0, 6)}...{result[3].slice(36, 42)}</strong><span className="badge bg-success text-light ms-4">{result[3] ? 'Refused' : 'On going'}</span></p>
                         </div>
                         <div className="card-body">
-                            <h5 className="card-title">{result[0]}</h5>
+                            <h5 className="card-title">{result[1]}</h5>
                             <div className="badge-section mt-2">
                                 <span className="badge bg-warning text-light ms-2">BTC</span>
                             </div>
@@ -140,7 +143,7 @@ export default function GetProposals() {
                                 <div className="progress-bar-striped bg-warning d-flex justify-content-center" style={{ width: 5 }}>5%</div>
                                 <div className="progress-bar-striped bg-danger d-flex justify-content-center" style={{ width: 25 }}>25%</div>
                             </div>
-                            <Link href={`/proposals/read/${result[0]}/${result[6]}`} className="btn btn-secondary mt-2 justify-content-center d-flex">See more</Link>
+                            <Link href={`/proposals/read/${result[1]}/${result[0]}`} className="btn btn-secondary mt-2 justify-content-center d-flex">See more</Link>
                         </div>
                     </div>
                 ))}
