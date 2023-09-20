@@ -16,12 +16,8 @@ export default function GetProposals() {
 
     for (let i = 1; i <= counter; i++) {
         const proposalData = ReadArticle(i)
-        if (proposalData !== undefined && !proposalData[4]) {
-            proposalData[0] = proposalData[0].toString();
-            proposalData[6] = proposalData[6].toString();
-            proposalData[7] = proposalData[7].toString();
-            proposalData[8] = proposalData[8].toString();
-            proposalData[9] = proposalData[9].toString();
+        if (proposalData && !proposalData[4]) {
+            proposalData[10] = proposalData[10].toString();
             proposalsList.push(proposalData);
         };
     };
