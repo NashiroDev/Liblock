@@ -8,23 +8,12 @@ import tokenContract from "../../../contracts/Proposal.json";
 export default function GetArticles() {
     const proposalContract = "0x066bad9A6bb7931b8d7ef31F0509C3478f39dCE3"
 
-    // const { data: counterData } = useContractRead({
-    //     address: proposalContract,
-    //     abi: tokenContract.abi,
-    //     functionName: 'articleIDCounter',
-    // });
     const counterData = ReadAny(proposalContract, tokenContract.abi, 'proposalCount')
 
     const counter = counterData ? counterData.toString() : '1';
     let articlesList = []
 
     for (let i = 1; i <= counter; i++) {
-        // const { data: articleData } = useContractRead({
-        //     address: proposalContract,
-        //     abi: tokenContract.abi,
-        //     functionName: 'readProposal',
-        //     args: [i]
-        // });
         const articleData = ReadArticle(i)
         if (articleData && articleData[4]) {
             articleData[0] = articleData[0].toString();
