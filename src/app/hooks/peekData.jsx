@@ -5,7 +5,7 @@ import ReadArticle,{ ReadAny } from "./read"
 import tokenContract from "../../../contracts/Proposal.json";
 
 export function GetFewArticles() {
-    const proposalContract = "0x426ed6a38a15645bd24AAFe92579dDd0896d33Cd"
+    const proposalContract = "0x066bad9A6bb7931b8d7ef31F0509C3478f39dCE3"
     const [page, setPage] = useState(1);
 
     // const { data: counterData } = useContractRead({
@@ -86,7 +86,7 @@ export function GetFewArticles() {
 }
 
 export function GetFewProposals() {
-    const proposalContract = "0x426ed6a38a15645bd24AAFe92579dDd0896d33Cd"
+    const proposalContract = "0x066bad9A6bb7931b8d7ef31F0509C3478f39dCE3"
     const [page, setPage] = useState(1);
 
     // const { data: counterData } = useContractRead({
