@@ -1,12 +1,12 @@
 import { useContractRead } from 'wagmi';
-import tokenContract from "../../../contracts/Proposal.json";
+import proposalAbi from "../../../contracts/Proposal.json";
 
 export default function ReadArticle(id:string): any {
     const proposalContract = "0x066bad9A6bb7931b8d7ef31F0509C3478f39dCE3"
 
     const { data: articleData, isLoading } = useContractRead({
         address: proposalContract,
-        abi: tokenContract.abi,
+        abi: proposalAbi.abi,
         functionName: 'getProposal',
         args: [id]
     });
@@ -19,11 +19,11 @@ export default function ReadArticle(id:string): any {
     return articleData
 }
 
-export function ReadAny(_address:any, _tokenContract:any, _functionName:any): any {
+export function ReadAny(_address:any, _proposalAbi:any, _functionName:any): any {
 
     const { data, isLoading } = useContractRead({
         address: _address,
-        abi: _tokenContract,
+        abi: _proposalAbi,
         functionName: _functionName,
     });
 
@@ -35,11 +35,11 @@ export function ReadAny(_address:any, _tokenContract:any, _functionName:any): an
     return data
 }
 
-export function ReadAnyArgs(_address:any, _tokenContract:any, _functionName:any, _args:any): any {
+export function ReadAnyArgs(_address:any, _proposalAbi:any, _functionName:any, _args:any): any {
 
     const { data, isLoading } = useContractRead({
         address: _address,
-        abi: _tokenContract,
+        abi: _proposalAbi,
         functionName: _functionName,
         args: [_args]
     });
