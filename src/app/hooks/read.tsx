@@ -2,7 +2,7 @@ import { useContractRead } from 'wagmi';
 import tokenContract from "../../../contracts/Proposal.json";
 
 export default function ReadArticle(id:string): any {
-    const proposalContract = "0x426ed6a38a15645bd24AAFe92579dDd0896d33Cd"
+    const proposalContract = "0x066bad9A6bb7931b8d7ef31F0509C3478f39dCE3"
 
     const { data: articleData, isLoading } = useContractRead({
         address: proposalContract,

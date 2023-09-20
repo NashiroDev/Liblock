@@ -7,32 +7,17 @@ import ReadArticle, { ReadAny } from "./read"
 import tokenContract from "../../../contracts/Proposal.json";
 
 export default function GetProposals() {
-    const proposalContract = "0x426ed6a38a15645bd24AAFe92579dDd0896d33Cd"
+    const proposalContract = "0x066bad9A6bb7931b8d7ef31F0509C3478f39dCE3"
 
-    // const { data: counterData } = useContractRead({
-    //     address: proposalContract,
-    //     abi: tokenContract.abi,
-    //     functionName: 'articleIDCounter',
-    // });
     const counterData = ReadAny(proposalContract, tokenContract.abi, 'proposalCount')
 
     const counter = counterData ? counterData.toString() : '1';
     let proposalsList = []
 
     for (let i = 1; i <= counter; i++) {
-        // const { data: proposalData } = useContractRead({
-        //     address: proposalContract,
-        //     abi: tokenContract.abi,
-        //     functionName: 'readProposal',
-        //     args: [i]
-        // });
         const proposalData = ReadArticle(i)
-        if (proposalData !== undefined && !proposalData[4]) {
-            proposalData[0] = proposalData[0].toString();
-            proposalData[6] = proposalData[6].toString();
-            proposalData[7] = proposalData[7].toString();
-            proposalData[8] = proposalData[8].toString();
-            proposalData[9] = proposalData[9].toString();
+        if (proposalData && !proposalData[4]) {
+            proposalData[10] = proposalData[10].toString();
             proposalsList.push(proposalData);
         };
     };

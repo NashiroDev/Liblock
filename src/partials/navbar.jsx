@@ -40,6 +40,9 @@ export default function Navbar() {
           </ul>
         </div>
         <ul className="navbar-nav ms-4">
+          <li className="nav-item">
+            <Link className="nav-link text-light" href="/proposals/create">Submit</Link>
+          </li>
           <li><ConnectButton
             accountStatus={{
               smallScreen: 'avatar',
