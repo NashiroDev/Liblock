@@ -15,7 +15,7 @@ export default function GetArticles() {
 
     for (let i = 1; i <= counter; i++) {
         const articleData = ReadArticle(i)
-        if (articleData && articleData[4]) {
+        if (articleData && articleData[5]) {
             articleData[10] = articleData[10].toString();
             articlesList.push(articleData);
         };

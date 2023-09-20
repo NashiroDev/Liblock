@@ -16,7 +16,7 @@ export default function GetProposals() {
 
     for (let i = 1; i <= counter; i++) {
         const proposalData = ReadArticle(i)
-        if (proposalData && !proposalData[4]) {
+        if (proposalData && !proposalData[5]) {
             proposalData[10] = proposalData[10].toString();
             proposalsList.push(proposalData);
         };

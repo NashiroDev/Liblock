@@ -15,7 +15,7 @@ export function GetFewArticles() {
 
     for (let i = counter; i > 0; i--) {
         const articleData = ReadArticle(i)
-        if (articleData && !articleData[4]) { /** Later remove "!" */
+        if (articleData && !articleData[5]) { /** Later remove "!" */
             articleData[10] = articleData[10].toString();
             articlesList.push(articleData);
             if (articlesList.length > 11) {
@@ -81,7 +81,7 @@ export function GetFewProposals() {
 
     for (let i = counter; i != 0; i--) {
         const proposalData = ReadArticle(i)
-        if (proposalData && !proposalData[4]) {
+        if (proposalData && !proposalData[5]) {
             proposalData[10] = proposalData[10].toString();
             proposalsList.push(proposalData);
             if (proposalsList.length > 11) {
