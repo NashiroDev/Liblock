@@ -3,19 +3,19 @@
 import { useState } from "react";
 import Link from "next/link";
 import ReadArticle, { ReadAny } from "./read"
-import tokenContract from "../../../contracts/Proposal.json";
+import proposalAbi from "../../../contracts/Proposal.json";
 
 export default function GetArticles() {
     const proposalContract = "0x066bad9A6bb7931b8d7ef31F0509C3478f39dCE3"
 
-    const counterData = ReadAny(proposalContract, tokenContract.abi, 'proposalCount')
+    const counterData = ReadAny(proposalContract, proposalAbi.abi, 'proposalCount')
 
     const counter = counterData ? counterData.toString() : '1';
     let articlesList = []
 
     for (let i = 1; i <= counter; i++) {
         const articleData = ReadArticle(i)
-        if (articleData && articleData[4]) {
+        if (articleData && articleData[5]) {
             articleData[10] = articleData[10].toString();
             articlesList.push(articleData);
         };

@@ -2,20 +2,20 @@
 import Link from "next/link"
 import { useState } from "react";
 import ReadArticle,{ ReadAny } from "./read"
-import tokenContract from "../../../contracts/Proposal.json";
+import proposalAbi from "../../../contracts/Proposal.json";
 
 export function GetFewArticles() {
     const proposalContract = "0x066bad9A6bb7931b8d7ef31F0509C3478f39dCE3"
     const [page, setPage] = useState(1);
 
-    const counterData = ReadAny(proposalContract, tokenContract.abi, 'proposalCount')
+    const counterData = ReadAny(proposalContract, proposalAbi.abi, 'proposalCount')
 
     const counter = counterData ? counterData.toString() : 1;
     let articlesList = []
 
     for (let i = counter; i > 0; i--) {
         const articleData = ReadArticle(i)
-        if (articleData && !articleData[4]) { /** Later remove "!" */
+        if (articleData && !articleData[5]) { /** Later remove "!" */
             articleData[10] = articleData[10].toString();
             articlesList.push(articleData);
             if (articlesList.length > 11) {
@@ -74,20 +74,19 @@ export function GetFewProposals() {
     const proposalContract = "0x066bad9A6bb7931b8d7ef31F0509C3478f39dCE3"
     const [page, setPage] = useState(1);
 
-    const counterData = ReadAny(proposalContract, tokenContract.abi, 'proposalCount')
+    const counterData = ReadAny(proposalContract, proposalAbi.abi, 'proposalCount')
 
     const counter = counterData ? counterData.toString() : 1;
     let proposalsList = []
 
     for (let i = counter; i != 0; i--) {
         const proposalData = ReadArticle(i)
-        if (proposalData && !proposalData[4]) {
+        if (proposalData && !proposalData[5]) {
             proposalData[10] = proposalData[10].toString();
             proposalsList.push(proposalData);
             if (proposalsList.length > 11) {
                 break;
             }
-            console.log(proposalsList[0])
         };
     };
 

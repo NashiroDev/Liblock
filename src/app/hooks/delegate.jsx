@@ -4,7 +4,7 @@ import { useAccount } from 'wagmi';
 import { useContractWrite, usePrepareContractWrite } from "wagmi";
 import { useState } from "react";
 import { ReadAnyArgs } from "./read"
-import tokenContract from "../../../contracts/Liblock.json";
+import tokenAbi from "../../../contracts/Liblock.json";
 
 export default function Delegate() {
   const libContract = "0xd8bD9d1d5d3a3672348dF21Eb0541f7c920d4310"
@@ -14,14 +14,14 @@ export default function Delegate() {
 
   const { config } = usePrepareContractWrite({
     address: libContract,
-    abi: tokenContract.abi,
+    abi: tokenAbi.abi,
     functionName: "delegate",
     args: [address],
   });
 
-  const liblockBalanceOf = ReadAnyArgs(libContract, tokenContract.abi, 'balanceOf', connectedUserAddress.address)
-  const liblockGetVotes = ReadAnyArgs(libContract, tokenContract.abi, 'getVotes', connectedUserAddress.address)
-  const liblockDelegates = ReadAnyArgs(libContract, tokenContract.abi, 'delegates', connectedUserAddress.address)
+  const liblockBalanceOf = ReadAnyArgs(libContract, tokenAbi.abi, 'balanceOf', connectedUserAddress.address)
+  const liblockGetVotes = ReadAnyArgs(libContract, tokenAbi.abi, 'getVotes', connectedUserAddress.address)
+  const liblockDelegates = ReadAnyArgs(libContract, tokenAbi.abi, 'delegates', connectedUserAddress.address)
 
   const result_0 = liblockBalanceOf ? (BigInt(liblockBalanceOf) / (BigInt(10n) ** BigInt(18n))).toString() : "0";
   const result_1 = liblockGetVotes ? (BigInt(liblockGetVotes) / (BigInt(10n) ** BigInt(18n))).toString() : "0";
