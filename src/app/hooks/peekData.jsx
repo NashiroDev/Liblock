@@ -87,7 +87,6 @@ export function GetFewProposals() {
             if (proposalsList.length > 11) {
                 break;
             }
-            console.log(proposalsList[0])
         };
     };
 
