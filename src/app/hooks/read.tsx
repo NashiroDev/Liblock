@@ -41,7 +41,7 @@ export function ReadAnyArgs(_address:any, _proposalAbi:any, _functionName:any, _
         address: _address,
         abi: _proposalAbi,
         functionName: _functionName,
-        args: [_args]
+        args: _args
     });
 
     if (isLoading) {

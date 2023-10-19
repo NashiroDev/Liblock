@@ -24,7 +24,7 @@ export default function Navbar() {
               <Link className="nav-link text-light" href="/proposals">Proposals</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link text-light" href="/delegate">Delegate</Link>
+              <Link className="nav-link text-light" href="/gate">Ecosystem gate</Link>
             </li>
             <li className="nav-item">
               <button onClick={toggleDropdown} className="btn text-light">
