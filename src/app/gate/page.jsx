@@ -17,7 +17,7 @@ function DelegateText() {
         <section>
             <div className="page-head">
                 <img src="./assets/article-banner.png" className="img-fluid" alt="missing"/>
-                <h2>Delegate</h2>
+                <h2>Ecosystem gateway</h2>
             </div>
             <div className="container">
                 <div className="mt-4 mb-6">
@@ -33,10 +33,6 @@ function DelegateText() {
 function StakeText() {
     return (
         <section>
-            <div className="page-head">
-                <img src="./assets/article-banner.png" className="img-fluid" alt="missing"/>
-                <h2>Stake</h2>
-            </div>
             <div className="container">
                 <div className="mt-4 mb-6">
                     <p>Here, you can stake your $LIB tokens.<br/>By doing so, you'll be able to participate in Liblock governance by submitting an article or 

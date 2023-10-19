@@ -27,27 +27,17 @@ export function ReadAny(_address:any, _proposalAbi:any, _functionName:any): any 
         functionName: _functionName,
     });
 
-    if (isLoading) {
-        // Return a loading state or placeholder
-        return false
-    }
-
     return data
 }
 
-export function ReadAnyArgs(_address:any, _proposalAbi:any, _functionName:any, _args:any): any {
+export function ReadAnyArgs(_address:any, _abi:any, _functionName:any, _args:any): any {
 
-    const { data, isLoading } = useContractRead({
+    const { data } = useContractRead({
         address: _address,
-        abi: _proposalAbi,
+        abi: _abi,
         functionName: _functionName,
         args: _args
     });
-
-    if (isLoading) {
-        // Return a loading state or placeholder
-        return false
-    }
 
     return data
 }
