@@ -1,6 +1,7 @@
 import Delegate from "../hooks/delegate"
 import Stake from "../hooks/stake"
 import Claim from "../hooks/claim"
+import UpdateFloor from "../hooks/floor"
 import UpdateDistributionEpoch from "../hooks/updateDistributionEpoch"
 import UpdateAddressDividends from "../hooks/updateAddressDividends"
 import UpdateEpochInheritance from "../hooks/updateAddressInheritance"
@@ -20,6 +21,8 @@ export default function Index() {
             <UpdateDistributionEpoch />
             <UpdateEpochInheritanceText />
             <UpdateEpochInheritance />
+            <UpdateFloorText />
+            <UpdateFloor />
         </div>
     )
 }
@@ -103,6 +106,18 @@ function UpdateEpochInheritanceText() {
             <div className="container">
                 <div className="mt-4 mb-6">
                     <p>Here, you can inherit your shares still viable from the last epoch to the current one. Anyone can update any address.</p>
+                </div>
+            </div>
+        </section>
+    )
+}
+
+function UpdateFloorText() {
+    return (
+        <section>
+            <div className="container">
+                <div className="mt-4 mb-6">
+                    <p>With this button, anyone can update the floor price neccessary to submit a proposal as long as it's been at least 7days since the previous update. This action will also reset the virtual power of every address. </p>
                 </div>
             </div>
         </section>
