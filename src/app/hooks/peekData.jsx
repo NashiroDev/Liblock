@@ -2,10 +2,10 @@
 import Link from "next/link"
 import { useState } from "react";
 import ReadArticle,{ ReadAny } from "./read"
-import proposalAbi from "../../../contracts/Proposal.json";
+import proposalAbi from "../../../contracts/gProposal.json";
 
 export function GetFewArticles() {
-    const proposalContract = "0x066bad9A6bb7931b8d7ef31F0509C3478f39dCE3"
+    const proposalContract = "0xf2c06D8B5986eB79473CFfF70ABfc2E5986F4EB6"
     const [page, setPage] = useState(1);
 
     const counterData = ReadAny(proposalContract, proposalAbi.abi, 'proposalCount')

@@ -1,8 +1,8 @@
 import { useContractRead } from 'wagmi';
-import proposalAbi from "../../../contracts/Proposal.json";
+import proposalAbi from "../../../contracts/gProposal.json";
 
 export default function ReadArticle(id:string): any {
-    const proposalContract = "0x066bad9A6bb7931b8d7ef31F0509C3478f39dCE3"
+    const proposalContract = "0x9536a9453bC912F7C955c79C9a11758Fab4695ef"
 
     const { data: articleData, isLoading } = useContractRead({
         address: proposalContract,

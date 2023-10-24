@@ -1,14 +1,14 @@
 "use client"
 
 import { useContractWrite, usePrepareContractWrite } from "wagmi";
-import governanceAbi from "../../../contracts/Governance.json";
+import proposalAbi from "../../../contracts/gProposal.json";
 
 export default function UpdateFloor() {
-    const governanceContract = "0x"
+    const proposalContract = "0x9536a9453bC912F7C955c79C9a11758Fab4695ef"
 
     const { config } = usePrepareContractWrite({
-        address: governanceContract,
-        abi: governanceAbi.abi,
+        address: proposalContract,
+        abi: proposalAbi.abi,
         functionName: "updateFloor",
     });
 

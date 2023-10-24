@@ -4,10 +4,10 @@
 import { useState } from "react";
 import Link from "next/link";
 import ReadArticle, { ReadAny } from "./read"
-import proposalAbi from "../../../contracts/Proposal.json";
+import proposalAbi from "../../../contracts/gProposal.json";
 
 export default function GetProposals() {
-    const proposalContract = "0x066bad9A6bb7931b8d7ef31F0509C3478f39dCE3"
+    const proposalContract = "0x9536a9453bC912F7C955c79C9a11758Fab4695ef"
 
     const counterData = ReadAny(proposalContract, proposalAbi.abi, 'proposalCount')
 

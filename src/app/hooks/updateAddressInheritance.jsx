@@ -4,7 +4,7 @@ import { useContractWrite, usePrepareContractWrite } from "wagmi";
 import distributorAbi from "../../../contracts/Distributor.json";
 
 export default function UpdateEpochInheritance() {
-    const distributorContract = "0x"
+    const distributorContract = "0xf2c06D8B5986eB79473CFfF70ABfc2E5986F4EB6"
 
     const [address, setAddress] = useState("");
 

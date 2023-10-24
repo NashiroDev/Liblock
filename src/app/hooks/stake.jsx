@@ -4,10 +4,11 @@ import { useContractWrite, usePrepareContractWrite, useAccount } from "wagmi";
 import { ReadAnyArgs } from "./read";
 import { useState } from "react";
 import tokenAbi from "../../../contracts/Liblock.json";
+import stakeAbi from "../../../contracts/Liblocked.json";
 
 export default function Stake() {
-    const libContract = "0xd8bD9d1d5d3a3672348dF21Eb0541f7c920d4310"
-    const stakeContract = "0xd8bD9d1d5d3a3672348dF21Eb0541f7c920d4310"
+    const libContract = "0x206661AA8FecBd56c00cCbE96a4AD7f3fe00691f"
+    const stakeContract = "0x6bBD6ED8Ec215F1d40C31D305CED8B8fe9b4E040"
 
     const connectedUserAddress = useAccount()
     const [amount, setAmount] = useState("0");
@@ -24,7 +25,7 @@ export default function Stake() {
 
     const { config: configStake } = usePrepareContractWrite({
         address: stakeContract,
-        abi: stakeContract.abi,
+        abi: stakeAbi.abi,
         functionName: duration,
         args: [amount * 10 ** 18],
     });

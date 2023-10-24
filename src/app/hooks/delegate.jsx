@@ -6,7 +6,7 @@ import { ReadAnyArgs } from "./read"
 import tokenAbi from "../../../contracts/Liblock.json";
 
 export default function Delegate() {
-  const libContract = "0xd8bD9d1d5d3a3672348dF21Eb0541f7c920d4310"
+  const libContract = "0x206661AA8FecBd56c00cCbE96a4AD7f3fe00691f"
 
   const connectedUserAddress = useAccount()
   const [address, setAddress] = useState("");
