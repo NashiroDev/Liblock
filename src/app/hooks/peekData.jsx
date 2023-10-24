@@ -1,19 +1,25 @@
 "use client"
 import Link from "next/link"
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ReadArticle,{ ReadAny } from "./read"
 import proposalAbi from "../../../contracts/gProposal.json";
 
 export function GetFewArticles() {
-    const proposalContract = "0xf2c06D8B5986eB79473CFfF70ABfc2E5986F4EB6"
+    const proposalContract = "0x9536a9453bC912F7C955c79C9a11758Fab4695ef"
     const [page, setPage] = useState(1);
+    const [counter, setCounter] = useState(1);
 
     const counterData = ReadAny(proposalContract, proposalAbi.abi, 'proposalCount')
 
-    const counter = counterData ? counterData.toString() : 1;
     let articlesList = []
 
-    for (let i = counter; i > 0; i--) {
+    useEffect(() => {
+        if (counterData) {
+            setCounter(counterData.toString());
+        }
+    }, [counterData]);
+
+    for (let i = counter; i >= 0; i--) {
         const articleData = ReadArticle(i)
         if (articleData && !articleData[5]) { /** Later remove "!" */
             articleData[10] = articleData[10].toString();
@@ -71,7 +77,7 @@ export function GetFewArticles() {
 }
 
 export function GetFewProposals() {
-    const proposalContract = "0x066bad9A6bb7931b8d7ef31F0509C3478f39dCE3"
+    const proposalContract = "0x9536a9453bC912F7C955c79C9a11758Fab4695ef"
     const [page, setPage] = useState(1);
 
     const counterData = ReadAny(proposalContract, proposalAbi.abi, 'proposalCount')
@@ -79,7 +85,7 @@ export function GetFewProposals() {
     const counter = counterData ? counterData.toString() : 1;
     let proposalsList = []
 
-    for (let i = counter; i != 0; i--) {
+    for (let i = counter; i >= 0; i--) {
         const proposalData = ReadArticle(i)
         if (proposalData && !proposalData[5]) {
             proposalData[10] = proposalData[10].toString();

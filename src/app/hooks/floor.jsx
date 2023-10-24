@@ -3,13 +3,13 @@
 import { useContractWrite, usePrepareContractWrite } from "wagmi";
 import proposalAbi from "../../../contracts/gProposal.json";
 
-export default function UpdateFloor() {
+export default function BalanceFloor() {
     const proposalContract = "0x9536a9453bC912F7C955c79C9a11758Fab4695ef"
 
     const { config } = usePrepareContractWrite({
         address: proposalContract,
         abi: proposalAbi.abi,
-        functionName: "updateFloor",
+        functionName: "balanceFloor",
     });
 
     const { data, isLoading, isSuccess, isError, write } = useContractWrite(config);

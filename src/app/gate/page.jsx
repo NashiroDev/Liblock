@@ -1,7 +1,9 @@
+"use client"
+
 import Delegate from "../hooks/delegate"
 import Stake from "../hooks/stake"
 import Claim from "../hooks/claim"
-import UpdateFloor from "../hooks/floor"
+import BalanceFloor from "../hooks/floor"
 import UpdateDistributionEpoch from "../hooks/updateDistributionEpoch"
 import UpdateAddressDividends from "../hooks/updateAddressDividends"
 import UpdateEpochInheritance from "../hooks/updateAddressInheritance"
@@ -21,8 +23,8 @@ export default function Index() {
             <UpdateDistributionEpoch />
             <UpdateEpochInheritanceText />
             <UpdateEpochInheritance />
-            <UpdateFloorText />
-            <UpdateFloor />
+            <BalanceFloorText />
+            <BalanceFloor />
         </div>
     )
 }
@@ -108,7 +110,7 @@ function UpdateEpochInheritanceText() {
     )
 }
 
-function UpdateFloorText() {
+function BalanceFloorText() {
     return (
         <section>
             <div className="container">
