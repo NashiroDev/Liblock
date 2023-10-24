@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react";
 import { useContractWrite, usePrepareContractWrite, useAccount } from "wagmi";
 import { ReadAnyArgs } from "./read"
 import distributorAbi from "../../../contracts/Distributor.json";
@@ -28,7 +29,7 @@ export default function Claim() {
 
     return (
         <section className="container mt-4">
-      <h3>Delegate</h3>
+      <h3>Claim</h3>
       <form onSubmit={handleSubmit} className="d-flex justify-content-center">
         <div className="input-group mb-3">
           <input
@@ -40,7 +41,7 @@ export default function Claim() {
             className="form-control"
           />
           <button type="submit" disabled={!write} className="btn btn-primary">
-            Delegate
+            Claim
           </button>
         </div>
       </form>
