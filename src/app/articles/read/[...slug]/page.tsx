@@ -1,6 +1,6 @@
 "use client"
 
-import { FC } from "react"
+import { FC, useState, useEffect } from "react"
 import ReadArticle from "../../../hooks/read"
 
 interface pageProps {
@@ -8,9 +8,10 @@ interface pageProps {
 }
 
 const page: FC<pageProps> = ({ params }) => {
+    const [articleData, setArticleData] = useState(['', '', '', '']);
 
-    let articleData = ReadArticle(params.slug[1])
-    articleData = articleData ? articleData : ["loading", "loading", "loading"]
+    const data = ReadArticle(params.slug[1])
+    data.then((val) => setArticleData(val))
 
     return (
         <section className="container mb-4">

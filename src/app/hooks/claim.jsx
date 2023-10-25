@@ -10,6 +10,7 @@ export default function Claim() {
 
     const connectedUserAddress = useAccount()
     const [amount, setAmount] = useState("0");
+    const [allocations, setAllocations] = useState("0");
 
     const { config } = usePrepareContractWrite({
         address: distributorContract,
@@ -18,7 +19,8 @@ export default function Claim() {
         args: [amount*10**18],
     });
 
-    const GetAllocations = ReadAnyArgs(distributorContract, distributorAbi.abi, 'getAddressClaimableTokens', connectedUserAddress.address)
+    const getAllocations = ReadAnyArgs(distributorContract, distributorAbi.abi, 'getAddressClaimableTokens', [connectedUserAddress.address])
+    getAllocations.then((data) => setAllocations(String(BigInt(data) / (BigInt(10n) ** BigInt(18n)))));
 
     const { data, isLoading, isSuccess, isError, write } = useContractWrite(config);
 
@@ -46,7 +48,7 @@ export default function Claim() {
         </div>
       </form>
         <div className="ms-4 mt-4 mb-4">
-          <h5>Connected address $LIB available to claim : {GetAllocations} LIB</h5>
+          <h5>Connected address $LIB available to claim : {allocations} LIB</h5>
         </div>
     </section>
     );

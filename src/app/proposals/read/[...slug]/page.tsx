@@ -12,6 +12,7 @@ interface pageProps {
 const page: FC<pageProps> = ({ params }) => {
     const proposalContract = "0x9536a9453bC912F7C955c79C9a11758Fab4695ef"
 
+    const [articleData, setArticleData] = useState(['', '', '', '']);
     const [vote, setVote] = useState("");
 
     const { config } = usePrepareContractWrite({
@@ -21,8 +22,8 @@ const page: FC<pageProps> = ({ params }) => {
         args: [params.slug[1], vote]
     });
 
-    let articleData = ReadArticle(params.slug[1])
-    articleData = articleData ? articleData : ["loading", "loading", "loading", "loading"]
+    const data0 = ReadArticle(params.slug[1])
+    data0.then((val) => setArticleData(val))
 
     const { data, isLoading, isSuccess, isError, write } = useContractWrite(config);
 

@@ -7,28 +7,28 @@ import proposalAbi from "../../../contracts/gProposal.json";
 export function GetFewArticles() {
     const proposalContract = "0x9536a9453bC912F7C955c79C9a11758Fab4695ef"
     const [page, setPage] = useState(1);
-    const [counter, setCounter] = useState(1);
+    const [counter, setCounter] = useState();
+    let [articlesList, setArticlesList] = useState([]);
 
     const counterData = ReadAny(proposalContract, proposalAbi.abi, 'proposalCount')
-
-    let articlesList = []
+    counterData.then((val) => setCounter(String(val)-1));
 
     useEffect(() => {
-        if (counterData) {
-            setCounter(counterData.toString());
-        }
-    }, [counterData]);
-
-    for (let i = counter-1; i >= 0; i--) {
-        const articleData = ReadArticle(i)
-        if (articleData && !articleData[5]) { /** Later remove "!" */
-            articleData[10] = articleData[10].toString();
-            articlesList.push(articleData);
-            if (articlesList.length > 11) {
-                break;
+        if (articlesList.length < 12) {
+            const fetchData = async () => {
+                const newArticlesList = [];
+                for (let i = counter; i >= counter-11; i--) {
+                    const articleData = await ReadArticle(i);
+                    if (articleData[5]) {
+                        articleData[10] = String(articleData[10]);
+                        newArticlesList.push(articleData);
+                    }
+                }
+                setArticlesList(newArticlesList);
             }
-        };
-    };
+            fetchData();
+        }
+    }, [counter]);
 
     const startIndex = (page - 1) * 3;
     const endIndex = page * 3;
@@ -53,7 +53,7 @@ export function GetFewArticles() {
                             <div key={index} className="col-3 ms-4 card">
                                 <img src="./assets/logo-color.svg" className="card-img-top" alt="..." />
                                 <div className="card-body">
-                                    <h5 className="card-title">{result[1]}</h5>
+                                    <h5 className="card-title">{result[1].slice(0, 48)}</h5>
                                     <p className="card-text">{result[2].slice(0, 107)}...</p>
                                     <p className="card-text">By : {result[3].slice(0, 6)}...{result[3].slice(36, 42)}</p>
                                     <div className="badge-section mt-2">
@@ -79,28 +79,28 @@ export function GetFewArticles() {
 export function GetFewProposals() {
     const proposalContract = "0x9536a9453bC912F7C955c79C9a11758Fab4695ef"
     const [page, setPage] = useState(1);
-    const [counter, setCounter] = useState(1);
+    const [counter, setCounter] = useState();
+    let [proposalsList, setProposalsList] = useState([]);
 
     const counterData = ReadAny(proposalContract, proposalAbi.abi, 'proposalCount')
-
-    let proposalsList = []
+    counterData.then((val) => setCounter(String(val)-1));
 
     useEffect(() => {
-        if (counterData) {
-            setCounter(counterData.toString());
-        }
-    }, [counterData]);
-
-    for (let i = counter-1; i >= 0; i--) {
-        const articleData = ReadArticle(i)
-        if (articleData && !articleData[5]) { /** Later remove "!" */
-            articleData[10] = articleData[10].toString();
-            proposalsList.push(articleData);
-            if (proposalsList.length > 11) {
-                break;
+        if (proposalsList.length < 12) {
+            const fetchData = async () => {
+                const newProposalsList = [];
+                for (let i = counter; i >= counter-11; i--) {
+                    const proposalData = await ReadArticle(i);
+                    if (!proposalData[5]) {
+                        proposalData[10] = String(proposalData[10]);
+                        newProposalsList.push(proposalData);
+                    }
+                }
+                setProposalsList(newProposalsList);
             }
-        };
-    };
+            fetchData();
+        }
+    }, [counter]);
 
     const startIndex = (page - 1) * 3;
     const endIndex = page * 3;
@@ -125,7 +125,7 @@ export function GetFewProposals() {
                             <div key={index} className="col-3 ms-4 card">
                                 <img src="./assets/logo-color.svg" className="card-img-top" alt="..." />
                                 <div className="card-body">
-                                    <h5 className="card-title">{result[1]}</h5>
+                                    <h5 className="card-title">{result[1].slice(0, 48)}</h5>
                                     <p className="card-text">Proposer : {result[3].slice(0, 6)}...{result[3].slice(36, 42)}</p>
                                     <div className="progress mt-2">
                                         <div className="progress-bar-striped bg-success" style={{ width: 50 }}></div>

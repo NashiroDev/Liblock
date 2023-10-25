@@ -11,27 +11,30 @@ export default function GetProposals() {
     const [keyword, setKeyword] = useState('');
     const [order, setOrder] = useState('');
     const [page, setPage] = useState(1);
-    const [counter, setCounter] = useState(1);
+    const [counter, setCounter] = useState();
+    let [proposalsList, setProposalsList] = useState([]);
 
     const proposalContract = "0x9536a9453bC912F7C955c79C9a11758Fab4695ef"
 
     const counterData = ReadAny(proposalContract, proposalAbi.abi, 'proposalCount')
+    counterData.then((val) => setCounter(String(val)-1));
 
     useEffect(() => {
-        if (counterData) {
-            setCounter(counterData.toString());
+        if (proposalsList.length !== counter + 1) {
+            const fetchData = async () => {
+                const newProposalsList = [];
+                for (let i = 0; i <= counter; i++) {
+                    const proposalData = await ReadArticle(i);
+                    if (!proposalData[5]) {
+                        proposalData[10] = String(proposalData[10]);
+                        newProposalsList.push(proposalData);
+                    }
+                }
+                setProposalsList(newProposalsList);
+            }
+            fetchData();
         }
-    }, [counterData]);
-
-    let proposalsList = []
-
-    for (let i = 1; i <= counter; i++) {
-        const proposalData = ReadArticle(i)
-        if (proposalData && !proposalData[5]) {
-            proposalData[10] = String(proposalData[10]);
-            proposalsList.push(proposalData);
-        };
-    };
+    }, [counter]);
 
     const handleTagChange = (e) => {
         setTag(e.target.value);
@@ -44,8 +47,6 @@ export default function GetProposals() {
     const handleOrderChange = (e) => {
         setOrder(e.target.value);
     };
-
-    console.log(proposalsList);
 
     const handleSubmit = (e) => {
         e.preventDefault();

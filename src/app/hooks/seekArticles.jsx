@@ -1,37 +1,39 @@
 "use client"
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import ReadArticle, { ReadAny } from "./read"
 import proposalAbi from "../../../contracts/gProposal.json";
 
 export default function GetArticles() {
-    const proposalContract = "0x9536a9453bC912F7C955c79C9a11758Fab4695ef"
-
-    const [counter, setCounter] = useState(1);
-
-    const counterData = ReadAny(proposalContract, proposalAbi.abi, 'proposalCount')
-
-    useEffect(() => {
-        if (counterData) {
-            setCounter(counterData.toString());
-        }
-    }, [counterData]);
-    
-    let articlesList = []
-
-    for (let i = 1; i <= counter; i++) {
-        const articleData = ReadArticle(i)
-        if (articleData && articleData[5]) {
-            articleData[10] = String(articleData[10]);
-            articlesList.push(articleData);
-        };
-    };
-
     const [tag, setTag] = useState('');
     const [keyword, setKeyword] = useState('');
     const [order, setOrder] = useState('');
     const [page, setPage] = useState(1);
+    const [counter, setCounter] = useState();
+    let [articlesList, setArticlesList] = useState([]);
+
+    const proposalContract = "0x9536a9453bC912F7C955c79C9a11758Fab4695ef"
+
+    const counterData = ReadAny(proposalContract, proposalAbi.abi, 'proposalCount')
+    counterData.then((val) => setCounter(String(val)-1));
+
+    useEffect(() => {
+        if (articlesList.length !== counter + 1) {
+            const fetchData = async () => {
+                const newArticlesList = [];
+                for (let i = 0; i <= counter; i++) {
+                    const articleData = await ReadArticle(i);
+                    if (articleData[5]) {
+                        articleData[10] = String(articleData[10]);
+                        newArticlesList.push(articleData);
+                    }
+                }
+                setArticlesList(newArticlesList);
+            }
+            fetchData();
+        }
+    }, [counter]);
 
     const handleTagChange = (e) => {
         setTag(e.target.value);
@@ -123,7 +125,7 @@ export default function GetArticles() {
                     <div key={index} className="col-3 ms-4 card mt-4">
                         <img src="./assets/logo-color.svg" className="card-img-top" alt="..." />
                         <div className="card-body">
-                            <h5 className="card-title text-align-center mx-auto">{result[1].slice(0, 30)}</h5>
+                            <h5 className="card-title text-align-center mx-auto">{result[1].slice(0, 48)}</h5>
                             <p className="card-text text-align-center">{result[2].slice(0, 107)}...</p>
                             <p className='d-flex justify-content-center lh-1'>By : {result[3].slice(0, 6)}...{result[3].slice(36, 42)}</p>
                             <div className="d-flex justify-content-center">

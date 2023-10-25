@@ -35,7 +35,6 @@ export default function Stake() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(allowance, duration);
         if (allowance >= amount*10**18) {
             writeStake();
         } else {

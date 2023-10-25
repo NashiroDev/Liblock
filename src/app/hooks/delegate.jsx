@@ -1,5 +1,5 @@
 import { useContractWrite, usePrepareContractWrite, useAccount } from "wagmi";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import tokenAbi from "../../../contracts/Liblock.json";
 import rTokenAbi from "../../../contracts/rLiblock.json";
 import { ReadAnyArgs } from "./read";
@@ -10,12 +10,12 @@ export default function Delegate() {
 
   const connectedUserAddress = useAccount()
   const [address, setAddress] = useState("");
-  const [liblockBalanceOf, setLiblockBalanceOf] = useState(null);
-  const [liblockGetVotes, setLiblockGetVotes] = useState(null);
-  const [liblockDelegates, setLiblockDelegates] = useState(null);
-  const [rLiblockBalanceOf, setrLiblockBalanceOf] = useState(null);
-  const [rliblockGetVotes, setrLiblockGetVotes] = useState(null);
-  const [rliblockDelegates, setrLiblockDelegates] = useState(null);
+  const [liblockBalanceOf, setLiblockBalanceOf] = useState("loading");
+  const [liblockGetVotes, setLiblockGetVotes] = useState("loading");
+  const [liblockDelegates, setLiblockDelegates] = useState("loading");
+  const [rLiblockBalanceOf, setrLiblockBalanceOf] = useState("loading");
+  const [rliblockGetVotes, setrLiblockGetVotes] = useState("loading");
+  const [rliblockDelegates, setrLiblockDelegates] = useState("loading");
 
   const { config } = usePrepareContractWrite({
     address: libContract,
@@ -31,28 +31,14 @@ export default function Delegate() {
   const libDelegateData = ReadAnyArgs(libContract, tokenAbi.abi, 'delegates', [connectedUserAddress.address])
   const rLibDelegateData = ReadAnyArgs(rLibContract, rTokenAbi.abi, 'delegates', [connectedUserAddress.address])
 
-  const { data: txnData, isLoading: isDelegationLoading, isSuccess, isError, write } = useContractWrite(config);
+  libBalanceData.then((data) => setLiblockBalanceOf(BigInt(data) / (BigInt(10n) ** BigInt(18n))));
+  rLibBalanceData.then((data) => setrLiblockBalanceOf(BigInt(data) / (BigInt(10n) ** BigInt(18n))));
+  libVotesData.then((data) => setLiblockGetVotes(BigInt(data) / (BigInt(10n) ** BigInt(18n))));
+  rLibVotesData.then((data) => setrLiblockGetVotes(BigInt(data) / (BigInt(10n) ** BigInt(18n))));
+  libDelegateData.then((data) => setLiblockDelegates(data));
+  rLibDelegateData.then((data) => setrLiblockDelegates(data));
 
-  useEffect(() => {
-    if (libBalanceData) {
-      setLiblockBalanceOf(BigInt(libBalanceData) / (BigInt(10n) ** BigInt(18n)));
-    }
-    if (rLibBalanceData) {
-      setrLiblockBalanceOf(BigInt(rLibBalanceData) / (BigInt(10n) ** BigInt(18n)));
-    }
-    if (libVotesData) {
-      setLiblockGetVotes(BigInt(libVotesData) / (BigInt(10n) ** BigInt(18n)));
-    }
-    if (rLibVotesData) {
-      setrLiblockGetVotes(BigInt(rLibVotesData) / (BigInt(10n) ** BigInt(18n)));
-    }
-    if (libDelegateData) {
-      setLiblockDelegates(libDelegateData);
-    }
-    if (rLibDelegateData) {
-      setrLiblockDelegates(rLibDelegateData);
-    }
-  }, [rLibDelegateData, rLibVotesData, rLibBalanceData, libBalanceData, libVotesData, libDelegateData]);
+  const { data: txnData, isLoading: isDelegationLoading, isSuccess, isError, write } = useContractWrite(config);
 
   const handleSubmit = (e) => {
     e.preventDefault();
