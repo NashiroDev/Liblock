@@ -7,9 +7,13 @@ import ReadArticle, { ReadAny } from "./read"
 import proposalAbi from "../../../contracts/gProposal.json";
 
 export default function GetProposals() {
-    const proposalContract = "0x9536a9453bC912F7C955c79C9a11758Fab4695ef"
-
+    const [tag, setTag] = useState('');
+    const [keyword, setKeyword] = useState('');
+    const [order, setOrder] = useState('');
+    const [page, setPage] = useState(1);
     const [counter, setCounter] = useState(1);
+
+    const proposalContract = "0x9536a9453bC912F7C955c79C9a11758Fab4695ef"
 
     const counterData = ReadAny(proposalContract, proposalAbi.abi, 'proposalCount')
 
@@ -24,15 +28,10 @@ export default function GetProposals() {
     for (let i = 1; i <= counter; i++) {
         const proposalData = ReadArticle(i)
         if (proposalData && !proposalData[5]) {
-            proposalData[10] = proposalData[10].toString();
+            proposalData[10] = String(proposalData[10]);
             proposalsList.push(proposalData);
         };
     };
-
-    const [tag, setTag] = useState('');
-    const [keyword, setKeyword] = useState('');
-    const [order, setOrder] = useState('');
-    const [page, setPage] = useState(1);
 
     const handleTagChange = (e) => {
         setTag(e.target.value);

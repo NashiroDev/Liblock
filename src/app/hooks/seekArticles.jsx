@@ -23,7 +23,7 @@ export default function GetArticles() {
     for (let i = 1; i <= counter; i++) {
         const articleData = ReadArticle(i)
         if (articleData && articleData[5]) {
-            articleData[10] = articleData[10].toString();
+            articleData[10] = String(articleData[10]);
             articlesList.push(articleData);
         };
     };
