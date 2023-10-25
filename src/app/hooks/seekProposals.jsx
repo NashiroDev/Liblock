@@ -1,31 +1,40 @@
 
 "use client"
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import ReadArticle, { ReadAny } from "./read"
-import proposalAbi from "../../../contracts/Proposal.json";
+import proposalAbi from "../../../contracts/gProposal.json";
 
 export default function GetProposals() {
-    const proposalContract = "0x066bad9A6bb7931b8d7ef31F0509C3478f39dCE3"
-
-    const counterData = ReadAny(proposalContract, proposalAbi.abi, 'proposalCount')
-
-    const counter = counterData ? counterData.toString() : '1';
-    let proposalsList = []
-
-    for (let i = 1; i <= counter; i++) {
-        const proposalData = ReadArticle(i)
-        if (proposalData && !proposalData[5]) {
-            proposalData[10] = proposalData[10].toString();
-            proposalsList.push(proposalData);
-        };
-    };
-
     const [tag, setTag] = useState('');
     const [keyword, setKeyword] = useState('');
     const [order, setOrder] = useState('');
     const [page, setPage] = useState(1);
+    const [counter, setCounter] = useState();
+    let [proposalsList, setProposalsList] = useState([]);
+
+    const proposalContract = "0x9536a9453bC912F7C955c79C9a11758Fab4695ef"
+
+    const counterData = ReadAny(proposalContract, proposalAbi.abi, 'proposalCount')
+    counterData.then((val) => setCounter(String(val)-1));
+
+    useEffect(() => {
+        if (proposalsList.length !== counter + 1) {
+            const fetchData = async () => {
+                const newProposalsList = [];
+                for (let i = 0; i <= counter; i++) {
+                    const proposalData = await ReadArticle(i);
+                    if (!proposalData[5]) {
+                        proposalData[10] = String(proposalData[10]);
+                        newProposalsList.push(proposalData);
+                    }
+                }
+                setProposalsList(newProposalsList);
+            }
+            fetchData();
+        }
+    }, [counter]);
 
     const handleTagChange = (e) => {
         setTag(e.target.value);

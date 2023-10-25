@@ -1,16 +1,25 @@
-"use client"
-
-import { useAccount } from 'wagmi';
-import { useContractWrite, usePrepareContractWrite } from "wagmi";
+import { useContractWrite, usePrepareContractWrite, useAccount } from "wagmi";
 import { useState } from "react";
-import { ReadAnyArgs } from "./read"
 import tokenAbi from "../../../contracts/Liblock.json";
+import rTokenAbi from "../../../contracts/rLiblock.json";
+import proposalAbi from "../../../contracts/gProposal.json";
+import { ReadAnyArgs, ReadAny } from "./read";
 
 export default function Delegate() {
-  const libContract = "0xd8bD9d1d5d3a3672348dF21Eb0541f7c920d4310"
+  const libContract = "0x206661AA8FecBd56c00cCbE96a4AD7f3fe00691f"
+  const rLibContract = "0x3F4E1D83ac17e482b49Bc13Cf55FDb0dB3826e56"
+  const proposalContract = "0x9536a9453bC912F7C955c79C9a11758Fab4695ef"
 
   const connectedUserAddress = useAccount()
   const [address, setAddress] = useState("");
+  const [counter, setCounter] = useState(0);
+  const [liblockBalanceOf, setLiblockBalanceOf] = useState("loading");
+  const [liblockGetVotes, setLiblockGetVotes] = useState("loading");
+  const [liblockDelegates, setLiblockDelegates] = useState("loading");
+  const [rLiblockBalanceOf, setrLiblockBalanceOf] = useState("loading");
+  const [rliblockGetVotes, setrLiblockGetVotes] = useState("loading");
+  const [rliblockDelegates, setrLiblockDelegates] = useState("loading");
+  const [virtualPower, setVirtualPower] = useState("loading");
 
   const { config } = usePrepareContractWrite({
     address: libContract,
@@ -19,13 +28,25 @@ export default function Delegate() {
     args: [address],
   });
 
-  const liblockBalanceOf = ReadAnyArgs(libContract, tokenAbi.abi, 'balanceOf', connectedUserAddress.address)
-  const liblockGetVotes = ReadAnyArgs(libContract, tokenAbi.abi, 'getVotes', connectedUserAddress.address)
-  const liblockDelegates = ReadAnyArgs(libContract, tokenAbi.abi, 'delegates', connectedUserAddress.address)
+  const counterData = ReadAny(proposalContract, proposalAbi.abi, 'balancingCount')
+  counterData.then((val) => {
+    const govVP = ReadAnyArgs(proposalContract, proposalAbi.abi, 'virtualPowerUsed', [connectedUserAddress.address, val])
+    govVP.then((data) => setVirtualPower(BigInt(data) / (BigInt(10n) ** BigInt(18n))))
+  });
 
-  const result_0 = liblockBalanceOf ? (BigInt(liblockBalanceOf) / (BigInt(10n) ** BigInt(18n))).toString() : "0";
-  const result_1 = liblockGetVotes ? (BigInt(liblockGetVotes) / (BigInt(10n) ** BigInt(18n))).toString() : "0";
-  const result_2 = liblockDelegates ? liblockDelegates : "loading";
+  const libBalanceData = ReadAnyArgs(libContract, tokenAbi.abi, 'balanceOf', [connectedUserAddress.address])
+  const rLibBalanceData = ReadAnyArgs(rLibContract, rTokenAbi.abi, 'balanceOf', [connectedUserAddress.address])
+  const libVotesData = ReadAnyArgs(libContract, tokenAbi.abi, 'getVotes', [connectedUserAddress.address])
+  const rLibVotesData = ReadAnyArgs(rLibContract, rTokenAbi.abi, 'getVotes', [connectedUserAddress.address])
+  const libDelegateData = ReadAnyArgs(libContract, tokenAbi.abi, 'delegates', [connectedUserAddress.address])
+  const rLibDelegateData = ReadAnyArgs(rLibContract, rTokenAbi.abi, 'delegates', [connectedUserAddress.address])
+
+  libBalanceData.then((data) => setLiblockBalanceOf(BigInt(data) / (BigInt(10n) ** BigInt(18n))));
+  rLibBalanceData.then((data) => setrLiblockBalanceOf(BigInt(data) / (BigInt(10n) ** BigInt(18n))));
+  libVotesData.then((data) => setLiblockGetVotes(BigInt(data) / (BigInt(10n) ** BigInt(18n))));
+  rLibVotesData.then((data) => setrLiblockGetVotes(BigInt(data) / (BigInt(10n) ** BigInt(18n))));
+  libDelegateData.then((data) => setLiblockDelegates(data));
+  rLibDelegateData.then((data) => setrLiblockDelegates(data));
 
   const { data: txnData, isLoading: isDelegationLoading, isSuccess, isError, write } = useContractWrite(config);
 
@@ -90,11 +111,15 @@ export default function Delegate() {
           </div>
         }
       </div>
-        <div className="ms-4 mt-4 mb-4">
-          <h5>Connected address $LIB token balance : {result_0} LIB</h5>
-          <h5>Connected address votes weight : {result_1} LIB</h5>
-          <h5>Connected address current delegatee : {result_2}</h5>
-        </div>
+      <div className="ms-4 mt-4 mb-4">
+        <h3>Connected address info :</h3>
+        <h5>$LIB token balance : {String(liblockBalanceOf)} $LIB</h5>
+        <h5>$rLIB token balance : {String(rLiblockBalanceOf)} $rLIB</h5>
+        <h5>$LIB delegatee : {liblockDelegates == connectedUserAddress.address ? liblockDelegates + " (self)" : liblockDelegates}</h5>
+        <h5>$rLIB delegatee : {rliblockDelegates == connectedUserAddress.address ? rliblockDelegates + " (self)" : rliblockDelegates}</h5>
+        <h5>Votes weight (LIB, rLIB, Total): {String(liblockGetVotes)}, {String(rliblockGetVotes)}, {String(liblockGetVotes + rliblockGetVotes)}</h5>
+        <h5>Virtual power used : {String(virtualPower)}</h5>
+      </div>
     </section>
   );
 }

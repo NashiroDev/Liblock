@@ -1,53 +1,39 @@
-import { useContractRead } from 'wagmi';
-import proposalAbi from "../../../contracts/Proposal.json";
+import { readContract  } from 'wagmi/actions';
+import proposalAbi from "../../../contracts/gProposal.json";
 
-export default function ReadArticle(id:string): any {
-    const proposalContract = "0x066bad9A6bb7931b8d7ef31F0509C3478f39dCE3"
+export default async function ReadArticle(id:string): Promise<any> {
+    const proposalContract = "0x9536a9453bC912F7C955c79C9a11758Fab4695ef"
 
-    const { data: articleData, isLoading } = useContractRead({
+    const data = await readContract({
         address: proposalContract,
         abi: proposalAbi.abi,
         functionName: 'getProposal',
         args: [id]
     });
 
-    if (isLoading) {
-        // Return a loading state or placeholder
-        return false
-    }
-
-    return articleData
+    return data
 }
 
-export function ReadAny(_address:any, _proposalAbi:any, _functionName:any): any {
+export async function ReadAny(_address:any, _proposalAbi:any, _functionName:any): Promise<any> {
 
-    const { data, isLoading } = useContractRead({
+    const data = await readContract({
         address: _address,
         abi: _proposalAbi,
         functionName: _functionName,
+        args: []
     });
-
-    if (isLoading) {
-        // Return a loading state or placeholder
-        return false
-    }
 
     return data
 }
 
-export function ReadAnyArgs(_address:any, _proposalAbi:any, _functionName:any, _args:any): any {
+export async function ReadAnyArgs(_address:any, _abi:any, _functionName:any, _args:any): Promise<any> {
 
-    const { data, isLoading } = useContractRead({
+    const data = await readContract({
         address: _address,
-        abi: _proposalAbi,
+        abi: _abi,
         functionName: _functionName,
-        args: [_args]
+        args: _args
     });
-
-    if (isLoading) {
-        // Return a loading state or placeholder
-        return false
-    }
 
     return data
 }

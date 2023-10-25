@@ -3,10 +3,10 @@
 import { useAccount } from 'wagmi';
 import { useContractWrite, usePrepareContractWrite } from "wagmi";
 import { useState } from "react";
-import tokenAbi from "../../../contracts/Proposal.json";
+import proposalAbi from "../../../contracts/gProposal.json";
 
 export default function CreateProposal() {
-    const proposalContract = "0x066bad9A6bb7931b8d7ef31F0509C3478f39dCE3"
+    const proposalContract = "0x9536a9453bC912F7C955c79C9a11758Fab4695ef"
     const { address: connectedUserAddress } = useAccount();
 
     const [title, setTitle] = useState("");
@@ -14,7 +14,7 @@ export default function CreateProposal() {
 
     const { config } = usePrepareContractWrite({
         address: proposalContract,
-        abi: tokenAbi.abi,
+        abi: proposalAbi.abi,
         functionName: "createProposal",
         args: [title, content],
     });

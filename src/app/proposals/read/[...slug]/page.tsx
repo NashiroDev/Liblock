@@ -3,15 +3,16 @@
 import { FC, useState } from "react"
 import ReadArticle from "../../../hooks/read"
 import { useContractWrite, usePrepareContractWrite } from 'wagmi';
-import proposalAbi from "../../../../../contracts/Proposal.json";
+import proposalAbi from "../../../../../contracts/gProposal.json";
 
 interface pageProps {
     params: { slug: string }
 }
 
 const page: FC<pageProps> = ({ params }) => {
-    const proposalContract = "0x066bad9A6bb7931b8d7ef31F0509C3478f39dCE3"
+    const proposalContract = "0x9536a9453bC912F7C955c79C9a11758Fab4695ef"
 
+    const [articleData, setArticleData] = useState(['', '', '', '']);
     const [vote, setVote] = useState("");
 
     const { config } = usePrepareContractWrite({
@@ -21,8 +22,8 @@ const page: FC<pageProps> = ({ params }) => {
         args: [params.slug[1], vote]
     });
 
-    let articleData = ReadArticle(params.slug[1])
-    articleData = articleData ? articleData : ["loading", "loading", "loading", "loading"]
+    const data0 = ReadArticle(params.slug[1])
+    data0.then((val) => setArticleData(val))
 
     const { data, isLoading, isSuccess, isError, write } = useContractWrite(config);
 
