@@ -2,26 +2,36 @@ import { useContractWrite, usePrepareContractWrite, useAccount } from "wagmi";
 import { useState } from "react";
 import tokenAbi from "../../../contracts/Liblock.json";
 import rTokenAbi from "../../../contracts/rLiblock.json";
-import { ReadAnyArgs } from "./read";
+import proposalAbi from "../../../contracts/gProposal.json";
+import { ReadAnyArgs, ReadAny } from "./read";
 
 export default function Delegate() {
   const libContract = "0x206661AA8FecBd56c00cCbE96a4AD7f3fe00691f"
   const rLibContract = "0x3F4E1D83ac17e482b49Bc13Cf55FDb0dB3826e56"
+  const proposalContract = "0x9536a9453bC912F7C955c79C9a11758Fab4695ef"
 
   const connectedUserAddress = useAccount()
   const [address, setAddress] = useState("");
+  const [counter, setCounter] = useState(0);
   const [liblockBalanceOf, setLiblockBalanceOf] = useState("loading");
   const [liblockGetVotes, setLiblockGetVotes] = useState("loading");
   const [liblockDelegates, setLiblockDelegates] = useState("loading");
   const [rLiblockBalanceOf, setrLiblockBalanceOf] = useState("loading");
   const [rliblockGetVotes, setrLiblockGetVotes] = useState("loading");
   const [rliblockDelegates, setrLiblockDelegates] = useState("loading");
+  const [virtualPower, setVirtualPower] = useState("loading");
 
   const { config } = usePrepareContractWrite({
     address: libContract,
     abi: tokenAbi.abi,
     functionName: "delegate",
     args: [address],
+  });
+
+  const counterData = ReadAny(proposalContract, proposalAbi.abi, 'balancingCount')
+  counterData.then((val) => {
+    const govVP = ReadAnyArgs(proposalContract, proposalAbi.abi, 'virtualPowerUsed', [connectedUserAddress.address, val])
+    govVP.then((data) => setVirtualPower(BigInt(data) / (BigInt(10n) ** BigInt(18n))))
   });
 
   const libBalanceData = ReadAnyArgs(libContract, tokenAbi.abi, 'balanceOf', [connectedUserAddress.address])
@@ -108,6 +118,7 @@ export default function Delegate() {
         <h5>$LIB delegatee : {liblockDelegates == connectedUserAddress.address ? liblockDelegates + " (self)" : liblockDelegates}</h5>
         <h5>$rLIB delegatee : {rliblockDelegates == connectedUserAddress.address ? rliblockDelegates + " (self)" : rliblockDelegates}</h5>
         <h5>Votes weight (LIB, rLIB, Total): {String(liblockGetVotes)}, {String(rliblockGetVotes)}, {String(liblockGetVotes + rliblockGetVotes)}</h5>
+        <h5>Virtual power used : {String(virtualPower)}</h5>
       </div>
     </section>
   );
