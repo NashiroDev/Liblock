@@ -19,7 +19,7 @@ export function GetFewArticles() {
         }
     }, [counterData]);
 
-    for (let i = counter; i >= 0; i--) {
+    for (let i = counter-1; i >= 0; i--) {
         const articleData = ReadArticle(i)
         if (articleData && !articleData[5]) { /** Later remove "!" */
             articleData[10] = articleData[10].toString();
@@ -79,17 +79,23 @@ export function GetFewArticles() {
 export function GetFewProposals() {
     const proposalContract = "0x9536a9453bC912F7C955c79C9a11758Fab4695ef"
     const [page, setPage] = useState(1);
+    const [counter, setCounter] = useState(1);
 
     const counterData = ReadAny(proposalContract, proposalAbi.abi, 'proposalCount')
 
-    const counter = counterData ? counterData.toString() : 1;
     let proposalsList = []
 
-    for (let i = counter; i >= 0; i--) {
-        const proposalData = ReadArticle(i)
-        if (proposalData && !proposalData[5]) {
-            proposalData[10] = proposalData[10].toString();
-            proposalsList.push(proposalData);
+    useEffect(() => {
+        if (counterData) {
+            setCounter(counterData.toString());
+        }
+    }, [counterData]);
+
+    for (let i = counter-1; i >= 0; i--) {
+        const articleData = ReadArticle(i)
+        if (articleData && !articleData[5]) { /** Later remove "!" */
+            articleData[10] = articleData[10].toString();
+            proposalsList.push(articleData);
             if (proposalsList.length > 11) {
                 break;
             }

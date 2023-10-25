@@ -1,7 +1,7 @@
 
 "use client"
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import ReadArticle, { ReadAny } from "./read"
 import proposalAbi from "../../../contracts/gProposal.json";
@@ -9,9 +9,16 @@ import proposalAbi from "../../../contracts/gProposal.json";
 export default function GetProposals() {
     const proposalContract = "0x9536a9453bC912F7C955c79C9a11758Fab4695ef"
 
+    const [counter, setCounter] = useState(1);
+
     const counterData = ReadAny(proposalContract, proposalAbi.abi, 'proposalCount')
 
-    const counter = counterData ? counterData.toString() : '1';
+    useEffect(() => {
+        if (counterData) {
+            setCounter(counterData.toString());
+        }
+    }, [counterData]);
+
     let proposalsList = []
 
     for (let i = 1; i <= counter; i++) {
@@ -38,6 +45,8 @@ export default function GetProposals() {
     const handleOrderChange = (e) => {
         setOrder(e.target.value);
     };
+
+    console.log(proposalsList);
 
     const handleSubmit = (e) => {
         e.preventDefault();

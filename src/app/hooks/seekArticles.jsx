@@ -8,9 +8,16 @@ import proposalAbi from "../../../contracts/gProposal.json";
 export default function GetArticles() {
     const proposalContract = "0x9536a9453bC912F7C955c79C9a11758Fab4695ef"
 
+    const [counter, setCounter] = useState(1);
+
     const counterData = ReadAny(proposalContract, proposalAbi.abi, 'proposalCount')
 
-    const counter = counterData ? counterData.toString() : '1';
+    useEffect(() => {
+        if (counterData) {
+            setCounter(counterData.toString());
+        }
+    }, [counterData]);
+    
     let articlesList = []
 
     for (let i = 1; i <= counter; i++) {
