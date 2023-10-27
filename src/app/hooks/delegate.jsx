@@ -12,7 +12,7 @@ export default function Delegate() {
 
   const connectedUserAddress = useAccount()
   const [address, setAddress] = useState("");
-  const [counter, setCounter] = useState(0);
+  // const [counter, setCounter] = useState(0);
   const [liblockBalanceOf, setLiblockBalanceOf] = useState("loading");
   const [liblockGetVotes, setLiblockGetVotes] = useState("loading");
   const [liblockDelegates, setLiblockDelegates] = useState("loading");
