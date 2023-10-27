@@ -28,6 +28,7 @@ export default function Dashboard() {
     const [virtualPower, setVirtualPower] = useState("loading");
     const [stakeNounce, setStakeNounce] = useState("loading");
     const [claimable, setClaimable] = useState("loading");
+    const [shares, setShares] = useState("loading");
     const [ledger, setLedger] = useState([]);
 
     const counterData = ReadAny(proposalContract, proposalAbi.abi, 'balancingCount')
@@ -41,6 +42,8 @@ export default function Dashboard() {
         setEpoch(data);
         const currentInherit = ReadAnyArgs(distributorContract, distributorAbi.abi, 'getAddressEpochInheritance', [address, epoch]);
         currentInherit.then((data) => setInherit(data));
+        const currentShares = ReadAnyArgs(distributorContract, distributorAbi.abi, "getAddressEpochShares", [address, epoch]);
+        currentShares.then((data) => setShares(Number(data[0]) / 10 ** 18))
     });
 
     const sNounce = ReadAnyArgs(liblockedContract, liblockedAbi.abi, 'getAddressNounce', [address])
@@ -96,6 +99,7 @@ export default function Dashboard() {
                 <h5>Tracker :</h5>
                 <div className="d-flex gap-4 border justify-content-center text-center align-middle">
                     <p>{String(virtualPower)} Virtual power used</p>
+                    <p>{String(shares)} current epoch ({String(epoch)}) shares</p>
                     <p>{String(claimable)} Current claimable $LIB</p>
                     <p>{String(inherit)} Inheritance done / to do</p>
                 </div>
