@@ -26,6 +26,7 @@ export default function Dashboard() {
     const [rLiblockBalanceOf, setrLiblockBalanceOf] = useState("loading");
     const [rliblockGetVotes, setrLiblockGetVotes] = useState("loading");
     const [virtualPower, setVirtualPower] = useState("loading");
+    const [balancing, setBalancing] = useState("loading");
     const [stakeNounce, setStakeNounce] = useState("loading");
     const [claimable, setClaimable] = useState("loading");
     const [shares, setShares] = useState("loading");
@@ -35,6 +36,12 @@ export default function Dashboard() {
     counterData.then((val) => {
         const govVP = ReadAnyArgs(proposalContract, proposalAbi.abi, 'virtualPowerUsed', [address, val])
         govVP.then((data) => setVirtualPower(Number(data) / 10 ** 18))
+    });
+    
+    const balancingEpoch = ReadAny(proposalContract, proposalAbi.abi, 'balancingCount')
+    balancingEpoch.then((val) => {
+        const balancingData = ReadAnyArgs(proposalContract, proposalAbi.abi, 'balancing', [val])
+        balancingData.then((data) => setBalancing(data))
     });
 
     const currentEpoch = ReadAny(distributorContract, distributorAbi.abi, 'getEpochHeight');
@@ -102,6 +109,7 @@ export default function Dashboard() {
                     <p>{String(shares)} current epoch ({String(epoch)}) shares</p>
                     <p>{String(claimable)} Current claimable $LIB</p>
                     <p>{String(inherit)} Inheritance done / to do</p>
+                    <p>{String(balancing[5])} Current proposal floor</p>
                 </div>
                 <button className="btn btn-primary mt-3" onClick={handleToggleLedger}>
                     Show Ledger
