@@ -35,7 +35,7 @@ export default function UpdateAddressDividends() {
     return (
         <section className="container mt-4">
             <h3>Update Address Dividends</h3>
-            <h5>Progress for epoch {epoch} : {progress}</h5>
+            <h5>Progress for epoch {String(epoch)} : {String(progress[1])} to do; {String(progress[0])} done</h5>
             <form onSubmit={handleSubmit} className="d-flex justify-content-center">
                 <div className="input-group mb-3">
                     <button type="submit" disabled={!write} className="btn btn-primary">

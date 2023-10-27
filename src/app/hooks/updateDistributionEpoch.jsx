@@ -29,7 +29,7 @@ export default function UpdateDistributionEpoch() {
     return (
         <section className="container mt-4">
             <h3>Update Epoch</h3>
-            <h5>Time left before new epoch (in seconds) : {epochTime ? epochTime : '0'}</h5>
+            <h5>Time left before new epoch (in seconds) : {String(epochTime ? epochTime : 0)}</h5>
             <form onSubmit={handleSubmit} className="d-flex justify-content-center">
                 <div className="input-group mb-3">
                     <button type="submit" disabled={!write} className="btn btn-primary">

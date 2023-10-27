@@ -28,7 +28,7 @@ export default function BalanceFloor() {
     return (
         <section className="container mt-4">
             <h3>Update Floor</h3>
-            <h5>Minimum block height for update : {alterBlock}</h5>
+            <h5>Minimum block height for update : {String(alterBlock)}</h5>
             <form onSubmit={handleSubmit} className="d-flex justify-content-center">
                 <div className="input-group mb-3">
                     <button type="submit" disabled={!write} className="btn btn-primary">
