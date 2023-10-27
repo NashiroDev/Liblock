@@ -46,6 +46,9 @@ export default function Navbar() {
         </div>
         <ul className="navbar-nav ms-4">
           <li className="nav-item">
+            <Link className="nav-link text-light" href="/dashboard">Dashboard</Link>
+          </li>
+          <li className="nav-item">
             <Link className="nav-link text-light" href="/proposals/create">Submit</Link>
           </li>
           <li><ConnectButton

@@ -13,8 +13,10 @@ export default function Stake() {
     const connectedUserAddress = useAccount()
     const [amount, setAmount] = useState("0");
     const [duration, setDuration] = useState("lock17");
+    const [allowance, setAllowance] = useState("0");
 
-    const allowance = ReadAnyArgs(libContract, tokenAbi.abi, 'allowance', [connectedUserAddress.address, stakeContract]);
+    const allowanceAmount = ReadAnyArgs(libContract, tokenAbi.abi, 'allowance', [connectedUserAddress.address, stakeContract]);
+    allowanceAmount.then((data) => setAllowance(data));
 
     const { config: configApprove } = usePrepareContractWrite({
         address: libContract,

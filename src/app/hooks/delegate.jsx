@@ -12,7 +12,7 @@ export default function Delegate() {
 
   const connectedUserAddress = useAccount()
   const [address, setAddress] = useState("");
-  const [counter, setCounter] = useState(0);
+  // const [counter, setCounter] = useState(0);
   const [liblockBalanceOf, setLiblockBalanceOf] = useState("loading");
   const [liblockGetVotes, setLiblockGetVotes] = useState("loading");
   const [liblockDelegates, setLiblockDelegates] = useState("loading");
@@ -58,6 +58,15 @@ export default function Delegate() {
   return (
     <section className="container mt-4">
       <h3>Delegate</h3>
+      <div className="ms-4 mt-4 mb-4">
+        <h4>Connected address info :</h4>
+        <h5>$LIB token balance : {String(liblockBalanceOf)} $LIB</h5>
+        <h5>$rLIB token balance : {String(rLiblockBalanceOf)} $rLIB</h5>
+        <h5>$LIB delegatee : {liblockDelegates == connectedUserAddress.address ? liblockDelegates + " (self)" : liblockDelegates}</h5>
+        <h5>$rLIB delegatee : {rliblockDelegates == connectedUserAddress.address ? rliblockDelegates + " (self)" : rliblockDelegates}</h5>
+        <h5>Votes weight (LIB, rLIB, Total): {String(liblockGetVotes)}, {String(rliblockGetVotes)}, {String(liblockGetVotes + rliblockGetVotes)}</h5>
+        <h5>Virtual power used : {String(virtualPower)}</h5>
+      </div>
       <form onSubmit={handleSubmit} className="d-flex justify-content-center">
         <div className="input-group mb-3">
           <input
@@ -110,15 +119,6 @@ export default function Delegate() {
             </div>
           </div>
         }
-      </div>
-      <div className="ms-4 mt-4 mb-4">
-        <h3>Connected address info :</h3>
-        <h5>$LIB token balance : {String(liblockBalanceOf)} $LIB</h5>
-        <h5>$rLIB token balance : {String(rLiblockBalanceOf)} $rLIB</h5>
-        <h5>$LIB delegatee : {liblockDelegates == connectedUserAddress.address ? liblockDelegates + " (self)" : liblockDelegates}</h5>
-        <h5>$rLIB delegatee : {rliblockDelegates == connectedUserAddress.address ? rliblockDelegates + " (self)" : rliblockDelegates}</h5>
-        <h5>Votes weight (LIB, rLIB, Total): {String(liblockGetVotes)}, {String(rliblockGetVotes)}, {String(liblockGetVotes + rliblockGetVotes)}</h5>
-        <h5>Virtual power used : {String(virtualPower)}</h5>
       </div>
     </section>
   );

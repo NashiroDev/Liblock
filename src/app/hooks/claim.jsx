@@ -32,6 +32,7 @@ export default function Claim() {
     return (
         <section className="container mt-4">
       <h3>Claim</h3>
+      <h5>Connected address $LIB available to claim : {allocations} LIB</h5>
       <form onSubmit={handleSubmit} className="d-flex justify-content-center">
         <div className="input-group mb-3">
           <input
@@ -47,9 +48,6 @@ export default function Claim() {
           </button>
         </div>
       </form>
-        <div className="ms-4 mt-4 mb-4">
-          <h5>Connected address $LIB available to claim : {allocations} LIB</h5>
-        </div>
     </section>
     );
 }
