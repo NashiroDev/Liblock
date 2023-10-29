@@ -3,10 +3,10 @@
 import { useContractWrite, usePrepareContractWrite } from "wagmi";
 import distributorAbi from "../../../contracts/Distributor.json";
 import { useState } from "react";
-import { ReadAnyArgs, ReadAny } from "./read";
+import { ReadAny } from "./read";
 
 export default function UpdateDistributionEpoch() {
-    const distributorContract = "0xf2c06D8B5986eB79473CFfF70ABfc2E5986F4EB6"
+    const distributorContract = process.env.NEXT_PUBLIC_DISTRIBUTOR_ADDRESS;
 
     const [epochTime, setEpochTime] = useState(0);
 

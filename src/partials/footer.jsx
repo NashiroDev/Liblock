@@ -3,7 +3,7 @@ export default function Footer() {
       <footer className="footer text-center text-lg-start bg-secondary">
         <div className="text-center text-white p-3 text-light">
           © 2023 Copyright :
-          <a className="text-white" href="https://github.com/NashiroDev"> Nathan Pauchon</a>
+          <a className="text-white" href="https://github.com/NashiroDev"> Nashiro</a>
         </div>
       </footer>
     )

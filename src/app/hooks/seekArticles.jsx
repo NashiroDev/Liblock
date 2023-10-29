@@ -13,7 +13,7 @@ export default function GetArticles() {
     const [counter, setCounter] = useState();
     let [articlesList, setArticlesList] = useState([]);
 
-    const proposalContract = "0x9536a9453bC912F7C955c79C9a11758Fab4695ef"
+    const proposalContract = process.env.NEXT_PUBLIC_PROPOSALS_ADDRESS;
 
     const counterData = ReadAny(proposalContract, proposalAbi.abi, 'proposalCount')
     counterData.then((val) => setCounter(String(val)-1));
@@ -58,7 +58,7 @@ export default function GetArticles() {
     if (keyword != '' && articlesList) {
         let articlesListFilter = []
         for (let i = 0; i < articlesList.length; i++) {
-            if (articlesList[i][0].includes(keyword)) {
+            if (articlesList[i][1].includes(keyword)) {
                 articlesListFilter.push(articlesList[i])
             }
         }
@@ -67,10 +67,10 @@ export default function GetArticles() {
 
     if (order != '') {
         if (order === 'asc') {
-            const articlesListOrder = [...articlesList].sort((a, b) => a[5] - b[5])
+            const articlesListOrder = [...articlesList].sort((a, b) => a[10] - b[10])
             articlesList = articlesListOrder
         } else if (order === 'desc') {
-            const articlesListOrder = [...articlesList].sort((a, b) => b[5] - a[5])
+            const articlesListOrder = [...articlesList].sort((a, b) => b[10] - a[10])
             articlesList = articlesListOrder
         }
         

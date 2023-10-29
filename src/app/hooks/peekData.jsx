@@ -1,11 +1,12 @@
 "use client"
 import Link from "next/link"
 import { useState, useEffect } from "react";
-import ReadArticle,{ ReadAny } from "./read"
+import ReadArticle, { ReadAny } from "./read"
 import proposalAbi from "../../../contracts/gProposal.json";
 
 export function GetFewArticles() {
-    const proposalContract = "0x9536a9453bC912F7C955c79C9a11758Fab4695ef"
+    const proposalContract = process.env.NEXT_PUBLIC_PROPOSALS_ADDRESS
+
     const [page, setPage] = useState(1);
     const [counter, setCounter] = useState();
     let [articlesList, setArticlesList] = useState([]);
@@ -77,7 +78,8 @@ export function GetFewArticles() {
 }
 
 export function GetFewProposals() {
-    const proposalContract = "0x9536a9453bC912F7C955c79C9a11758Fab4695ef"
+    const proposalContract = process.env.NEXT_PUBLIC_PROPOSALS_ADDRESS
+
     const [page, setPage] = useState(1);
     const [counter, setCounter] = useState();
     let [proposalsList, setProposalsList] = useState([]);

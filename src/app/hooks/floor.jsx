@@ -6,7 +6,7 @@ import { ReadAny } from "./read";
 import proposalAbi from "../../../contracts/gProposal.json";
 
 export default function BalanceFloor() {
-    const proposalContract = "0x9536a9453bC912F7C955c79C9a11758Fab4695ef"
+    const proposalContract = process.env.NEXT_PUBLIC_PROPOSALS_ADDRESS;
     const [alterBlock, setAlterBlock] = useState()
 
     const alterationBlock = ReadAny(proposalContract, proposalAbi.abi, 'nextAlterationBlock')

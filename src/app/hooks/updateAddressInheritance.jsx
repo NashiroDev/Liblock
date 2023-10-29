@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 import { ReadAnyArgs, ReadAny } from "./read";
 
 export default function UpdateEpochInheritance() {
-    const distributorContract = "0xf2c06D8B5986eB79473CFfF70ABfc2E5986F4EB6"
+    const distributorContract = process.env.NEXT_PUBLIC_DISTRIBUTOR_ADDRESS;
 
     const [address, setAddress] = useState('0x00000000');
     const [epoch, setEpoch] = useState();

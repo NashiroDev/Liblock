@@ -6,10 +6,10 @@ import proposalAbi from "../../../contracts/gProposal.json";
 import { ReadAnyArgs, ReadAny } from "./read";
 
 export default function Delegate() {
-  const libContract = "0x206661AA8FecBd56c00cCbE96a4AD7f3fe00691f"
-  const rLibContract = "0x3F4E1D83ac17e482b49Bc13Cf55FDb0dB3826e56"
-  const proposalContract = "0x9536a9453bC912F7C955c79C9a11758Fab4695ef"
-
+  const libContract = process.env.NEXT_PUBLIC_LIB_ADDRESS;
+  const rLibContract = process.env.NEXT_PUBLIC_RLIB_ADDRESS;
+  const proposalContract = process.env.NEXT_PUBLIC_PROPOSALS_ADDRESS;
+  
   const connectedUserAddress = useAccount()
   const [address, setAddress] = useState("");
   // const [counter, setCounter] = useState(0);
