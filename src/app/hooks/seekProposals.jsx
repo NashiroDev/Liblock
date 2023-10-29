@@ -59,7 +59,7 @@ export default function GetProposals() {
     if (keyword != '' && proposalsList) {
         let proposalsListFilter = []
         for (let i = 0; i < proposalsList.length; i++) {
-            if (proposalsList[i][0].includes(keyword)) {
+            if (proposalsList[i][1].includes(keyword)) {
                 proposalsListFilter.push(proposalsList[i])
             }
         }
@@ -68,10 +68,10 @@ export default function GetProposals() {
 
     if (order != '') {
         if (order === 'asc') {
-            const proposalsListOrder = [...proposalsList].sort((a, b) => a[5] - b[5])
+            const proposalsListOrder = [...proposalsList].sort((a, b) => a[10] - b[10])
             proposalsList = proposalsListOrder
         } else if (order === 'desc') {
-            const proposalsListOrder = [...proposalsList].sort((a, b) => b[5] - a[5])
+            const proposalsListOrder = [...proposalsList].sort((a, b) => b[10] - a[10])
             proposalsList = proposalsListOrder
         }
 
