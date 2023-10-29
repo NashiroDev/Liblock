@@ -8,7 +8,6 @@ export default function Navbar() {
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
-    console.log(isDropdownOpen)
   };
 
   return (
