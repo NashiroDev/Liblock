@@ -6,7 +6,7 @@ import proposalAbi from "../../../contracts/gProposal.json";
 
 export function GetFewArticles() {
     const proposalContract = process.env.NEXT_PUBLIC_PROPOSALS_ADDRESS
-    console.log(proposalContract)
+
     const [page, setPage] = useState(1);
     const [counter, setCounter] = useState();
     let [articlesList, setArticlesList] = useState([]);
