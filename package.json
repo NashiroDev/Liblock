@@ -9,7 +9,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@prisma/client": "^5.5.2",
     "@rainbow-me/rainbowkit": "^1.0.10",
     "@types/node": "20.5.9",
     "@wagmi/core": "^1.4.5",
@@ -30,8 +29,7 @@
   },
   "devDependencies": {
     "@types/react": "18.2.21",
-    "eslint-plugin-react-hooks": "^4.6.0",
-    "prisma": "^5.5.2"
+    "eslint-plugin-react-hooks": "^4.6.0"
   },
   "browser": {
     "fs": false,
