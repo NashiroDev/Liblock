@@ -6,7 +6,7 @@ import { ReadAnyArgs } from "./read"
 import distributorAbi from "../../../contracts/Distributor.json";
 
 export default function Claim() {
-    const distributorContract = "0xf2c06D8B5986eB79473CFfF70ABfc2E5986F4EB6"
+    const distributorContract = env(DISTRIBUTOR_ADDRESS)
 
     const connectedUserAddress = useAccount()
     const [amount, setAmount] = useState("0");

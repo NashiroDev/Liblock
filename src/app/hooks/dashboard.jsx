@@ -10,11 +10,11 @@ import distributorAbi from "../../../contracts/Distributor.json";
 import { ReadAnyArgs, ReadAny } from "./read";
 
 export default function Dashboard() {
-    const libContract = "0x206661AA8FecBd56c00cCbE96a4AD7f3fe00691f"
-    const rLibContract = "0x3F4E1D83ac17e482b49Bc13Cf55FDb0dB3826e56"
-    const proposalContract = "0x9536a9453bC912F7C955c79C9a11758Fab4695ef"
-    const distributorContract = "0xf2c06D8B5986eB79473CFfF70ABfc2E5986F4EB6"
-    const liblockedContract = "0x6bBD6ED8Ec215F1d40C31D305CED8B8fe9b4E040"
+    const libContract = env(LIB_ADDRESS);
+    const rLibContract = env(RLIB_ADDRESS);
+    const proposalContract = env(PROPOSALS_ADDRESS);
+    const distributorContract = env(DISTRIBUTOR_ADDRESS);
+    const liblockedContract = env(LIBLOCKED_ADDRESS);
 
     const [showLedger, setShowLedger] = useState(false);
     const connectedUserAddress = useAccount()

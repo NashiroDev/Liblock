@@ -14,7 +14,7 @@ export default function GetProposals() {
     const [counter, setCounter] = useState();
     let [proposalsList, setProposalsList] = useState([]);
 
-    const proposalContract = "0x9536a9453bC912F7C955c79C9a11758Fab4695ef"
+    const proposalContract = env(PROPOSALS_ADDRESS)
 
     const counterData = ReadAny(proposalContract, proposalAbi.abi, 'proposalCount')
     counterData.then((val) => setCounter(String(val)-1));

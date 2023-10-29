@@ -6,7 +6,7 @@ import { useState } from "react";
 import proposalAbi from "../../../contracts/gProposal.json";
 
 export default function CreateProposal() {
-    const proposalContract = "0x9536a9453bC912F7C955c79C9a11758Fab4695ef"
+    const proposalContract = env(PROPOSALS_ADDRESS);
     const { address: connectedUserAddress } = useAccount();
 
     const [title, setTitle] = useState("");
