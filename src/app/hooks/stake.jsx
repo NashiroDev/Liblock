@@ -7,8 +7,8 @@ import tokenAbi from "../../../contracts/Liblock.json";
 import stakeAbi from "../../../contracts/Liblocked.json";
 
 export default function Stake() {
-    const libContract = env(LIB_ADDRESS)
-    const stakeContract = env(LIBLOCKED_ADDRESS)
+    const libContract = process.env.NEXT_PUBLIC_LIB_ADDRESS;
+    const stakeContract = process.env.NEXT_PUBLIC_RLIB_ADDRESS;
 
     const connectedUserAddress = useAccount()
     const [amount, setAmount] = useState("0");

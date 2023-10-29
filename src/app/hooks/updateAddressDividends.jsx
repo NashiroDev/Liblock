@@ -6,7 +6,7 @@ import { useState } from "react";
 import distributorAbi from "../../../contracts/Distributor.json";
 
 export default function UpdateAddressDividends() {
-    const distributorContract = env(DISTRIBUTOR_ADDRESS)
+    const distributorContract = process.env.NEXT_PUBLIC_DISTRIBUTOR_ADDRESS;
 
     const [epoch, setEpoch] = useState(0);
     const [progress, setProgress] = useState(0);

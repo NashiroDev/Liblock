@@ -6,7 +6,7 @@ import { useState } from "react";
 import { ReadAny } from "./read";
 
 export default function UpdateDistributionEpoch() {
-    const distributorContract = env(DISTRIBUTOR_ADDRESS)
+    const distributorContract = process.env.NEXT_PUBLIC_DISTRIBUTOR_ADDRESS;
 
     const [epochTime, setEpochTime] = useState(0);
 

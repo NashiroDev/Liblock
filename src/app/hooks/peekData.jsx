@@ -5,7 +5,8 @@ import ReadArticle,{ ReadAny } from "./read"
 import proposalAbi from "../../../contracts/gProposal.json";
 
 export function GetFewArticles() {
-    const proposalContract = env(PROPOSALS_ADDRESS)
+    const proposalContract = process.env.NEXT_PUBLIC_PROPOSALS_ADDRESS
+    console.log(proposalContract)
     const [page, setPage] = useState(1);
     const [counter, setCounter] = useState();
     let [articlesList, setArticlesList] = useState([]);
@@ -77,7 +78,7 @@ export function GetFewArticles() {
 }
 
 export function GetFewProposals() {
-    const proposalContract = env(PROPOSALS_ADDRESS)
+    const proposalContract = process.env.NEXT_PUBLIC_PROPOSALS_ADDRESS
     const [page, setPage] = useState(1);
     const [counter, setCounter] = useState();
     let [proposalsList, setProposalsList] = useState([]);

@@ -14,7 +14,7 @@ export default function GetProposals() {
     const [counter, setCounter] = useState();
     let [proposalsList, setProposalsList] = useState([]);
 
-    const proposalContract = env(PROPOSALS_ADDRESS)
+    const proposalContract = process.env.NEXT_PUBLIC_PROPOSALS_ADDRESS;
 
     const counterData = ReadAny(proposalContract, proposalAbi.abi, 'proposalCount')
     counterData.then((val) => setCounter(String(val)-1));

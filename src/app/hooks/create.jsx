@@ -6,7 +6,7 @@ import { useState } from "react";
 import proposalAbi from "../../../contracts/gProposal.json";
 
 export default function CreateProposal() {
-    const proposalContract = env(PROPOSALS_ADDRESS);
+    const proposalContract = process.env.NEXT_PUBLIC_PROPOSALS_ADDRESS;
     const { address: connectedUserAddress } = useAccount();
 
     const [title, setTitle] = useState("");
