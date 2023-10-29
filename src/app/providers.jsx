@@ -16,12 +16,12 @@ import { scrollSepolia } from "wagmi/chains";
 import { publicProvider } from "wagmi/providers/public";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 
-const projectId = "be4bc7e4028ce5d2783be18884044fa7"; // from walletconnect
+const projectId = env(WALLETCONNECT_PROJECT_ID); // from walletconnect
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
   [scrollSepolia],
   [
-    alchemyProvider({ apiKey: 's_IL_eYOapWUzea-e-O5U4N4r3XZ4mLa' }),
+    alchemyProvider({ apiKey: env(ALCHEMY_ID) }),
     publicProvider()
   ],
 );
