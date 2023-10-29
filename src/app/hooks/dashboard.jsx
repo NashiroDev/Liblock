@@ -109,7 +109,7 @@ export default function Dashboard() {
                     <p>{String(shares)} current epoch ({String(epoch)}) shares</p>
                     <p>{String(claimable)} Current claimable $LIB</p>
                     <p>{String(inherit)} Inheritance done / to do</p>
-                    <p>{String(balancing[5])} Current proposal floor</p>
+                    <p>{String(Number(balancing[5]) / 10**18)} Current proposal floor</p>
                 </div>
                 <button className="btn btn-primary mt-3" onClick={handleToggleLedger}>
                     Show Ledger
