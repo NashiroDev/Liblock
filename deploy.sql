@@ -13,7 +13,7 @@ CREATE TABLE Article (
     id INTEGER NOT NULL UNIQUE,
     title VARCHAR(255) NOT NULL,
     content TEXT,
-    createdAt TIMESTAMP(6) NOT NULL,
+    createdAt BIGINT NOT NULL,
     accepted BOOLEAN,
     creator_address VARCHAR(255),
     likes INTEGER,

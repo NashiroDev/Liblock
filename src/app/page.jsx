@@ -1,6 +1,7 @@
 "use client"
 import Themes from "../partials/themes"
 import { GetFewArticles, GetFewProposals } from "./hooks/peekData"
+import db from '../../db/db';
 
 export default function Home() {
   return (
