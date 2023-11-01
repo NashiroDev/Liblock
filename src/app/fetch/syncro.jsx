@@ -1,6 +1,6 @@
 import { query } from '../../../db/db';
 import { escape } from 'mysql';
-import ReadArticle from './read';
+import ReadArticle from '../hooks/read';
 
 export default async function syncronise(onChainLast) {
     const offChainLast = await lastArticle();
@@ -33,7 +33,7 @@ export default async function syncronise(onChainLast) {
     }
 };
 
-export async function lastArticle() {
+async function lastArticle() {
     try {
         const lastArticleQuery = `
         SELECT *

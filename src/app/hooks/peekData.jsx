@@ -3,7 +3,7 @@ import Link from "next/link"
 import { useState, useEffect } from "react";
 import ReadArticle, { ReadAny } from "./read"
 import proposalAbi from "../../../contracts/gProposal.json";
-import syncronise from "./syncro";
+import syncronise from "../fetch/syncro";
 
 export function GetFewArticles() {
     const proposalContract = process.env.NEXT_PUBLIC_PROPOSALS_ADDRESS
