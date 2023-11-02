@@ -1,8 +1,8 @@
 "use client"
 
-import { useAccount } from 'wagmi';
-import { useContractWrite, usePrepareContractWrite } from "wagmi";
+import { useContractWrite, usePrepareContractWrite, useAccount } from "wagmi";
 import { useState } from "react";
+import pullProposal from "../fetch/newProposal";
 import proposalAbi from "../../../contracts/gProposal.json";
 
 export default function CreateProposal() {
@@ -11,6 +11,8 @@ export default function CreateProposal() {
 
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
+    const [tags, setTags] = useState("");
+    const [counter, setCounter] = useState();
 
     const { config } = usePrepareContractWrite({
         address: proposalContract,
@@ -23,7 +25,19 @@ export default function CreateProposal() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        const _title = title;
+        const _content = content;
+        const _tags = tags;
         write();
+        if (isSuccess) {
+            const counterData = ReadAny(proposalContract, proposalAbi.abi, 'proposalCount')
+            counterData.then((val) => setCounter(String(val)-1));
+            for (let i = counter; i > counter-6; i--) {
+                if (pullProposal(i, _title, _content, _tags)) {
+                    break;
+                }
+            }
+        }
     };
 
     return (
@@ -50,6 +64,17 @@ export default function CreateProposal() {
                         className="form-control"
                         rows="15" // Specify the number of rows to expand the textarea
                     ></textarea>
+                </div>
+                <label>Each tag must be lowercase, separated by a , and without space (i.e : ethereum,zk-snark)</label>
+                <div className="input-group mb-3">
+                    <input
+                        type="text"
+                        value={tags}
+                        onChange={(e) => setTags(e.target.value)}
+                        placeholder="There are your article tags"
+                        required
+                        className="form-control"
+                    />
                 </div>
                 <button type="submit" disabled={!write} className="btn btn-primary m-4">
                     Submit article
