@@ -29,7 +29,9 @@ export default async function pullProposal(i, title, content, tags) {
         } catch (error) {
             console.error('Error pushing new article:', error);
         }
+        return true;
     }
+    return false;
 };
 
 async function pushTags(id, tags) {

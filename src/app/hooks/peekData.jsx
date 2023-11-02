@@ -3,7 +3,7 @@ import Link from "next/link"
 import { useState, useEffect } from "react";
 import ReadArticle, { ReadAny } from "./read"
 import proposalAbi from "../../../contracts/gProposal.json";
-import syncronise from "../fetch/syncro";
+import syncronise, { lastArticle } from "../fetch/syncro";
 
 export function GetFewArticles() {
     const proposalContract = process.env.NEXT_PUBLIC_PROPOSALS_ADDRESS
@@ -12,10 +12,14 @@ export function GetFewArticles() {
     const [counter, setCounter] = useState();
     let [articlesList, setArticlesList] = useState([]);
 
-    const counterData = ReadAny(proposalContract, proposalAbi.abi, 'proposalCount')
-    counterData.then((val) => {
-        setCounter(String(val)-1)
-        syncronise(Number(val)-1);
+    const offChainLast = lastArticle()
+    offChainLast.then((val) => {
+        const id = val
+        const counterData = ReadAny(proposalContract, proposalAbi.abi, 'proposalCount')
+        counterData.then((val) => {
+            setCounter(String(val)-1)
+            syncronise(Number(val)-1, id);
+        })
     });
 
     useEffect(() => {

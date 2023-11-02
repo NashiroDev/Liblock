@@ -2,10 +2,10 @@ import { query } from '../../../db/db';
 import { escape } from 'mysql';
 import ReadArticle from '../hooks/read';
 
-export default async function syncronise(onChainLast) {
-    const offChainLast = await lastArticle();
+export default async function syncronise(onChainLast, offChainLast) {
     if (Number(onChainLast) > offChainLast) {
         for (let i = offChainLast+1; i <= onChainLast; i++) {
+            console.log(i, "counter increment");
             const currentArticle = await ReadArticle(i);
             try {
                 const pushArticleQuery = `
@@ -18,7 +18,7 @@ export default async function syncronise(onChainLast) {
                     escape(String(currentArticle[1])), // Sanitize the title parameter
                     escape(String(currentArticle[2])), // Sanitize the content parameter
                     escape(Number(currentArticle[10]) - 604800), // Sanitize and calculate the createdAt parameter
-                    escape(Boolean(currentArticle[5])), // Sanitize the accepted parameter
+                    Boolean(currentArticle[5]) ? 1 : 0, // Sanitize the accepted parameter
                     escape(String(currentArticle[3])), // Sanitize the creator_address parameter
                     0, // No need to sanitize constant values
                     0 // No need to sanitize constant values
@@ -33,7 +33,7 @@ export default async function syncronise(onChainLast) {
     }
 };
 
-async function lastArticle() {
+export async function lastArticle() {
     try {
         const lastArticleQuery = `
         SELECT *
@@ -43,9 +43,10 @@ async function lastArticle() {
       `;
 
         const lastArticle = await query(lastArticleQuery);
+        console.log(lastArticle, lastArticle[0].id);
 
         if (lastArticle.length > 0) {
-            return Number(lastArticle[0][0]);
+            return Number(lastArticle[0].id);
         } else {
             console.log('No articles found');
         }
