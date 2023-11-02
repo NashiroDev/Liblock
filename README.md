@@ -199,4 +199,4 @@ Here is a list of potential functionalities that may or may not be implemented b
 - Author can pay LIB token to put forward an article
 - …
 
-Please note that the implementation of these ideas will depend on various factors, including technical feasibility, community feedback, and the overall project roadmap.
+**Please note that the implementation of these ideas will depend on various factors, including technical feasibility, community feedback, and the overall project roadmap.**
