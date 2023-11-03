@@ -5,7 +5,6 @@ import ReadArticle from '../hooks/read';
 export default async function syncronise(onChainLast, offChainLast) {
     if (Number(onChainLast) > offChainLast) {
         for (let i = offChainLast+1; i <= onChainLast; i++) {
-            console.log(i, "counter increment");
             const currentArticle = await ReadArticle(i);
             try {
                 const pushArticleQuery = `
@@ -43,7 +42,6 @@ export async function lastArticle() {
       `;
 
         const lastArticle = await query(lastArticleQuery);
-        console.log(lastArticle, lastArticle[0].id);
 
         if (lastArticle.length > 0) {
             return Number(lastArticle[0].id);
