@@ -8,7 +8,7 @@ import proposalAbi from "../../../contracts/gProposal.json";
 import liblockedAbi from "../../../contracts/Liblocked.json";
 import distributorAbi from "../../../contracts/Distributor.json";
 import { ReadAnyArgs, ReadAny } from "./read";
-import { fetchArticleOwned } from "../fetch/ownedArticles"
+import fetchArticleOwned from "../fetch/ownedArticles"
 
 export default function Dashboard() {
     const libContract = process.env.NEXT_PUBLIC_LIB_ADDRESS;
@@ -16,11 +16,11 @@ export default function Dashboard() {
     const proposalContract = process.env.NEXT_PUBLIC_PROPOSALS_ADDRESS;
     const distributorContract = process.env.NEXT_PUBLIC_DISTRIBUTOR_ADDRESS;
     const liblockedContract = process.env.NEXT_PUBLIC_LIBLOCKED_ADDRESS;
-
+  
     const [showLedger, setShowLedger] = useState(false);
     const [showArticle, setShowArticle] = useState(false);
-    const connectedUserAddress = useAccount()
-    const address = connectedUserAddress.address
+    const connectedUserAddress = useAccount();
+    const address = connectedUserAddress.address;
     const [epoch, setEpoch] = useState(1);
     const [inherit, setInherit] = useState(0);
     const [liblockBalanceOf, setLiblockBalanceOf] = useState("loading");
@@ -33,68 +33,106 @@ export default function Dashboard() {
     const [claimable, setClaimable] = useState("loading");
     const [shares, setShares] = useState("loading");
     const [ledger, setLedger] = useState([]);
-
-    const counterData = ReadAny(proposalContract, proposalAbi.abi, 'balancingCount')
-    counterData.then((val) => {
-        const govVP = ReadAnyArgs(proposalContract, proposalAbi.abi, 'virtualPowerUsed', [address, val])
-        govVP.then((data) => setVirtualPower(Number(data) / 10 ** 18))
-    });
-    
-    const balancingEpoch = ReadAny(proposalContract, proposalAbi.abi, 'balancingCount')
-    balancingEpoch.then((val) => {
-        const balancingData = ReadAnyArgs(proposalContract, proposalAbi.abi, 'balancing', [val])
-        balancingData.then((data) => setBalancing(data))
-    });
-
-    const currentEpoch = ReadAny(distributorContract, distributorAbi.abi, 'getEpochHeight');
-    currentEpoch.then((data) => {
-        setEpoch(data);
-        const currentInherit = ReadAnyArgs(distributorContract, distributorAbi.abi, 'getAddressEpochInheritance', [address, epoch]);
-        currentInherit.then((data) => setInherit(data));
-        const currentShares = ReadAnyArgs(distributorContract, distributorAbi.abi, "getAddressEpochShares", [address, epoch]);
-        currentShares.then((data) => setShares(Number(data[0]) / 10 ** 18))
-    });
-
-    const sNounce = ReadAnyArgs(liblockedContract, liblockedAbi.abi, 'getAddressNounce', [address])
-    sNounce.then((data) => setStakeNounce(data));
-
-    const articleOwned = fetchArticleOwned(address);
-
+    const [article, setArticle] = useState([]);
+    const [executed1, setExecuted1] = useState(false);
+    const [executed0, setExecuted0] = useState(false);
+  
     useEffect(() => {
-        if (stakeNounce != "loading") {
+      if (!executed1) {
+        const fetchData = async () => {
+          try {
+            const counterData = ReadAny(proposalContract, proposalAbi.abi, "balancingCount");
+            const val = await counterData;
+            const govVP = ReadAnyArgs(proposalContract, proposalAbi.abi, "virtualPowerUsed", [address, val]);
+            const data = await govVP;
+            setVirtualPower(Number(data) / 10 ** 18);
+  
+            const balancingData = ReadAnyArgs(proposalContract, proposalAbi.abi, "balancing", [val]);
+            const data2 = await balancingData;
+            setBalancing(data2);
+  
+            const currentEpoch = ReadAny(distributorContract, distributorAbi.abi, "getEpochHeight");
+            const data3 = await currentEpoch;
+            setEpoch(data3);
+  
+            // const currentInherit = ReadAnyArgs(distributorContract, distributorAbi.abi, "getAddressEpochInheritance", [address, epoch]);
+            // const data4 = await currentInherit;
+            setInherit("Temp new epoch wait");
+  
+            const currentShares = ReadAnyArgs(distributorContract, distributorAbi.abi, "getAddressEpochShares", [address, epoch]);
+            const data5 = await currentShares;
+            setShares(Number(data5[0]) / 10 ** 18);
+  
+            const sNounce = ReadAnyArgs(liblockedContract, liblockedAbi.abi, "getAddressNounce", [address]);
+            const data6 = await sNounce;
+            setStakeNounce(data6);
+  
+            const articleOwned = fetchArticleOwned(address);
+            const data7 = await articleOwned;
+            setArticle(data7);
+            console.log(data7, "mark");
+  
+            const libBalanceData = ReadAnyArgs(libContract, tokenAbi.abi, "balanceOf", [address]);
+            const rLibBalanceData = ReadAnyArgs(rLibContract, rTokenAbi.abi, "balanceOf", [address]);
+            const libVotesData = ReadAnyArgs(libContract, tokenAbi.abi, "getVotes", [address]);
+            const rLibVotesData = ReadAnyArgs(rLibContract, rTokenAbi.abi, "getVotes", [address]);
+            const claimableTokens = ReadAnyArgs(distributorContract, distributorAbi.abi, "getAddressClaimableTokens", [address]);
+  
+            const data8 = await libBalanceData;
+            setLiblockBalanceOf(Number(data8) / 10 ** 18);
+  
+            const data9 = await rLibBalanceData;
+            setrLiblockBalanceOf(Number(data9) / 10 ** 18);
+  
+            const data10 = await libVotesData;
+            setLiblockGetVotes(Number(data10) / 10 ** 18);
+  
+            const data11 = await rLibVotesData;
+            setrLiblockGetVotes(Number(data11) / 10 ** 18);
+  
+            const data12 = await claimableTokens;
+            setClaimable(Number(data12) / 10 ** 18);
+          } catch (error) {
+            console.error(error);
+          }
+        };
+  
+        fetchData();
+        setExecuted1(true);
+      }
+    }, []);
+  
+    useEffect(() => {
+      if (stakeNounce !== "loading" && !executed0) {
+        const fetchLedger = async () => {
+          try {
             const positionList = [];
             for (let i = 0; i <= stakeNounce; i++) {
-                const addressLedger = ReadAnyArgs(liblockedContract, liblockedAbi.abi, 'ledger', [address, i])
-                addressLedger.then((data) => {
-                    const temp0 = new Date(Number(data[3]) * 1000)
-                    const temp1 = new Date(Number(data[4]) * 1000)
-                    data[3] = temp0.toLocaleString()
-                    data[4] = temp1.toLocaleString()
-                    positionList.push(data)
-                })
+              const addressLedger = ReadAnyArgs(liblockedContract, liblockedAbi.abi, "ledger", [address, i]);
+              const data = await addressLedger;
+              const temp0 = new Date(Number(data[3]) * 1000);
+              const temp1 = new Date(Number(data[4]) * 1000);
+              data[3] = temp0.toLocaleString();
+              data[4] = temp1.toLocaleString();
+              positionList.push(data);
             }
             setLedger(positionList);
-        }
-    }, [stakeNounce])
-
-    const libBalanceData = ReadAnyArgs(libContract, tokenAbi.abi, 'balanceOf', [address])
-    const rLibBalanceData = ReadAnyArgs(rLibContract, rTokenAbi.abi, 'balanceOf', [address])
-    const libVotesData = ReadAnyArgs(libContract, tokenAbi.abi, 'getVotes', [address])
-    const rLibVotesData = ReadAnyArgs(rLibContract, rTokenAbi.abi, 'getVotes', [address])
-    const claimableTokens = ReadAnyArgs(distributorContract, distributorAbi.abi, "getAddressClaimableTokens", [address])
-
-    libBalanceData.then((data) => setLiblockBalanceOf(Number(data) / 10 ** 18));
-    rLibBalanceData.then((data) => setrLiblockBalanceOf(Number(data) / 10 ** 18));
-    libVotesData.then((data) => setLiblockGetVotes(Number(data) / 10 ** 18));
-    rLibVotesData.then((data) => setrLiblockGetVotes(Number(data) / 10 ** 18));
-    claimableTokens.then((data) => setClaimable(Number(data) / 10 ** 18));
-
+            setExecuted0(true);
+          } catch (error) {
+            console.error(error);
+          }
+        };
+  
+        fetchLedger();
+      }
+    }, [stakeNounce]);
+  
     const handleToggleLedger = () => {
-        setShowLedger(!showLedger);
+      setShowLedger(!showLedger);
     };
-
+  
     const handleToggleArticle = () => {
-        setShowArticle(!showArticle);
+      setShowArticle(!showArticle);
     };
 
     return (
@@ -138,12 +176,12 @@ export default function Dashboard() {
                         ))}
                     </div>
                 )}
-                <button className="btn btn-primary mt-3" onClick={handleToggleArticle}>
+                {/* <button className="btn btn-primary mt-3" onClick={handleToggleArticle}>
                     Show Articles
                 </button>
                 {showArticle && (
                     <div className="row mt-3 justify-content-center text-center">
-                        {articleOwned.map((result) => (
+                        {article.map((result) => (
                             <div className="col-3 ms-4 mt-4 card d-flex row-3">
                                 <div className="card-body">
                                     <p className="card-text">Lock contract address = {result[0]}</p>
@@ -151,7 +189,7 @@ export default function Dashboard() {
                             </div>
                         ))}
                     </div>
-                )}
+                )} */}
             </div>
         </section >
     );

@@ -1,3 +1,4 @@
+"use client"
 import { query } from '../../../db/db';
 import { escape } from 'mysql';
 import ReadArticle from '../hooks/read';

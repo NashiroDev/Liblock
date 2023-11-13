@@ -15,6 +15,7 @@ export function GetFewArticles() {
     const offChainLast = lastArticle()
     offChainLast.then((val) => {
         const id = val
+        console.log(id, "ddd");
         const counterData = ReadAny(proposalContract, proposalAbi.abi, 'proposalCount')
         counterData.then((val) => {
             setCounter(String(val)-1)
