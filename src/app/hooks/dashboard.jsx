@@ -8,6 +8,7 @@ import proposalAbi from "../../../contracts/gProposal.json";
 import liblockedAbi from "../../../contracts/Liblocked.json";
 import distributorAbi from "../../../contracts/Distributor.json";
 import { ReadAnyArgs, ReadAny } from "./read";
+import { fetchArticleOwned } from "../fetch/ownedArticles"
 
 export default function Dashboard() {
     const libContract = process.env.NEXT_PUBLIC_LIB_ADDRESS;
@@ -17,6 +18,7 @@ export default function Dashboard() {
     const liblockedContract = process.env.NEXT_PUBLIC_LIBLOCKED_ADDRESS;
 
     const [showLedger, setShowLedger] = useState(false);
+    const [showArticle, setShowArticle] = useState(false);
     const connectedUserAddress = useAccount()
     const address = connectedUserAddress.address
     const [epoch, setEpoch] = useState(1);
@@ -56,6 +58,8 @@ export default function Dashboard() {
     const sNounce = ReadAnyArgs(liblockedContract, liblockedAbi.abi, 'getAddressNounce', [address])
     sNounce.then((data) => setStakeNounce(data));
 
+    const articleOwned = fetchArticleOwned(address);
+
     useEffect(() => {
         if (stakeNounce != "loading") {
             const positionList = [];
@@ -87,6 +91,10 @@ export default function Dashboard() {
 
     const handleToggleLedger = () => {
         setShowLedger(!showLedger);
+    };
+
+    const handleToggleArticle = () => {
+        setShowArticle(!showArticle);
     };
 
     return (
@@ -125,6 +133,20 @@ export default function Dashboard() {
                                     <p className="card-text">Lock timestamp = {String(result[3])}</p>
                                     <p className="card-text">Unlock timestamp = {String(result[4])}</p>
                                     <p className="card-text">Lock contract address = {result[5]}</p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
+                <button className="btn btn-primary mt-3" onClick={handleToggleArticle}>
+                    Show Articles
+                </button>
+                {showArticle && (
+                    <div className="row mt-3 justify-content-center text-center">
+                        {articleOwned.map((result) => (
+                            <div className="col-3 ms-4 mt-4 card d-flex row-3">
+                                <div className="card-body">
+                                    <p className="card-text">Lock contract address = {result[0]}</p>
                                 </div>
                             </div>
                         ))}
