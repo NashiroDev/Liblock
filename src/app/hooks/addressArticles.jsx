@@ -1,20 +1,28 @@
-import { useState } from 'react';
-import useSWR from 'swr';
-
-const fetcher = (...args) => fetch(...args).then((res) => res.json());
+import { useState, useEffect } from 'react';
 
 export default function OwnedArticles({ authorAddress }) {
   const [showArticle, setShowArticle] = useState(false);
+  const [articles, setArticles] = useState([]);
+  const [executed, setExecuted] = useState(false);
 
-  const { data: articles, error } = useSWR(`/api/owned/${authorAddress}`, fetcher);
+  useEffect(() => {
+    if (!executed) {
+      const fetcher = async () => {
+        const res = await fetch(`/api/owned/${authorAddress}`);
+        const temp = await res.json();
+        setArticles(temp.data);
+        console.log(articles, 'tt');
+        setExecuted(true);
+      }
 
-  console.log(`/api/owned/${authorAddress}`);
+      fetcher();
+    }
+  }), [authorAddress];
 
   const handleToggleArticle = () => {
     setShowArticle(!showArticle);
   };
 
-  if (error) return <div>Failed to load</div>;
   if (!articles) return <div>Loading...</div>;
 
   return (
@@ -27,7 +35,9 @@ export default function OwnedArticles({ authorAddress }) {
           {articles.map((result) => (
             <div className="col-3 ms-4 mt-4 card d-flex row-3" key={result.id}>
               <div className="card-body">
-                <p className="card-text">test = {result[0]}</p>
+                <p className="card-text">test = {result.title}</p>
+                <p className="card-text">id = {result.id}</p>
+                <p className="card-text">test = {result.content}</p>
               </div>
             </div>
           ))}

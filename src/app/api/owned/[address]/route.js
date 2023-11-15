@@ -1,5 +1,6 @@
 import { query } from '../../../../../db/db';
 import { escape } from 'mysql';
+import { NextResponse } from "next/server";
 
 export async function GET(request, { params }) {
     const author_address = params.address;
@@ -17,5 +18,5 @@ export async function GET(request, { params }) {
         response.status(500).send();
     }
 
-    return new Response(articles);
+    return NextResponse.json({data: articles});
 }
