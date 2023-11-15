@@ -2,13 +2,13 @@
 
 import { useAccount } from "wagmi";
 import { useState, useEffect } from "react";
+import OwnedArticles from "./addressArticles";
 import tokenAbi from "../../../contracts/Liblock.json";
 import rTokenAbi from "../../../contracts/rLiblock.json";
 import proposalAbi from "../../../contracts/gProposal.json";
 import liblockedAbi from "../../../contracts/Liblocked.json";
 import distributorAbi from "../../../contracts/Distributor.json";
 import { ReadAnyArgs, ReadAny } from "./read";
-import fetchArticleOwned from "../fetch/ownedArticles"
 
 export default function Dashboard() {
     const libContract = process.env.NEXT_PUBLIC_LIB_ADDRESS;
@@ -18,7 +18,6 @@ export default function Dashboard() {
     const liblockedContract = process.env.NEXT_PUBLIC_LIBLOCKED_ADDRESS;
   
     const [showLedger, setShowLedger] = useState(false);
-    const [showArticle, setShowArticle] = useState(false);
     const connectedUserAddress = useAccount();
     const address = connectedUserAddress.address;
     const [epoch, setEpoch] = useState(1);
@@ -33,7 +32,6 @@ export default function Dashboard() {
     const [claimable, setClaimable] = useState("loading");
     const [shares, setShares] = useState("loading");
     const [ledger, setLedger] = useState([]);
-    const [article, setArticle] = useState([]);
     const [executed1, setExecuted1] = useState(false);
     const [executed0, setExecuted0] = useState(false);
   
@@ -66,11 +64,6 @@ export default function Dashboard() {
             const sNounce = ReadAnyArgs(liblockedContract, liblockedAbi.abi, "getAddressNounce", [address]);
             const data6 = await sNounce;
             setStakeNounce(data6);
-  
-            const articleOwned = fetchArticleOwned(address);
-            const data7 = await articleOwned;
-            setArticle(data7);
-            console.log(data7, "mark");
   
             const libBalanceData = ReadAnyArgs(libContract, tokenAbi.abi, "balanceOf", [address]);
             const rLibBalanceData = ReadAnyArgs(rLibContract, rTokenAbi.abi, "balanceOf", [address]);
@@ -176,20 +169,7 @@ export default function Dashboard() {
                         ))}
                     </div>
                 )}
-                {/* <button className="btn btn-primary mt-3" onClick={handleToggleArticle}>
-                    Show Articles
-                </button>
-                {showArticle && (
-                    <div className="row mt-3 justify-content-center text-center">
-                        {article.map((result) => (
-                            <div className="col-3 ms-4 mt-4 card d-flex row-3">
-                                <div className="card-body">
-                                    <p className="card-text">Lock contract address = {result[0]}</p>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                )} */}
+                <OwnedArticles authorAddress={address} />
             </div>
         </section >
     );
