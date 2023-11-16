@@ -11,7 +11,6 @@ export default function OwnedArticles({ authorAddress }) {
         const res = await fetch(`/api/owned/${authorAddress}`);
         const temp = await res.json();
         setArticles(temp.data);
-        console.log(articles, 'tt');
         setExecuted(true);
       }
 
