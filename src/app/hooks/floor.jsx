@@ -7,10 +7,10 @@ import proposalAbi from "../../../contracts/gProposal.json";
 
 export default function BalanceFloor() {
     const proposalContract = process.env.NEXT_PUBLIC_PROPOSALS_ADDRESS;
-    const [alterBlock, setAlterBlock] = useState()
+    const [alterTime, setAlterTime] = useState()
 
-    const alterationBlock = ReadAny(proposalContract, proposalAbi.abi, 'nextAlterationBlock')
-    alterationBlock.then((data) => setAlterBlock(data))
+    const alterationBlock = ReadAny(proposalContract, proposalAbi.abi, 'nextAlterationTimeLeft')
+    alterationBlock.then((data) => setAlterTime(data))
 
     const { config } = usePrepareContractWrite({
         address: proposalContract,
@@ -28,7 +28,7 @@ export default function BalanceFloor() {
     return (
         <section className="container mt-4">
             <h3>Update Floor</h3>
-            <h5>Minimum block height for update : {String(alterBlock)}</h5>
+            <h5>Time left before next possible update : {String(alterTime)}</h5>
             <form onSubmit={handleSubmit} className="d-flex justify-content-center">
                 <div className="input-group mb-3">
                     <button type="submit" disabled={!write} className="btn btn-primary">

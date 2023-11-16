@@ -2,9 +2,11 @@ import { query } from '../../../db/db';
 import { escape } from 'mysql';
 import ReadArticle from '../hooks/read';
 
+// TEMP IGNORED : websocket issues w/ scroll sepo scan
+
 export default async function pullProposal(i, title, content, tags) {
     const proposal = await ReadArticle(i);
-    if (title === proposal[1] && content === proposal[2]) {
+    if (title == proposal[1] && content == proposal[2]) {
         try {
             const pushArticleQuery = `
             INSERT INTO article (id, title, content, createdAt, accepted, creator_address, likes, deprecated)
