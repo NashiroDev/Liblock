@@ -39,7 +39,7 @@ export function GetFewArticles() {
 
     return (
         <section>
-            <SyncArticles />
+            <SyncArticles onChainCounter={counter}/>
             <div className="container">
                 <div className="d-flex align-items-center">
                     <h4>Last articles :</h4>

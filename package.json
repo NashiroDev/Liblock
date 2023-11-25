@@ -38,6 +38,7 @@
     "net": false,
     "tls": false,
     "path": false,
-    "os": false
+    "os": false,
+    "lokijs": false
   }
 }

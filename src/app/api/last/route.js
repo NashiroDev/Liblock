@@ -5,7 +5,7 @@ export async function GET(request, response) {
     let lastId = 0;
 
     try {
-        const articleQuery = `SELECT id FROM article OREDER BY id DESC LIMIT 1;`;
+        const articleQuery = `SELECT id FROM article ORDER BY id DESC LIMIT 1;`;
 
         lastId = await query(articleQuery);
 
@@ -14,5 +14,5 @@ export async function GET(request, response) {
         response.status(500).send();
     }
 
-    return NextResponse.json({data: lastId});
+    return NextResponse.json({data: lastId[0].id});
 }
