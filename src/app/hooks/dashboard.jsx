@@ -123,10 +123,6 @@ export default function Dashboard() {
     const handleToggleLedger = () => {
       setShowLedger(!showLedger);
     };
-  
-    const handleToggleArticle = () => {
-      setShowArticle(!showArticle);
-    };
 
     return (
         <section className="container mt-4">

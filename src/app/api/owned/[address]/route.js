@@ -7,9 +7,7 @@ export async function GET(request, { params }) {
     let articles;
 
     try {
-        const articleQuery = `
-      SELECT * FROM article WHERE creator_address = ?;
-    `;
+        const articleQuery = `SELECT * FROM article WHERE creator_address = ?;`;
 
         articles = await query(articleQuery, escape(author_address));
 

@@ -2,6 +2,7 @@
 import Link from "next/link"
 import { useState, useEffect } from "react";
 import ReadArticle, { ReadAny } from "./read"
+import SyncArticles from "./syncronise";
 import proposalAbi from "../../../contracts/gProposal.json";
 
 export function GetFewArticles() {
@@ -38,6 +39,7 @@ export function GetFewArticles() {
 
     return (
         <section>
+            <SyncArticles onChainCounter={counter}/>
             <div className="container">
                 <div className="d-flex align-items-center">
                     <h4>Last articles :</h4>
