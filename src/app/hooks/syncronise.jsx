@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import ReadArticle from "./read"
 
-export default function syncArticles() {
+export default function SyncArticles() {
     const [id, setId] = useState(0);
     const [counter, setCounter] = useState(0);
     const [executed, setExecuted] = useState(false);
@@ -33,7 +33,7 @@ export default function syncArticles() {
             const pusher = async () => {
                 for (let i = id+1; i <= counterData; i++) {
                     const currentArticle = await ReadArticle(i);
-                    const res = await fetch(`/api/syncronise`); //+ currentArticle data
+                    const res = await fetch(`/api/syncronise/${currentArticle[0]}/${currentArticle[1]}/${currentArticle[2]}/${currentArticle[10]}/${currentArticle[5]}/${currentArticle[3]}`);
                     console.log(res.json());
                 }
             }
@@ -42,4 +42,9 @@ export default function syncArticles() {
         }
     }), [counter];
     
+    return (
+        <div>
+            <p>00</p>
+        </div>
+    )
 }

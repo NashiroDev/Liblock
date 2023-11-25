@@ -1,16 +1,13 @@
-import { query } from '../../../../../db/db';
-import { escape } from 'mysql';
+import { query } from '../../../../db/db';
 import { NextResponse } from "next/server";
 
-export async function GET(request) {
-    let lastId;
+export async function GET(request, response) {
+    let lastId = 0;
 
     try {
-        const articleQuery = `
-      SELECT * FROM article OREDER BY id DESC LIMIT 1;
-    `;
+        const articleQuery = `SELECT id FROM article OREDER BY id DESC LIMIT 1;`;
 
-        lastId = await query(articleQuery, escape(author_address));
+        lastId = await query(articleQuery);
 
     } catch (error) {
         console.error('Error reading last Id:', error);
