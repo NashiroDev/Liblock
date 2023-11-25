@@ -50,10 +50,6 @@ export default function GetProposals() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Logic for filtering and searching Proposals based on the form inputs
-        console.log('Tag:', tag);
-        console.log('Keyword:', keyword);
-        console.log('Order:', order);
     };
 
     if (keyword != '' && proposalsList) {
