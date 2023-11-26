@@ -4,22 +4,29 @@ import { NextResponse } from "next/server";
 
 export async function GET(request, { params }) {
     let marker;
+    let scout;
 
     try {
         const seekTagQuery = `SELECT id FROM tags WHERE name = ?;`;
+        const seekLinkQuery = `SELECT * FROM article_tags WHERE article_id = ? AND tag_id = ?;`;
         const newTagQuery = `INSERT INTO tags (name) VALUE (?);`;
         const newLinkQuery = `INSERT INTO article_tags (article_id, tag_id) VALUES (?, ?);`;
 
         for (let i = 1; i <= params.tags.length; i++) {          
             try {
-                const scout = await query(seekTagQuery, [escape(stringToSlug(params.tags[i]))]);
-                await query(newLinkQuery, [escape(Number(params.tags[0])), scout.id]);
+                scout = await query(seekTagQuery, [escape(stringToSlug(params.tags[i]))]);
                 marker = "1";
             } catch (error) {
                 await query(newTagQuery, [escape(stringToSlug(params.tags[i]))]);
-                const scout = await query(seekTagQuery, [escape(stringToSlug(params.tags[i]))]);
-                await query(newLinkQuery, [escape(Number(params.tags[0])), scout.id]);
+                scout = await query(seekTagQuery, [escape(stringToSlug(params.tags[i]))]);
                 marker = "11";
+            }
+            try {
+                await query(seekLinkQuery, [escape(Number(params.tags[0])), scout.id]);
+                marker += "2";
+            } catch (error) {
+                await query(newLinkQuery, [escape(Number(params.tags[0])), scout.id]);
+                marker += "22";
             }
         }
     } catch (error) {
