@@ -34,7 +34,7 @@ export default function OwnedArticles({ authorAddress }) {
           {articles.map((result) => (
             <div className="col-3 ms-4 mt-4 card d-flex row-3" key={result.id}>
               <div className="card-body">
-                <p className="card-text">test = {result.title}</p>
+                <h4 className="card-text">{result.title}</h4>
                 <p className="card-text">id = {result.id}</p>
                 <p className="card-text">test = {result.content}</p>
               </div>
