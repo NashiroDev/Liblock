@@ -22,8 +22,12 @@ const page: FC<pageProps> = ({ params }) => {
         args: [params.slug[1], vote]
     });
 
-    const data0 = ReadArticle(params.slug[1])
-    data0.then((val) => setArticleData(val))
+    const data0 = ReadArticle(Number(params.slug[1]))
+    data0.then((val) => {
+        setArticleData(val)
+        const endVote = new Date(Number(articleData[3]) * 1000);
+        articleData[3] = endVote.toLocaleString();
+    })
 
     const { data, isLoading, isSuccess, isError, write } = useContractWrite(config);
 
@@ -48,6 +52,13 @@ const page: FC<pageProps> = ({ params }) => {
             </div>
             <div className="d-flex border text-center m-2 p-4">
                 <p className="fs-5 mt-2 text-wrap">{articleData[2]}</p>
+            </div>
+            <div className="d-flex">
+                <p>Yes (\%of votes) : {(Number(articleData[6]) * 100) / Number(articleData[6]) + Number(articleData[7]) + Number(articleData[8])}</p>
+                <p>No (\%of votes) : {(Number(articleData[7]) * 100) / Number(articleData[6]) + Number(articleData[7]) + Number(articleData[8])}</p>
+                <p>Abstain (\%of votes) : {(Number(articleData[8]) * 100) / Number(articleData[6]) + Number(articleData[7]) + Number(articleData[8])}</p>
+                <p>Unique voters : {Number(articleData[9])}</p>
+                <p>Voting end : {String(articleData[10])}</p>
             </div>
             <form onSubmit={handleSubmit}>
                 <div className="form-check">
