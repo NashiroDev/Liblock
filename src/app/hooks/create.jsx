@@ -29,6 +29,7 @@ export default function CreateProposal() {
         <section className="container mt-4">
             <h3>Write article data</h3>
             <p>Will be pulished as {connectedUserAddress}</p>
+            <p>You will be able to retrieve this proposal to attach tags to it for better visibility.</p>
             <form onSubmit={handleSubmit} className="d-flex flex-column align-items-center">
                 <div className="input-group mb-3">
                     <input
