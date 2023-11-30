@@ -10,7 +10,7 @@ interface pageProps {
 const page: FC<pageProps> = ({ params }) => {
     const [articleData, setArticleData] = useState(['', '', '', '']);
 
-    const data = ReadArticle(params.slug[1])
+    const data = ReadArticle(Number(params.slug[1]))
     data.then((val) => setArticleData(val))
 
     return (

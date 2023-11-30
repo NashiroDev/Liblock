@@ -101,13 +101,12 @@ export default function Dashboard() {
           try {
             const positionList = [];
             for (let i = 0; i <= stakeNounce; i++) {
-              const addressLedger = ReadAnyArgs(liblockedContract, liblockedAbi.abi, "ledger", [address, i]);
-              const data = await addressLedger;
-              const temp0 = new Date(Number(data[3]) * 1000);
-              const temp1 = new Date(Number(data[4]) * 1000);
-              data[3] = temp0.toLocaleString();
-              data[4] = temp1.toLocaleString();
-              positionList.push(data);
+              const addressLedger = await ReadAnyArgs(liblockedContract, liblockedAbi.abi, "ledger", [address, i]);
+              const temp0 = new Date(Number(addressLedger[3]) * 1000);
+              const temp1 = new Date(Number(addressLedger[4]) * 1000);
+              addressLedger[3] = temp0.toLocaleString();
+              addressLedger[4] = temp1.toLocaleString();
+              positionList.push(addressLedger);
             }
             setLedger(positionList);
             setExecuted0(true);

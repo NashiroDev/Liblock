@@ -4,7 +4,6 @@ import { NextResponse } from "next/server";
 
 export async function GET(request, { params }) {
     let marker;
-    console.log(params.params);
 
     try {
         const articleQuery = `INSERT INTO article (id, title, content, createdAt, accepted, creator_address, likes, deprecated) VALUES (?, ?, ?, ?, ?, ?, ?, ?);`;

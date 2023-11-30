@@ -49,10 +49,6 @@ export default function GetArticles() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Logic for filtering and searching articles based on the form inputs
-        console.log('Tag:', tag);
-        console.log('Keyword:', keyword);
-        console.log('Order:', order);
     };
 
     if (keyword != '' && articlesList) {
