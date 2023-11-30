@@ -53,7 +53,7 @@ const page: FC<pageProps> = ({ params }) => {
             <div className="d-flex border text-center m-2 p-4">
                 <p className="fs-5 mt-2 text-wrap">{articleData[2]}</p>
             </div>
-            <div className="d-flex">
+            <div className="d-flex row">
                 <p>Yes (\%of votes) : {(Number(articleData[6]) * 100) / Number(articleData[6]) + Number(articleData[7]) + Number(articleData[8])}</p>
                 <p>No (\%of votes) : {(Number(articleData[7]) * 100) / Number(articleData[6]) + Number(articleData[7]) + Number(articleData[8])}</p>
                 <p>Abstain (\%of votes) : {(Number(articleData[8]) * 100) / Number(articleData[6]) + Number(articleData[7]) + Number(articleData[8])}</p>
