@@ -24,6 +24,8 @@ export default function GetArticles() {
                 const newArticlesList = [];
                 for (let i = 0; i <= counter; i++) {
                     const articleData = await ReadArticle(i);
+                    articleData.push(String(articleData[1]).toLowerCase().replace(/[^a-zA-Z0-9- ]/g, '').replace(/\s+/g, '-'));
+                    articleData[1] = articleData[1].replace(/[^a-zA-Z0-9\-:é&'ç()!? ]/g, '');
                     if (articleData[5]) {
                         articleData[10] = String(articleData[10]);
                         newArticlesList.push(articleData);
@@ -125,7 +127,7 @@ export default function GetArticles() {
                             <p className="card-text text-align-center">{result[2].slice(0, 107)}...</p>
                             <p className='d-flex justify-content-center lh-1'>By : {result[3].slice(0, 6)}...{result[3].slice(36, 42)}</p>
                             <div className="d-flex justify-content-center">
-                                <Link href={`/articles/read/${result[1]}/${result[0]}`} className="btn btn-primary">Read</Link>
+                                <Link href={`/articles/read/${result[-1]}/${result[0]}`} className="btn btn-primary">Read</Link>
                             </div>
                         </div>
                     </div>

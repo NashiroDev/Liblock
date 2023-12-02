@@ -31,7 +31,7 @@ export default function SyncArticles({ onChainCounter }) {
             const pusher = async () => {
                 for (let i = id+1; i <= onChainCounter; i++) {
                     const currentArticle = await ReadArticle(i);
-                    const res = await fetch(`/api/syncronise/${currentArticle[0]}/${currentArticle[1]}/${currentArticle[2]}/${currentArticle[10]}/${currentArticle[5]}/${currentArticle[3]}`);
+                    const res = await fetch(`/api/syncronise/${currentArticle[0]}/${currentArticle[1].replace(/[^a-zA-Z0-9\-:é&'ç()!? ]/g, '')}/${currentArticle[2]}/${currentArticle[10]}/${currentArticle[5]}/${currentArticle[3]}`);
                 }
             }
             

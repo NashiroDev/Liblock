@@ -21,6 +21,8 @@ export function GetFewArticles() {
                 const newArticlesList = [];
                 for (let i = counter; i >= counter-11; i--) {
                     const articleData = await ReadArticle(i);
+                    articleData.push(String(articleData[1]).toLowerCase().replace(/[^a-zA-Z0-9- ]/g, '').replace(/\s+/g, '-'));
+                    articleData[1] = articleData[1].replace(/[^a-zA-Z0-9\-:é&'ç()!? ]/g, '');
                     if (articleData[5]) {
                         articleData[10] = String(articleData[10]);
                         newArticlesList.push(articleData);
@@ -63,7 +65,7 @@ export function GetFewArticles() {
                                         <span className="badge bg-warning text-light ms-2">Dapps</span>
                                         <span className="badge bg-warning text-light ms-2">L2</span>
                                     </div>
-                                    <Link href={`/articles/read/${result[1]}/${result[0]}`} className="btn btn-primary mt-2">Read</Link>
+                                    <Link href={`/articles/read/${result[11]}/${result[0]}`} className="btn btn-primary mt-2">Read</Link>
                                 </div>
                             </div>
                         ))}
@@ -95,6 +97,8 @@ export function GetFewProposals() {
                 const newProposalsList = [];
                 for (let i = counter; i >= counter-11; i--) {
                     const proposalData = await ReadArticle(i);
+                    proposalData.push(String(proposalData[1]).toLowerCase().replace(/[^a-zA-Z0-9- ]/g, '').replace(/\s+/g, '-'));
+                    proposalData[1] = proposalData[1].replace(/[^a-zA-Z0-9\-:é&'ç()!? ]/g, '');
                     if (!proposalData[5]) {
                         proposalData[10] = String(proposalData[10]);
                         newProposalsList.push(proposalData);
@@ -136,7 +140,7 @@ export function GetFewProposals() {
                                         <div className="progress-bar-striped bg-warning" style={{ width: 45 }}></div>
                                         <div className="progress-bar-striped bg-danger" style={{ width: 98 }}></div>
                                     </div>
-                                    <Link href={`/proposals/read/${result[1]}/${result[0]}`} className="btn btn-primary mt-2">See and vote</Link>
+                                    <Link href={`/proposals/read/${result[11]}/${result[0]}`} className="btn btn-primary mt-2">See and vote</Link>
                                 </div>
                             </div>
                         ))}

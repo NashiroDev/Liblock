@@ -3,6 +3,7 @@ import { escape } from 'mysql';
 import ReadArticle from '../hooks/read';
 
 // TEMP IGNORED : websocket issues w/ scroll sepo scan
+// to discard
 
 export default async function pullProposal(i, title, content, tags) {
     const proposal = await ReadArticle(i);

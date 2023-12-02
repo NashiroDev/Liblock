@@ -25,6 +25,8 @@ export default function GetProposals() {
                 const newProposalsList = [];
                 for (let i = 0; i <= counter; i++) {
                     const proposalData = await ReadArticle(i);
+                    proposalData.push(String(proposalData[1]).toLowerCase().replace(/[^a-zA-Z0-9- ]/g, '').replace(/\s+/g, '-'));
+                    proposalData[1] = proposalData[1].replace(/[^a-zA-Z0-9\-:é&'ç()!? ]/g, '');
                     if (!proposalData[5]) {
                         proposalData[10] = String(proposalData[10]);
                         newProposalsList.push(proposalData);
@@ -133,7 +135,7 @@ export default function GetProposals() {
                                 <div className="progress-bar-striped bg-warning d-flex justify-content-center" style={{ width: 5 }}>5%</div>
                                 <div className="progress-bar-striped bg-danger d-flex justify-content-center" style={{ width: 25 }}>25%</div>
                             </div>
-                            <Link href={`/proposals/read/${result[1]}/${result[0]}`} className="btn btn-secondary mt-2 justify-content-center d-flex">See more</Link>
+                            <Link href={`/proposals/read/${result[-1]}/${result[0]}`} className="btn btn-secondary mt-2 justify-content-center d-flex">See more</Link>
                         </div>
                     </div>
                 ))}
