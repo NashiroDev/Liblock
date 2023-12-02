@@ -13,7 +13,6 @@ export default function Themes() {
                 },
             });
             const data = await res.json();
-            console.log(res.da, "RES");
             setTags(data.data);
         };
 

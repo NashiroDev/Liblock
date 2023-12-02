@@ -53,9 +53,9 @@ export default function Dashboard() {
             const data3 = await currentEpoch;
             setEpoch(data3);
   
-            // const currentInherit = ReadAnyArgs(distributorContract, distributorAbi.abi, "getAddressEpochInheritance", [address, epoch]);
-            // const data4 = await currentInherit;
-            setInherit("Temp new epoch wait");
+            const currentInherit = ReadAnyArgs(distributorContract, distributorAbi.abi, "getAddressEpochInheritance", [address, epoch]);
+            const data4 = await currentInherit;
+            setInherit(data4);
   
             const currentShares = ReadAnyArgs(distributorContract, distributorAbi.abi, "getAddressEpochShares", [address, epoch]);
             const data5 = await currentShares;
