@@ -1,5 +1,5 @@
 "use client"
-import Themes from "../partials/themes"
+import Themes from "./hooks/seekTags"
 import { GetFewArticles, GetFewProposals } from "./hooks/peekData"
 
 export default function Home() {

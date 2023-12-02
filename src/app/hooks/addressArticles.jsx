@@ -38,7 +38,7 @@ export default function OwnedArticles({ authorAddress }) {
     // Call the API to add tags to the article
     const addTags = async () => {
       try {
-        const pushed = await fetch(`/api/tags`, {
+        const pushed = await fetch(`/api/tags/add`, {
           method: 'POST',
           body: JSON.stringify({ id: articleId, tagsList: formattedTags }), // Use correct field names
           headers: {

@@ -2,7 +2,7 @@ import { query } from '../../../../../db/db';
 import { escape } from 'mysql';
 import { NextResponse } from "next/server";
 
-export async function GET(request, { params }) {
+export async function GET({ params }) {
     const author_address = params.address;
     let articles;
 
