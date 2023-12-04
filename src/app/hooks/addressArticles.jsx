@@ -10,7 +10,7 @@ export default function OwnedArticles({ authorAddress }) {
 
   useEffect(() => {
     const fetchArticles = async () => {
-      const res = await fetch(`/api/owned`, {
+      const res = await fetch(`/api/articles/owned`, {
         method: 'POST',
         body: JSON.stringify({ author_address: authorAddress }), // Use correct field names
         headers: {
