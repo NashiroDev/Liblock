@@ -10,7 +10,13 @@ export default function OwnedArticles({ authorAddress }) {
 
   useEffect(() => {
     const fetchArticles = async () => {
-      const res = await fetch(`/api/owned/${authorAddress}`);
+      const res = await fetch(`/api/articles/owned`, {
+        method: 'POST',
+        body: JSON.stringify({ author_address: authorAddress }), // Use correct field names
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
       const data = await res.json();
       setArticles(data.data);
     };
@@ -38,21 +44,23 @@ export default function OwnedArticles({ authorAddress }) {
     // Call the API to add tags to the article
     const addTags = async () => {
       try {
-        const pushed = await fetch(`/api/tags`, {
-          method: 'POST',
-          body: JSON.stringify({ id: articleId, tagsList: formattedTags }), // Use correct field names
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
+        if (articleId !== "") {
+          const pushed = await fetch(`/api/tags/add`, {
+            method: 'POST',
+            body: JSON.stringify({ id: articleId, tagsList: formattedTags }), // Use correct field names
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
 
-        if (!pushed.ok) {
-          throw new Error(`Failed to add tags: ${pushed.status}`);
+          if (!pushed.ok) {
+            throw new Error(`Failed to add tags: ${pushed.status}`);
+          }
+
+          const responseData = await pushed.json();
+          setPush(responseData);
         }
 
-        const responseData = await pushed.json();
-        console.log(responseData, "RP");
-        setPush(responseData);
       } catch (error) {
         console.error('Error adding tags:', error);
       }
@@ -87,8 +95,13 @@ export default function OwnedArticles({ authorAddress }) {
           {articles.map((result) => (
             <div className="col-3 ms-4 mt-4 card d-flex row-3" key={result.id}>
               <div className="card-body">
-                <h4 className="card-text">{result.title}</h4>
-                <p className="card-text">{result.content.slice(0, 107)}...</p>
+                <h5 className="card-text">{result.title.slice(1, -1)}</h5>
+                <p className="card-text">{result.content.slice(1, -1).slice(0, 107)}...</p>
+                <div className="p-2 flex-fill">
+                  {result.linkedTags && result.linkedTags.split(',').map((tag, index) => (
+                    <span key={index} className="badge bg-primary text-light ms-2">{tag.slice(1, -1)}</span>
+                  ))}
+                </div>
                 <button
                   className="btn btn-primary"
                   onClick={() => handleToggleTag(result.id)}

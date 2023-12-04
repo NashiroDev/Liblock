@@ -25,7 +25,7 @@ export default function UpdateAddressDividends() {
         functionName: "updateAddressDividends",
     });
 
-    const { data, isLoading, isSuccess, isError, write } = useContractWrite(config);
+    const { write } = useContractWrite(config);
 
     const handleSubmit = (e) => {
         e.preventDefault();

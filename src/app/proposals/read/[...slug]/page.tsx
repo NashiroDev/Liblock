@@ -45,7 +45,7 @@ const page: FC<pageProps> = ({ params }) => {
     return (
         <section className="container mb-4">
             <div className="d-flex justify-content-center mt-4 mb-4">
-                <h1 className="justify-content-center text-align-center">{articleData[1]}</h1>
+                <h1 className="justify-content-center text-align-center">{articleData[1].replace(/[^a-zA-Z0-9\-:é&'ç()!? ]/g, '')}</h1>
             </div>
             <div className="d-flex">
                 <p className="fs-6">Author : {articleData[3]}</p>

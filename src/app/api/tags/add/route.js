@@ -1,10 +1,9 @@
-import { query } from '../../../../db/db';
-import { escape } from 'mysql';
+import { query } from '../../../../../db/db';
+import { escape } from "mysql";
 
 export async function POST(req) {
     let marker;
     let scout;
-    let scout1;
 
     const { id, tagsList } = await req.json();
 
@@ -17,19 +16,16 @@ export async function POST(req) {
 
             marker = "0";
             try {
-                // Use a try-catch block to handle duplicate entry error
                 await query(newTagQuery, [escape(stringToSlug(tagsList[i]))]);
                 console.log(scout, "Tag inserted and re-queried");
                 marker += "1";
             } catch (error) {
-                // Handle duplicate entry error more gracefully
                 if (error.code === 'ER_DUP_ENTRY') {
                     console.log(`Tag '${tagsList[i]}' already exists.`);
                     marker += "3";
-                    // Retrieve the existing tag
                 } else {
                     console.error('Error inserting tag:', error);
-                    throw error; // Rethrow other errors
+                    throw error;
                 }
             }
 
@@ -42,15 +38,13 @@ export async function POST(req) {
                 await query(newLinkQuery, [escape(id), String(scout[0].id), (escape(id) + "." + String(scout[0].id))]);
                 marker += "22";
                 console.log('Link inserted successfully', newLinkQuery, [escape(id), scout[0].id, (escape(id) + "." + String(scout[0].id))]);
-                
             } catch (error) {
-
                 if (error.code === 'ER_DUP_ENTRY') {
                     console.log(`Tag already linked.`);
                     marker += "9";
                 } else {
                     console.error('Error inserting tag:', error);
-                    throw error; // Rethrow other errors
+                    throw error;
                 }
             }
         }

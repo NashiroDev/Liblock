@@ -1,4 +1,4 @@
-import { query } from '../../../../../db/db';
+import { query } from '../../../../../../db/db';
 import { escape } from 'mysql';
 import { NextResponse } from "next/server";
 
