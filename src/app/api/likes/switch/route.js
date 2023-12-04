@@ -3,6 +3,7 @@ import { query } from '../../../../../db/db';
 export async function POST(req) {
 
     const { userId, articleId } = await req.json();
+    let marker = "0";
 
     try {
         const checkLikeQuery = `SELECT * FROM likes WHERE user_id = ? AND article_id = ?;`;
@@ -19,15 +20,19 @@ export async function POST(req) {
             await query(decrementLikesQuery, [articleId]);
 
             console.log('User unliked the article');
+            marker += "1";
         } else {
 
             await query(incrementLikesQuery, [articleId]);
             await query(createLikeQuery, [userId, articleId]);
 
             console.log('User liked the article');
+            marker += "2";
         }
     } catch (error) {
         console.error('Error liking the article:', error);
         throw error;
     }
+
+    return new Response(JSON.stringify({ marker:marker }))
 }
