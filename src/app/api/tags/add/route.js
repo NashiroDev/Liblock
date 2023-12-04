@@ -1,5 +1,5 @@
 import { query } from '../../../../../db/db';
-import { escape } from 'mysql';
+import { escape } from "mysql";
 
 export async function POST(req) {
     let marker;
