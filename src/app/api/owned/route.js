@@ -6,7 +6,14 @@ export async function POST(req) {
     let articles;
 
     try {
-        const articleQuery = `SELECT * FROM article WHERE creator_address = ?;`;
+        const articleQuery = `
+            SELECT a.*, GROUP_CONCAT(t.name) AS linkedTags
+            FROM article a
+            LEFT JOIN article_tags at ON a.id = at.article_id
+            LEFT JOIN tags t ON at.tag_id = t.id
+            WHERE a.creator_address = ? 
+            GROUP BY a.id;
+        `;
 
         articles = await query(articleQuery, escape(body.author_address));
 

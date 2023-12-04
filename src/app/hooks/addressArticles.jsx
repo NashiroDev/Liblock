@@ -18,7 +18,6 @@ export default function OwnedArticles({ authorAddress }) {
         },
       });
       const data = await res.json();
-      console.log(data);
       setArticles(data.data);
     };
 
@@ -59,57 +58,61 @@ export default function OwnedArticles({ authorAddress }) {
           }
 
           const responseData = await pushed.json();
-          console.log(responseData, "RP");
           setPush(responseData);
         }
 
       } catch (error) {
-      console.error('Error adding tags:', error);
-    }
+        console.error('Error adding tags:', error);
+      }
+    };
+
+    await addTags();
+
+    // Clear the tag input field
+    setTagInput('');
   };
 
-  await addTags();
-
-  // Clear the tag input field
-  setTagInput('');
-};
-
-return (
-  <div>
-    <button className="btn btn-primary mt-3" onClick={handleToggleArticle}>
-      Show Articles
-    </button>
-    <div className="mb-3">
-      <p>{push.marker}</p>
-      <input
-        type="text"
-        className="form-control"
-        placeholder="Enter tags"
-        value={tagInput}
-        onChange={(e) => setTagInput(e.target.value)}
-      />
-      <button className="btn btn-primary mt-2" onClick={handleAddTag}>
-        Add Tags for article {articleId}
+  return (
+    <div>
+      <button className="btn btn-primary mt-3" onClick={handleToggleArticle}>
+        Show Articles
       </button>
-    </div>
-    {showArticle && (
-      <div className="row mt-3 justify-content-center text-center">
-        {articles.map((result) => (
-          <div className="col-3 ms-4 mt-4 card d-flex row-3" key={result.id}>
-            <div className="card-body">
-              <h4 className="card-text">{result.title}</h4>
-              <p className="card-text">{result.content.slice(0, 107)}...</p>
-              <button
-                className="btn btn-primary"
-                onClick={() => handleToggleTag(result.id)}
-              >
-                Pass id
-              </button>
-            </div>
-          </div>
-        ))}
+      <div className="mb-3">
+        <p>{push.marker}</p>
+        <input
+          type="text"
+          className="form-control"
+          placeholder="Enter tags"
+          value={tagInput}
+          onChange={(e) => setTagInput(e.target.value)}
+        />
+        <button className="btn btn-primary mt-2" onClick={handleAddTag}>
+          Add Tags for article {articleId}
+        </button>
       </div>
-    )}
-  </div>
-);
+      {showArticle && (
+        <div className="row mt-3 justify-content-center text-center">
+          {articles.map((result) => (
+            <div className="col-3 ms-4 mt-4 card d-flex row-3" key={result.id}>
+              <div className="card-body">
+                <h5 className="card-text">{result.title}</h5>
+                <p className="card-text">{result.content.slice(0, 107)}...</p>
+                <div className="p-2 flex-fill">
+                  {result.linkedTags && result.linkedTags.split(',').map((tag, index) => (
+                    <span key={index} className="badge bg-primary text-light ms-2">{tag}</span>
+                  ))}
+                </div>
+                <button
+                  className="btn btn-primary"
+                  onClick={() => handleToggleTag(result.id)}
+                >
+                  Pass id
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
 }
