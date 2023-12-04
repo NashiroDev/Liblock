@@ -95,11 +95,11 @@ export default function OwnedArticles({ authorAddress }) {
           {articles.map((result) => (
             <div className="col-3 ms-4 mt-4 card d-flex row-3" key={result.id}>
               <div className="card-body">
-                <h5 className="card-text">{result.title}</h5>
-                <p className="card-text">{result.content.slice(0, 107)}...</p>
+                <h5 className="card-text">{result.title.slice(1, -1)}</h5>
+                <p className="card-text">{result.content.slice(1, -1).slice(0, 107)}...</p>
                 <div className="p-2 flex-fill">
                   {result.linkedTags && result.linkedTags.split(',').map((tag, index) => (
-                    <span key={index} className="badge bg-primary text-light ms-2">{tag}</span>
+                    <span key={index} className="badge bg-primary text-light ms-2">{tag.slice(1, -1)}</span>
                   ))}
                 </div>
                 <button
