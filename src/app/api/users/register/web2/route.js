@@ -1,10 +1,9 @@
-import { query } from '../../../../../db/db';
+import { query } from '../../../../../../db/db';
 import { escape } from "mysql";
-import { hashPassword } from '../../../utils/password'; // Import a password hashing utility function
-import { validateEmail, validatePassword } from '../../../utils/validation'; // Import validation utility functions
+import { hashPassword } from '../../../../utils/password'; // Import a password hashing utility function
+import { validateEmail, validatePassword } from '../../../../utils/validation'; // Import validation utility functions
 
-export default async function POST(req) {
-    let newUser;
+export async function POST(req) {
 
     const { email, password, name } = await req.json();
 
@@ -18,11 +17,12 @@ export default async function POST(req) {
         const hashedPassword = await hashPassword(password);
 
         // Create a new user in the database
-        newUser = await query(newUserQuery, [escape(email), escape(name), hashedPassword]);
+        await query(newUserQuery, [email, hashedPassword, escape(name).slice(1,-1)]);
 
     } catch (error) {
         console.error('Error creating user', error);
+        return new Response(JSON.stringify({ status:"An error occured, please retry." }))
     }
 
-    return new Response(JSON.stringify({ status:newUser }))
+    return new Response(JSON.stringify({ status:"Successfully registered !" }));
 }
