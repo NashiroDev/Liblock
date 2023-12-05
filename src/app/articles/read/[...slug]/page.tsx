@@ -91,20 +91,20 @@ const Page: FC<pageProps> = ({ params }) => {
       {article && (
         <div>
           <div className="d-flex justify-content-center mt-4 mb-4">
-            <h1 className="justify-content-center text-align-center">{article.title.slice(1, -1)}</h1>
+            <h1 className="justify-content-center text-align-center">{article.title}</h1>
           </div>
           <div className="d-flex">
-            <p className="fs-6 me-auto">Author: {article.creator_address.slice(1, -1)}</p>
+            <p className="fs-6 me-auto">Author: {article.creator_address}</p>
             <p className="fs-6">Created at: {article.createdAt}</p>
           </div>
           <div className="d-flex border text-center m-2 p-4">
-            <p className="fs-5 mt-2 text-wrap">{article.content.slice(1, -1)}</p>
+            <p className="fs-5 mt-2 text-wrap">{article.content}</p>
           </div>
           <div className="d-flex">
             {article.linkedTags &&
               article.linkedTags.split(",").map((tag, index) => (
                 <span key={index} className="badge bg-primary text-light ms-2">
-                  {tag.slice(1, -1)}
+                  {tag}
                 </span>
               ))}
           </div>
