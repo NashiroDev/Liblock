@@ -10,8 +10,8 @@ export async function GET(request, { params }) {
 
         const sanitizedParams = [
             escape(Number(params.params[0])), // Sanitize the ID parameter
-            escape(String(params.params[1])), // Sanitize the title parameter
-            escape(String(params.params[2])), // Sanitize the content parameter
+            escape(String(params.params[1])).slice(1,-1), // Sanitize the title parameter
+            escape(String(params.params[2])).slice(1,-1), // Sanitize the content parameter
             escape(Number(params.params[3]) - 604800), // Sanitize and calculate the createdAt parameter
             Boolean(params.params[4] === 'false') ? 0 : 1, // Sanitize the accepted parameter
             escape(String(params.params[5])), // Sanitize the creator_address parameter

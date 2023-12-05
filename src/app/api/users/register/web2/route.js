@@ -17,7 +17,7 @@ export async function POST(req) {
         const hashedPassword = await hashPassword(password);
 
         // Create a new user in the database
-        await query(newUserQuery, [email, hashedPassword, escape(name).slice(1,-1)]);
+        await query(newUserQuery, [escape(email).slice(1,-1), hashedPassword, escape(name).slice(1,-1)]);
 
     } catch (error) {
         console.error('Error creating user', error);

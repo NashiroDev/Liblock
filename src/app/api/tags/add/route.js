@@ -16,7 +16,7 @@ export async function POST(req) {
 
             marker = "0";
             try {
-                await query(newTagQuery, [escape(stringToSlug(tagsList[i]))]);
+                await query(newTagQuery, [escape(stringToSlug(tagsList[i])).slice(1,-1)]);
                 console.log(scout, "Tag inserted and re-queried");
                 marker += "1";
             } catch (error) {
@@ -31,7 +31,7 @@ export async function POST(req) {
 
 
             try {
-                scout = await query(seekTagQuery, [escape(stringToSlug(tagsList[i]))]);
+                scout = await query(seekTagQuery, [escape(stringToSlug(tagsList[i])).slice(1,-1)]);
                 marker += "2";
                 console.log(scout[0].id, "Link query result");
                 
