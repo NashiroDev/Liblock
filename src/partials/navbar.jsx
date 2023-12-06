@@ -1,5 +1,4 @@
 "use client"
-import { ConnectButton } from "@rainbow-me/rainbowkit"
 import Link from 'next/link'
 import React, { useState } from 'react';
 
@@ -50,12 +49,8 @@ export default function Navbar() {
           <li className="nav-item">
             <Link className="nav-link text-light" href="/proposals/create">Submit</Link>
           </li>
-          <li><ConnectButton
-            accountStatus={{
-              smallScreen: 'avatar',
-              largeScreen: 'full',
-            }}
-          />
+          <li>
+            <Link className="nav-link text-light" href="/user/register">Login / Register</Link>
           </li>
         </ul>
       </div>
