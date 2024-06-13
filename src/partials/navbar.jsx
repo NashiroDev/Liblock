@@ -1,6 +1,7 @@
 "use client"
 import Link from 'next/link'
 import React, { useState } from 'react';
+import { ConnectButton } from "@rainbow-me/rainbowkit"
 
 export default function Navbar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -50,7 +51,12 @@ export default function Navbar() {
             <Link className="nav-link text-light" href="/proposals/create">Submit</Link>
           </li>
           <li>
-            <Link className="nav-link text-light" href="/user/register">Login / Register</Link>
+            <ConnectButton
+              accountStatus={{
+                smallScreen: 'avatar',
+                largeScreen: 'full',
+              }}
+            />
           </li>
         </ul>
       </div>

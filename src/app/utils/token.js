@@ -1,23 +1,29 @@
-import jwt from 'jsonwebtoken';
+import { jwtVerify } from 'jose/jwt/verify';
 
-const JWT_SECRET = 'hgqe45h654g65df5h5h55fd6fh12ez657hf5';
-
-export function getUserIdFromToken(token) {
+export async function getUserIdFromToken(token) {
   try {
-    const decoded = jwt.verify(token, JWT_SECRET);
-    return decoded.userId;
+    const { payload } = await jwtVerify(token, {
+      issuer: 'urn:example:issuer',
+      audience: 'urn:example:audience',
+    });
+    return payload.userId;
   } catch (error) {
     // Handle invalid or expired token
+    console.log(error, 'biwa');
     return null;
   }
 }
 
-export function getUserNameFromToken(token) {
+export async function getUserNameFromToken(token) {
   try {
-    const decoded = jwt.verify(token, JWT_SECRET);
-    return decoded.name;
+    const { payload } = await jwtVerify(token, {
+      issuer: 'urn:example:issuer',
+      audience: 'urn:example:audience',
+    });
+    return payload.name;
   } catch (error) {
     // Handle invalid or expired token
+    console.log(error, 'wabi');
     return null;
   }
 }
