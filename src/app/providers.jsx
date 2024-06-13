@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import {
   RainbowKitProvider,
   getDefaultWallets,
@@ -11,7 +11,7 @@ import {
   trustWallet,
   ledgerWallet,
 } from "@rainbow-me/rainbowkit/wallets";
-import { configureChains, createConfig, WagmiConfig } from "wagmi";
+import { configureChains, createConfig, WagmiConfig, useSignMessage, useAccount, useConnect } from "wagmi";
 import { scrollSepolia } from "wagmi/chains";
 import { publicProvider } from "wagmi/providers/public";
 import { alchemyProvider } from "wagmi/providers/alchemy";
@@ -55,6 +55,16 @@ const wagmiConfig = createConfig({
   webSocketPublicClient,
 });
 
+const requestSignature = async (signMessage, address, disconnect) => {
+  const message = `Domain: liblock.app\nPubKey: ${address}\nMessage: By signing this message, you recognize that your interactions on the website are your own responsibility and any issues that may arise can not be blamed over the Liblock app`;
+  try {
+    await signMessage({ message });
+  } catch (error) {
+    console.error('Signature failed', error);
+    disconnect();
+  }
+};
+
 const Providers = ({ children }) => {
   return (
     <WagmiConfig config={wagmiConfig}>
@@ -63,10 +73,26 @@ const Providers = ({ children }) => {
         appInfo={AppInfo}
         modalSize="compact"
       >
-        {children}
+        <SignatureChecker>
+          {children}
+        </SignatureChecker>
       </RainbowKitProvider>
     </WagmiConfig>
   );
+};
+
+const SignatureChecker = ({ children }) => {
+  const { address, isConnected } = useAccount();
+  const { signMessage } = useSignMessage();
+  const { disconnect } = useConnect();
+
+  useEffect(() => {
+    if (isConnected) {
+      requestSignature(signMessage, address, disconnect);
+    }
+  }, [isConnected, address, signMessage, disconnect]);
+
+  return <>{children}</>;
 };
 
 export default Providers;

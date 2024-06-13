@@ -1,10 +1,12 @@
 "use client"
 import Link from 'next/link'
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ConnectButton } from "@rainbow-me/rainbowkit"
+import { useAccount } from 'wagmi';
 
 export default function Navbar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const { address, isConnected } = useAccount();
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -44,12 +46,16 @@ export default function Navbar() {
           </ul>
         </div>
         <ul className="navbar-nav ms-4">
-          <li className="nav-item">
-            <Link className="nav-link text-light" href="/dashboard">Dashboard</Link>
-          </li>
-          <li className="nav-item">
-            <Link className="nav-link text-light" href="/proposals/create">Submit</Link>
-          </li>
+          {isConnected && (
+            <li className="nav-item">
+              <Link className="nav-link text-light" href="/dashboard">Dashboard</Link>
+            </li>
+          )}
+          {isConnected && (
+            <li className="nav-item">
+              <Link className="nav-link text-light" href="/proposals/create">Submit</Link>
+            </li>
+          )}
           <li>
             <ConnectButton
               accountStatus={{
