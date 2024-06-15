@@ -1,42 +1,28 @@
 "use client"
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import ReadArticle, { ReadAny } from "./read";
-import proposalAbi from "../../../contracts/gProposal.json";
 import ProgressBar from "../../partials/progressbar";
 
 export default function GetProposals() {
     const [keyword, setKeyword] = useState('');
     const [order, setOrder] = useState('');
     const [page, setPage] = useState(1);
-    const [counter, setCounter] = useState();
     const [tags, setTags] = useState([]);
     const [selectedTags, setSelectedTags] = useState([]);
-    let [proposalsList, setProposalsList] = useState([]);
-
-    const proposalContract = process.env.NEXT_PUBLIC_PROPOSALS_ADDRESS;
-    const counterData = ReadAny(proposalContract, proposalAbi.abi, 'proposalCount');
-
-    counterData.then((val) => setCounter(String(val) - 1));
+    const [proposalsList, setProposalsList] = useState([]);
 
     useEffect(() => {
-        if (proposalsList.length !== counter + 1) {
-            const fetchData = async () => {
-                const newProposalsList = [];
-                for (let i = 0; i <= counter; i++) {
-                    const proposalData = await ReadArticle(i);
-                    proposalData.push(String(proposalData[1]).toLowerCase().replace(/[^a-zA-Z0-9- ]/g, '').replace(/\s+/g, '-'));
-                    proposalData[1] = proposalData[1].replace(/[^a-zA-Z0-9\-:é&'ç()!? ]/g, '');
-                    if (!proposalData[5]) {
-                        proposalData[10] = String(proposalData[10]);
-                        newProposalsList.push(proposalData);
-                    }
-                }
-                setProposalsList(newProposalsList);
+        const fetchData = async () => {
+            try {
+                const res = await fetch(`/api/articles/readtag`, { method: 'GET' });
+                const data = await res.json();
+                setProposalsList(data.data);
+            } catch (error) {
+                console.error('Error fetching proposals:', error);
             }
-            fetchData();
-        }
-    }, [counter]);
+        };
+        fetchData();
+    }, []);
 
     useEffect(() => {
         const fetchTags = async () => {
@@ -52,9 +38,9 @@ export default function GetProposals() {
     }, []);
 
     const handleTagClick = (tagName) => {
-        setSelectedTags(prevSelectedTags => 
-            prevSelectedTags.includes(tagName) 
-                ? prevSelectedTags.filter(selected => selected !== tagName) 
+        setSelectedTags((prevSelectedTags) =>
+            prevSelectedTags.includes(tagName)
+                ? prevSelectedTags.filter((selected) => selected !== tagName)
                 : [...prevSelectedTags, tagName]
         );
     };
@@ -71,23 +57,27 @@ export default function GetProposals() {
         e.preventDefault();
     };
 
-    if (keyword != '' && proposalsList) {
-        proposalsList = proposalsList.filter(proposal => proposal[1].includes(keyword));
-    }
+    let filteredProposals = proposalsList;
 
-    if (selectedTags.length > 0) {
-        proposalsList = proposalsList.filter(proposal => 
-            selectedTags.some(tag => proposal.tags && proposal.tags.includes(tag))
+    if (keyword) {
+        filteredProposals = filteredProposals.filter((proposal) =>
+            proposal.title.includes(keyword)
         );
     }
 
-    if (order != '') {
-        proposalsList.sort((a, b) => (order === 'asc' ? a[10] - b[10] : b[10] - a[10]));
+    if (selectedTags.length > 0) {
+        filteredProposals = filteredProposals.filter((proposal) =>
+            selectedTags.some((tag) => proposal.tags && proposal.tags.includes(tag))
+        );
+    }
+
+    if (order) {
+        filteredProposals.sort((a, b) => (order === 'asc' ? a.createdAt - b.createdAt : b.createdAt - a.createdAt));
     }
 
     const startIndex = (page - 1) * 11;
     const endIndex = page * 11;
-    const paginatedProposals = proposalsList.slice(startIndex, endIndex);
+    const paginatedProposals = filteredProposals.slice(startIndex, endIndex);
 
     return (
         <div className="container-fluid">
@@ -109,7 +99,13 @@ export default function GetProposals() {
                     <form onSubmit={handleSubmit}>
                         <div className="form-group mb-2">
                             <label htmlFor="keyword">Keyword:</label>
-                            <input type="text" className="form-control" id="keyword" value={keyword} onChange={handleKeywordChange} />
+                            <input
+                                type="text"
+                                className="form-control"
+                                id="keyword"
+                                value={keyword}
+                                onChange={handleKeywordChange}
+                            />
                         </div>
                         <div className="form-group mb-2">
                             <label htmlFor="order">Order:</label>
@@ -118,35 +114,46 @@ export default function GetProposals() {
                                 <option value="desc">Latest</option>
                             </select>
                         </div>
-                        <button type="submit" className="btn btn-primary mb-4">Search</button>
+                        <button type="submit" className="btn btn-primary mb-4">
+                            Search
+                        </button>
                     </form>
                 </div>
                 {paginatedProposals.map((result, index) => (
                     <div key={index} className="card col proposal-card ms-2">
                         <div className="card-header">
-                            <p>Proposed by: <strong>{result[3].slice(0, 6)}...{result[3].slice(36, 42)}</strong>
-                                <span className="badge bg-success text-light ms-4">
-                                    {result[4] ? 'Finished' : 'On going'}
-                                </span>
+                            <p>
+                                Proposed by: <strong>{result.creator_address.slice(0, 6)}...{String(result.creator_address.slice(result.creator_address.length - 6))}</strong>
                             </p>
+                            <span className="badge bg-success text-light">
+                                {result.accepted ? 'Finished' : 'On going'}
+                            </span>
                         </div>
                         <div className="card-body">
-                            <h5 className="card-title">{result[1]}</h5>
+                            <h5 className="card-title">{result.title}</h5>
                             <div className="badge-section mt-2">
-                                <span className="badge bg-warning text-light ms-2">BTC</span>
+                                {result.tags && result.tags.map((tag, idx) => (
+                                    <span key={idx} className="badge bg-warning text-light ms-2">{tag}</span>
+                                ))}
                             </div>
-                            <ProgressBar yesVotes={result[6]} noVotes={result[7]} abstainVotes={result[8]} />
-                            <Link href={`/proposals/read/${result[-1]}/${result[0]}`} className="btn btn-secondary mt-2 justify-content-center d-flex">See more</Link>
+                            <ProgressBar yesVotes={result.yesVotes} noVotes={result.noVotes} abstainVotes={result.abstainVotes} />
+                            <Link href={`/proposals/read/${result.id}`} className="btn btn-secondary mt-2 justify-content-center d-flex">
+                                See more
+                            </Link>
                         </div>
                     </div>
                 ))}
             </div>
             <div className="d-flex justify-content-center m-4">
                 {page > 1 && (
-                    <button onClick={() => setPage(page - 1)} className="btn btn-secondary ms-2"> Previous Page </button>
+                    <button onClick={() => setPage(page - 1)} className="btn btn-secondary ms-2">
+                        Previous Page
+                    </button>
                 )}
                 {endIndex < proposalsList.length && (
-                    <button onClick={() => setPage(page + 1)} className="btn btn-secondary ms-2"> Next Page </button>
+                    <button onClick={() => setPage(page + 1)} className="btn btn-secondary ms-2">
+                        Next Page
+                    </button>
                 )}
             </div>
         </div>
