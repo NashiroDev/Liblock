@@ -3,15 +3,17 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import ReadArticle, { ReadAny } from "./read";
 import proposalAbi from "../../../contracts/gProposal.json";
-import ProgressBar from "../../partials/progressbar"; // import the new ProgressBar component
+import ProgressBar from "../../partials/progressbar";
 
 export default function GetProposals() {
-    const [tag, setTag] = useState('');
     const [keyword, setKeyword] = useState('');
     const [order, setOrder] = useState('');
     const [page, setPage] = useState(1);
     const [counter, setCounter] = useState();
+    const [tags, setTags] = useState([]);
+    const [selectedTags, setSelectedTags] = useState([]);
     let [proposalsList, setProposalsList] = useState([]);
+
     const proposalContract = process.env.NEXT_PUBLIC_PROPOSALS_ADDRESS;
     const counterData = ReadAny(proposalContract, proposalAbi.abi, 'proposalCount');
 
@@ -36,8 +38,25 @@ export default function GetProposals() {
         }
     }, [counter]);
 
-    const handleTagChange = (e) => {
-        setTag(e.target.value);
+    useEffect(() => {
+        const fetchTags = async () => {
+            const res = await fetch(`/api/tags/seek`, {
+                method: 'POST',
+                body: JSON.stringify({ token: "ads21" }),
+                headers: { 'Content-Type': 'application/json' },
+            });
+            const data = await res.json();
+            setTags(data.data);
+        };
+        fetchTags();
+    }, []);
+
+    const handleTagClick = (tagName) => {
+        setSelectedTags(prevSelectedTags => 
+            prevSelectedTags.includes(tagName) 
+                ? prevSelectedTags.filter(selected => selected !== tagName) 
+                : [...prevSelectedTags, tagName]
+        );
     };
 
     const handleKeywordChange = (e) => {
@@ -53,23 +72,17 @@ export default function GetProposals() {
     };
 
     if (keyword != '' && proposalsList) {
-        let proposalsListFilter = [];
-        for (let i = 0; i < proposalsList.length; i++) {
-            if (proposalsList[i][1].includes(keyword)) {
-                proposalsListFilter.push(proposalsList[i]);
-            }
-        }
-        proposalsList = proposalsListFilter;
+        proposalsList = proposalsList.filter(proposal => proposal[1].includes(keyword));
+    }
+
+    if (selectedTags.length > 0) {
+        proposalsList = proposalsList.filter(proposal => 
+            selectedTags.some(tag => proposal.tags && proposal.tags.includes(tag))
+        );
     }
 
     if (order != '') {
-        if (order === 'asc') {
-            const proposalsListOrder = [...proposalsList].sort((a, b) => a[10] - b[10]);
-            proposalsList = proposalsListOrder;
-        } else if (order === 'desc') {
-            const proposalsListOrder = [...proposalsList].sort((a, b) => b[10] - a[10]);
-            proposalsList = proposalsListOrder;
-        }
+        proposalsList.sort((a, b) => (order === 'asc' ? a[10] - b[10] : b[10] - a[10]));
     }
 
     const startIndex = (page - 1) * 11;
@@ -78,13 +91,22 @@ export default function GetProposals() {
 
     return (
         <div className="container-fluid">
+            <div className="d-flex flex-wrap tags-filter">
+                <h4>Filter by tags :</h4>
+                {tags.map((tag, index) => (
+                    <span
+                        key={index}
+                        className={`badge tag-badge ${selectedTags.includes(tag.name) ? 'selected' : ''}`}
+                        onClick={() => handleTagClick(tag.name)}
+                        style={{ opacity: selectedTags.includes(tag.name) ? 1 : 0.6, cursor: 'pointer', margin: '5px' }}
+                    >
+                        {tag.name}
+                    </span>
+                ))}
+            </div>
             <div className="page-body row row-cols-4 mt-4 mb-6 justify-content-center">
                 <div className="col-md-3 ms-2 mb-4 card">
                     <form onSubmit={handleSubmit}>
-                        <div className="form-group mb-2">
-                            <label htmlFor="tag">Tag:</label>
-                            <input type="text" className="form-control" id="tag" value={tag} onChange={handleTagChange} />
-                        </div>
                         <div className="form-group mb-2">
                             <label htmlFor="keyword">Keyword:</label>
                             <input type="text" className="form-control" id="keyword" value={keyword} onChange={handleKeywordChange} />

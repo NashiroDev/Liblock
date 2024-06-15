@@ -14,3 +14,18 @@
         min-height: 1rem;
     }
 }
+
+.tags-filter {
+    margin: 1.618rem;
+    display: flex;
+    flex-wrap: wrap;
+    border: 1px solid black;
+    border-radius: 3.618px;
+
+    span {
+        margin: 0.5rem;
+        color: black;
+        font-size: 0.8rem;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+    }
+}
