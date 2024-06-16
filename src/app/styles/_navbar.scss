@@ -1,9 +1,31 @@
 .nav-img {
-    width: 65px;
-    height: 50px;
+  width: 65px;
+  height: 50px;
 }
 .navbar {
-    position: sticky;
-    top: 0;
-    z-index: 999;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+}
+
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  background-color: #343a40;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  border-radius: 0.25rem;
+}
+
+.dropdown-menu.show {
+  display: block;
+}
+
+.dropdown-item {
+  color: #fff;
+  padding: 0.5rem 1rem;
+  text-decoration: none;
+}
+
+.dropdown-item:hover {
+  background-color: #495057;
 }
