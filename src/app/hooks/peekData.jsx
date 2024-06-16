@@ -15,8 +15,8 @@ const cardStyle = {
 const containerStyle = {
     display: 'grid',
     gap: '1rem',
-    gridTemplateColumns: 'repeat(3, 1fr)', // 2 columns
-    gridTemplateRows: 'repeat(2, auto)' // 3 rows
+    gridTemplateColumns: 'repeat(3, 1fr)', // 3 columns
+    gridTemplateRows: 'repeat(2, auto)' // 2 rows
 };
 
 const buttonStyle = {
@@ -165,7 +165,7 @@ export function GetFewProposals() {
                                 animate={{ opacity: 1, x: 0 }}
                                 exit={{ opacity: 0, x: -100 }}
                             >
-                                <Link href={`/proposals/read/{result[11]}/${result[0]}`} passHref>
+                                <Link href={`/proposals/read/${result[11]}/${result[0]}`} passHref>
                                     <div className="card-body">
                                         <h5 className="card-title">{result[1].slice(0, 48)}</h5>
                                         <p className="card-text">Proposer : {result[3].slice(0, 6)}...{result[3].slice(36, 42)}</p>

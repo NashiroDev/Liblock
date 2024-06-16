@@ -1,7 +1,6 @@
 "use client"
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import ProgressBar from "../../partials/progressbar";
 
 export default function GetProposals() {
     const [keyword, setKeyword] = useState('');
@@ -57,7 +56,7 @@ export default function GetProposals() {
         e.preventDefault();
     };
 
-    let filteredProposals = proposalsList;
+    let filteredProposals = proposalsList.filter((proposal) => !proposal.accepted);
 
     if (keyword) {
         filteredProposals = filteredProposals.filter((proposal) =>
@@ -125,22 +124,18 @@ export default function GetProposals() {
                             <p>
                                 Proposed by: <strong>{result.creator_address.slice(0, 6)}...{String(result.creator_address.slice(result.creator_address.length - 6))}</strong>
                             </p>
-                            <span className="badge bg-success text-light">
-                                {result.accepted ? 'Finished' : 'On going'}
-                            </span>
+                            <span className="badge bg-success text-light">Time left: not implemented</span>
                         </div>
-                        <div className="card-body">
-                            <h5 className="card-title">{result.title}</h5>
-                            <div className="badge-section mt-2">
-                                {result.tags && result.tags.map((tag, idx) => (
-                                    <span key={idx} className="badge bg-warning text-light ms-2">{tag}</span>
-                                ))}
+                        <Link href={`/proposals/read/${result.title.toLowerCase().replace(/[^a-zA-Z0-9- ]/g, '').replace(/\s+/g, '-')}/${result.id}`} passHref>
+                            <div className="card-body">
+                                <h5 className="card-title">{result.title}</h5>
+                                <div className="badge-section mt-2">
+                                    {result.tags && result.tags.map((tag, idx) => (
+                                        <span key={idx} className="badge bg-warning text-light ms-2">{tag}</span>
+                                    ))}
+                                </div>
                             </div>
-                            <ProgressBar yesVotes={result.yesVotes} noVotes={result.noVotes} abstainVotes={result.abstainVotes} />
-                            <Link href={`/proposals/read/${result.id}`} className="btn btn-secondary mt-2 justify-content-center d-flex">
-                                See more
-                            </Link>
-                        </div>
+                        </Link>
                     </div>
                 ))}
             </div>
@@ -150,7 +145,7 @@ export default function GetProposals() {
                         Previous Page
                     </button>
                 )}
-                {endIndex < proposalsList.length && (
+                {endIndex < filteredProposals.length && (
                     <button onClick={() => setPage(page + 1)} className="btn btn-secondary ms-2">
                         Next Page
                     </button>

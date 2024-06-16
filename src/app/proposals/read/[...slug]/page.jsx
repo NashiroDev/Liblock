@@ -1,18 +1,15 @@
-"use client"
+"use client";
 
-import { FC, useState } from "react"
-import ReadArticle from "../../../hooks/read"
+import { useEffect, useState } from "react";
+import ReadArticle from "../../../hooks/read";
 import { useContractWrite, usePrepareContractWrite } from 'wagmi';
 import proposalAbi from "../../../../../contracts/gProposal.json";
+import ProgressBar from "../../../../partials/ProgressBar";
 
-interface pageProps {
-    params: { slug: string }
-}
+const Page = ({ params }) => {
+    const proposalContract = "0x9536a9453bC912F7C955c79C9a11758Fab4695ef";
 
-const page: FC<pageProps> = ({ params }) => {
-    const proposalContract = "0x9536a9453bC912F7C955c79C9a11758Fab4695ef"
-
-    const [articleData, setArticleData] = useState(['', '', '', '']);
+    const [articleData, setArticleData] = useState(['', '', '', '', '', '', 0, 0, 0, 0, '']);
     const [vote, setVote] = useState("");
 
     const { config } = usePrepareContractWrite({
@@ -22,25 +19,30 @@ const page: FC<pageProps> = ({ params }) => {
         args: [params.slug[1], vote]
     });
 
-    const data0 = ReadArticle(Number(params.slug[1]))
-    data0.then((val) => {
-        setArticleData(val)
-        const endVote = new Date(Number(articleData[3]) * 1000);
-        articleData[3] = endVote.toLocaleString();
-    })
+    useEffect(() => {
+        const fetchData = async () => {
+            const data = await ReadArticle(Number(params.slug[1]));
+            console.log(data);
+            setArticleData(data);
+        };
+    
+        fetchData();
+    }, [params.slug]);
 
     const { data, isLoading, isSuccess, isError, write } = useContractWrite(config);
 
-    const handleSubmit = (e: any) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
         if (write) {
             write();
-        };
+        }
     };
 
-    const handleVoteChange = (e: any) => {
+    const handleVoteChange = (e) => {
         setVote(e.target.value);
     };
+
+    const totalVotes = Number(articleData[6]) + Number(articleData[7]) + Number(articleData[8]);
 
     return (
         <section className="container mb-4">
@@ -54,11 +56,12 @@ const page: FC<pageProps> = ({ params }) => {
                 <p className="fs-5 mt-2 text-wrap">{articleData[2]}</p>
             </div>
             <div className="d-flex row">
-                <p>Yes (\%of votes) : {(Number(articleData[6]) * 100) / Number(articleData[6]) + Number(articleData[7]) + Number(articleData[8])}</p>
-                <p>No (\%of votes) : {(Number(articleData[7]) * 100) / Number(articleData[6]) + Number(articleData[7]) + Number(articleData[8])}</p>
-                <p>Abstain (\%of votes) : {(Number(articleData[8]) * 100) / Number(articleData[6]) + Number(articleData[7]) + Number(articleData[8])}</p>
+                <ProgressBar yesVotes={Number(articleData[6])} noVotes={Number(articleData[7])} abstainVotes={Number(articleData[8])} />
+                <p>Yes (% of votes) : {(Number(articleData[6]) * 100) / totalVotes}</p>
+                <p>No (% of votes) : {(Number(articleData[7]) * 100) / totalVotes}</p>
+                <p>Abstain (% of votes) : {(Number(articleData[8]) * 100) / totalVotes}</p>
                 <p>Unique voters : {Number(articleData[9])}</p>
-                <p>Voting end : {String(articleData[10])}</p>
+                <p>Voting end : {articleData[10]}</p>
             </div>
             <form onSubmit={handleSubmit}>
                 <div className="form-check">
@@ -96,7 +99,7 @@ const page: FC<pageProps> = ({ params }) => {
                 </div>
                 <button type="submit" className="btn btn-primary mt-3">Vote</button>
             </form>
-            {isLoading &&
+            {isLoading && (
                 <div className="notif-pop-loading position-fixed bottom-0 end-0 m-4 p-2 w-25">
                     <div className="card p-2">
                         <div className="toast-header">
@@ -107,20 +110,20 @@ const page: FC<pageProps> = ({ params }) => {
                         </div>
                     </div>
                 </div>
-            }
-            {isSuccess &&
+            )}
+            {isSuccess && (
                 <div className="notif-pop-success position-fixed bottom-0 end-0 m-4 p-2 w-50">
                     <div className="card p-2">
                         <div className="toast-header">
-                            <strong className="me-auto">Vote sent !</strong>
+                            <strong className="me-auto">Vote sent!</strong>
                         </div>
                         <div className="toast-body">
                             Hash : {data?.hash}
                         </div>
                     </div>
                 </div>
-            }
-            {isError &&
+            )}
+            {isError && (
                 <div className="notif-pop-error position-fixed bottom-0 end-0 m-4 p-2 w-25">
                     <div className="card p-2">
                         <div className="toast-header">
@@ -131,9 +134,9 @@ const page: FC<pageProps> = ({ params }) => {
                         </div>
                     </div>
                 </div>
-            }
+            )}
         </section>
-    )
-}
+    );
+};
 
-export default page
+export default Page;
