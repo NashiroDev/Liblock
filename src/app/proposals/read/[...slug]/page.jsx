@@ -16,13 +16,12 @@ const Page = ({ params }) => {
         address: proposalContract,
         abi: proposalAbi.abi,
         functionName: "vote",
-        args: [params.slug[1], vote]
+        args: [Number(params.slug[1]), vote]
     });
 
     useEffect(() => {
         const fetchData = async () => {
             const data = await ReadArticle(Number(params.slug[1]));
-            console.log(data);
             setArticleData(data);
         };
     

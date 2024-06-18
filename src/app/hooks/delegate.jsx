@@ -1,5 +1,5 @@
 import { useContractWrite, usePrepareContractWrite, useAccount } from "wagmi";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import tokenAbi from "../../../contracts/Liblock.json";
 import rTokenAbi from "../../../contracts/rLiblock.json";
 import proposalAbi from "../../../contracts/gProposal.json";
@@ -9,7 +9,7 @@ export default function Delegate() {
   const libContract = process.env.NEXT_PUBLIC_LIB_ADDRESS;
   const rLibContract = process.env.NEXT_PUBLIC_RLIB_ADDRESS;
   const proposalContract = process.env.NEXT_PUBLIC_PROPOSALS_ADDRESS;
-  
+
   const connectedUserAddress = useAccount()
   const [address, setAddress] = useState("");
   // const [counter, setCounter] = useState(0);
@@ -20,6 +20,7 @@ export default function Delegate() {
   const [rliblockGetVotes, setrLiblockGetVotes] = useState("loading");
   const [rliblockDelegates, setrLiblockDelegates] = useState("loading");
   const [virtualPower, setVirtualPower] = useState("loading");
+  const [notifications, setNotifications] = useState([]);
 
   const { config } = usePrepareContractWrite({
     address: libContract,
@@ -55,6 +56,27 @@ export default function Delegate() {
     write();
   };
 
+  useEffect(() => {
+    if (isDelegationLoading) {
+      addNotification("Transaction waiting", "Please see your wallet.", "loading");
+    }
+    if (isSuccess) {
+      addNotification("Delegation submission succeed, waiting for transaction validation", `Hash: ${txnData.hash}`, "success");
+    }
+    if (isError) {
+      addNotification("Transaction aborted", "User denied transaction.", "error");
+    }
+  }, [isDelegationLoading, isSuccess, isError, txnData]);
+
+  const addNotification = (title, message, type) => {
+    const id = new Date().getTime();
+    setNotifications((prev) => [...prev, { id, title, message, type }]);
+
+    setTimeout(() => {
+      setNotifications((prev) => prev.filter((notification) => notification.id !== id));
+    }, 7000);
+  };
+
   return (
     <section className="container mt-4">
       <div className="ms-4 mt-4 mb-4">
@@ -82,43 +104,21 @@ export default function Delegate() {
           </button>
         </div>
       </form>
-      <div className="toast-container">
-        {isDelegationLoading &&
-          <div className="notif-pop-loading position-fixed bottom-0 end-0 m-4 p-2 w-25">
-            <div className="card p-2">
-              <div className="toast-header">
-                <strong className="me-auto">Transaction waiting</strong>
-              </div>
-              <div className="toast-body">
-                Please see your wallet.
-              </div>
+      <div className="toast-container position-fixed bottom-0 end-0 m-4">
+        {notifications.map((notif) => (
+          <div
+            key={notif.id}
+            className={`notif-pop-${notif.type} card p-2 mb-2`}
+            style={{ width: "400px" }}
+          >
+            <div className="toast-header">
+              <strong className="me-auto">{notif.title}</strong>
+            </div>
+            <div className="toast-body">
+              {notif.message}
             </div>
           </div>
-        }
-        {isSuccess &&
-          <div className="notif-pop-success position-fixed bottom-0 end-0 m-4 p-2 w-50">
-            <div className="card p-2">
-              <div className="toast-header">
-                <strong className="me-auto">Transaction sent !</strong>
-              </div>
-              <div className="toast-body">
-                Hash : {txnData.hash}
-              </div>
-            </div>
-          </div>
-        }
-        {isError &&
-          <div className="notif-pop-error position-fixed bottom-0 end-0 m-4 p-2 w-25">
-            <div className="card p-2">
-              <div className="toast-header">
-                <strong className="me-auto">Transaction aborted</strong>
-              </div>
-              <div className="toast-body">
-                User denied transaction
-              </div>
-            </div>
-          </div>
-        }
+        ))}
       </div>
     </section>
   );
