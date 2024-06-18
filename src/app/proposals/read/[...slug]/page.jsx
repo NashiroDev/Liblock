@@ -11,6 +11,7 @@ const Page = ({ params }) => {
 
     const [articleData, setArticleData] = useState(['', '', '', '', '', '', 0, 0, 0, 0, '']);
     const [vote, setVote] = useState("");
+    const [notifications, setNotifications] = useState([]);
 
     const { config } = usePrepareContractWrite({
         address: proposalContract,
@@ -19,16 +20,37 @@ const Page = ({ params }) => {
         args: [Number(params.slug[1]), vote]
     });
 
+    const { data, isLoading, isSuccess, isError, write } = useContractWrite(config);
+
     useEffect(() => {
         const fetchData = async () => {
             const data = await ReadArticle(Number(params.slug[1]));
             setArticleData(data);
         };
-    
+
         fetchData();
     }, [params.slug]);
 
-    const { data, isLoading, isSuccess, isError, write } = useContractWrite(config);
+    useEffect(() => {
+        if (isLoading) {
+            addNotification("Transaction waiting", "Please see your wallet.", "loading");
+        }
+        if (isSuccess) {
+            addNotification("Claim submission succeed, waiting for transaction validation", `Hash: ${data.hash}`, "success");
+        }
+        if (isError) {
+            addNotification("Transaction aborted", "User denied transaction.", "error");
+        }
+    }, [isLoading, isSuccess, isError, data]);
+
+    const addNotification = (title, message, type) => {
+        const id = new Date().getTime();
+        setNotifications((prev) => [...prev, { id, title, message, type }]);
+
+        setTimeout(() => {
+            setNotifications((prev) => prev.filter((notification) => notification.id !== id));
+        }, 7000);
+    };
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -98,42 +120,22 @@ const Page = ({ params }) => {
                 </div>
                 <button type="submit" className="btn btn-primary mt-3">Vote</button>
             </form>
-            {isLoading && (
-                <div className="notif-pop-loading position-fixed bottom-0 end-0 m-4 p-2 w-25">
-                    <div className="card p-2">
+            <div className="toast-container position-fixed bottom-0 end-0 m-4">
+                {notifications.map((notif) => (
+                    <div
+                        key={notif.id}
+                        className={`notif-pop-${notif.type} card p-2 mb-2`}
+                        style={{ width: "400px" }}
+                    >
                         <div className="toast-header">
-                            <strong className="me-auto">Transaction waiting</strong>
+                            <strong className="me-auto">{notif.title}</strong>
                         </div>
                         <div className="toast-body">
-                            Please see your wallet.
+                            {notif.message}
                         </div>
                     </div>
-                </div>
-            )}
-            {isSuccess && (
-                <div className="notif-pop-success position-fixed bottom-0 end-0 m-4 p-2 w-50">
-                    <div className="card p-2">
-                        <div className="toast-header">
-                            <strong className="me-auto">Vote sent!</strong>
-                        </div>
-                        <div className="toast-body">
-                            Hash : {data?.hash}
-                        </div>
-                    </div>
-                </div>
-            )}
-            {isError && (
-                <div className="notif-pop-error position-fixed bottom-0 end-0 m-4 p-2 w-25">
-                    <div className="card p-2">
-                        <div className="toast-header">
-                            <strong className="me-auto">Transaction aborted</strong>
-                        </div>
-                        <div className="toast-body">
-                            User denied transaction
-                        </div>
-                    </div>
-                </div>
-            )}
+                ))}
+            </div>
         </section>
     );
 };
