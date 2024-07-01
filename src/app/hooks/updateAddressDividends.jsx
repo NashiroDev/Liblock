@@ -38,7 +38,7 @@ export default function UpdateAddressDividends() {
             addNotification("Transaction waiting", "Please see your wallet.", "loading");
         }
         if (isSuccess) {
-            addNotification("Article submission succeed, waiting for transaction validation", `Hash: ${data.hash}`, "success");
+            addNotification("Transaction submission succeed, waiting for transaction validation", `Hash: ${data.hash}`, "success");
         }
         if (isError) {
             addNotification("Transaction aborted", "User denied transaction.", "error");
