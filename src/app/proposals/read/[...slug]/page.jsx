@@ -79,42 +79,6 @@ const Page = ({ params }) => {
                     <div className="d-flex border text-center m-2 p-4 article-content">
                         <p className="fs-5 mt-2 text-wrap">{articleData[2]}</p>
                     </div>
-                    <form onSubmit={handleSubmit} className="vote-form">
-                        <div className="form-check">
-                            <input
-                                className="form-check-input"
-                                type="radio"
-                                name="voteOption"
-                                value="yes"
-                                checked={vote === "yes"}
-                                onChange={handleVoteChange}
-                            />
-                            <label className="form-check-label">Yes</label>
-                        </div>
-                        <div className="form-check">
-                            <input
-                                className="form-check-input"
-                                type="radio"
-                                name="voteOption"
-                                value="no"
-                                checked={vote === "no"}
-                                onChange={handleVoteChange}
-                            />
-                            <label className="form-check-label">No</label>
-                        </div>
-                        <div className="form-check">
-                            <input
-                                className="form-check-input"
-                                type="radio"
-                                name="voteOption"
-                                value="abstain"
-                                checked={vote === "abstain"}
-                                onChange={handleVoteChange}
-                            />
-                            <label className="form-check-label">Abstain</label>
-                        </div>
-                        <button type="submit" className="btn btn-primary mt-3 btn-vote">Vote</button>
-                    </form>
                 </div>
                 <div className="col-md-3">
                     <div className="sticky-top pt-4 sidebar">
@@ -126,6 +90,18 @@ const Page = ({ params }) => {
                             <p>Unique voters : {Number(articleData[9])}</p>
                             <p>Voting end in : {calculateTimeDifference(Number(articleData[10]))}</p>
                         </div>
+                        <hr className="my-3" />
+                        <form onSubmit={handleSubmit} className="vote-form d-flex flex-column align-items-center">
+                            <div className="btn-group-vertical w-100" role="group">
+                                <input type="radio" className="btn-check" name="voteOption" id="yes" value="yes" checked={vote === "yes"} onChange={handleVoteChange} />
+                                <label className="btn btn-outline-primary" htmlFor="yes">Yes</label>
+                                <input type="radio" className="btn-check" name="voteOption" id="no" value="no" checked={vote === "no"} onChange={handleVoteChange} />
+                                <label className="btn btn-outline-primary" htmlFor="no">No</label>
+                                <input type="radio" className="btn-check" name="voteOption" id="abstain" value="abstain" checked={vote === "abstain"} onChange={handleVoteChange} />
+                                <label className="btn btn-outline-primary" htmlFor="abstain">Abstain</label>
+                            </div>
+                            <button type="submit" className="btn btn-primary mt-3 w-100">Vote</button>
+                        </form>
                     </div>
                 </div>
                 <div className="toast-container position-fixed bottom-0 end-0 m-4">
