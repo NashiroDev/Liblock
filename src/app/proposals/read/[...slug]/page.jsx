@@ -13,6 +13,7 @@ const Page = ({ params }) => {
     const [articleData, setArticleData] = useState(['', '', '', '', '', '', 0, 0, 0, 0, '']);
     const [vote, setVote] = useState("");
     const [notifications, setNotifications] = useState([]);
+    const [timeRemaining, setTimeRemaining] = useState('');
 
     const { config } = usePrepareContractWrite({
         address: proposalContract,
@@ -31,6 +32,14 @@ const Page = ({ params }) => {
 
         fetchData();
     }, [params.slug]);
+
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setTimeRemaining(calculateTimeDifference(Number(articleData[10])));
+        }, 1000);
+
+        return () => clearInterval(timer);
+    }, [articleData[10]]);
 
     useEffect(() => {
         if (isLoading) {
