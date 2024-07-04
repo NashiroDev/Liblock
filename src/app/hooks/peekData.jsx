@@ -38,7 +38,7 @@ export function GetFewArticles() {
     const [articlesList, setArticlesList] = useState([]);
 
     const counterData = ReadAny(proposalContract, proposalAbi.abi, 'proposalCount')
-    counterData.then((val) => setCounter(String(val) - 1));
+    counterData.then((val) => setCounter(Math.max(0, Number(val) - 1)));
 
     useEffect(() => {
         if (articlesList.length < 12) {
@@ -116,7 +116,7 @@ export function GetFewProposals() {
     const [proposalsList, setProposalsList] = useState([]);
 
     const counterData = ReadAny(proposalContract, proposalAbi.abi, 'proposalCount')
-    counterData.then((val) => setCounter(String(val) - 1));
+    counterData.then((val) => setCounter(Math.max(0, Number(val) - 1)));
 
     useEffect(() => {
         if (proposalsList.length < 12) {
@@ -169,11 +169,6 @@ export function GetFewProposals() {
                                     <div className="card-body">
                                         <h5 className="card-title">{result[1].slice(0, 48)}</h5>
                                         <p className="card-text">Proposer : {result[3].slice(0, 6)}...{result[3].slice(36, 42)}</p>
-                                        <div className="progress mt-2">
-                                            <div className="progress-bar-striped bg-success" style={{ width: 50 }}></div>
-                                            <div className="progress-bar-striped bg-warning" style={{ width: 45 }}></div>
-                                            <div className="progress-bar-striped bg-danger" style={{ width: 98 }}></div>
-                                        </div>
                                     </div>
                                 </Link>
                             </motion.div>
