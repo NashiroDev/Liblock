@@ -2,13 +2,13 @@ import { readContract  } from 'wagmi/actions';
 import proposalAbi from "../../../contracts/gProposal.json";
 
 export default async function ReadArticle(id:number): Promise<any> {
-    const proposalContract = "0x9536a9453bC912F7C955c79C9a11758Fab4695ef"
+    const proposalContract = "0xe297f738b0c6b7ca9ef60d506822ae55aaf30286"
 
     const data = await readContract({
         address: proposalContract,
         abi: proposalAbi.abi,
-        functionName: 'getProposal',
-        args: [id]
+        functionName: 'proposals',
+        args: [id],
     });
 
     return data
