@@ -11,7 +11,7 @@ const Page = ({ params }) => {
     const proposalContract = "0x9536a9453bC912F7C955c79C9a11758Fab4695ef";
 
     const [articleData, setArticleData] = useState(['', '', '', '', '', '', 0, 0, 0, 0, '']);
-    const [vote, setVote] = useState("");
+    const [vote, setVote] = useState(-1);
     const [notifications, setNotifications] = useState([]);
     const [timeRemaining, setTimeRemaining] = useState('');
 
@@ -70,7 +70,7 @@ const Page = ({ params }) => {
     };
 
     const handleVoteChange = (e) => {
-        setVote(e.target.value);
+        setVote(Number(e.target.value));
     };
 
     const totalVotes = Number(articleData[6]) + Number(articleData[7]) + Number(articleData[8]);
@@ -102,11 +102,11 @@ const Page = ({ params }) => {
                         <hr className="my-3" />
                         <form onSubmit={handleSubmit} className="vote-form d-flex flex-column align-items-center">
                             <div className="btn-group-vertical w-100" role="group">
-                                <input type="radio" className="btn-check" name="voteOption" id="yes" value="yes" checked={vote === "yes"} onChange={handleVoteChange} />
+                                <input type="radio" className="btn-check" name="voteOption" id="yes" value="0" checked={vote === 0} onChange={handleVoteChange} />
                                 <label className="btn btn-outline-primary" htmlFor="yes">Yes</label>
-                                <input type="radio" className="btn-check" name="voteOption" id="no" value="no" checked={vote === "no"} onChange={handleVoteChange} />
+                                <input type="radio" className="btn-check" name="voteOption" id="no" value="1" checked={vote === 1} onChange={handleVoteChange} />
                                 <label className="btn btn-outline-primary" htmlFor="no">No</label>
-                                <input type="radio" className="btn-check" name="voteOption" id="abstain" value="abstain" checked={vote === "abstain"} onChange={handleVoteChange} />
+                                <input type="radio" className="btn-check" name="voteOption" id="abstain" value="2" checked={vote === 2} onChange={handleVoteChange} />
                                 <label className="btn btn-outline-primary" htmlFor="abstain">Abstain</label>
                             </div>
                             <button type="submit" className="btn btn-primary mt-3 w-100">Vote</button>
