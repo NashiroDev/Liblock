@@ -15,14 +15,22 @@ const Page = ({ params }) => {
     const [notifications, setNotifications] = useState([]);
     const [timeRemaining, setTimeRemaining] = useState('');
 
-    const { config } = usePrepareContractWrite({
+    const { config: configVote } = usePrepareContractWrite({
         address: proposalContract,
         abi: proposalAbi.abi,
         functionName: "vote",
         args: [Number(params.slug[1]), vote]
     });
 
-    const { data, isLoading, isSuccess, isError, write } = useContractWrite(config);
+    const { config: configExec } = usePrepareContractWrite({
+        address: proposalContract,
+        abi: proposalAbi.abi,
+        functionName: "executeProposal",
+        args: [Number(params.slug[1])]
+    });
+
+    const { data: dataVote, isLoading: LoadingVote, isSuccess: successVote, isError: errorVote, write: writeVote } = useContractWrite(configVote);
+    const { data: dataExec, isLoading: LoadingExec, isSuccess: successExec, isError: errorExec, write: writeExec } = useContractWrite(configExec);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -42,16 +50,28 @@ const Page = ({ params }) => {
     }, [articleData[10]]);
 
     useEffect(() => {
-        if (isLoading) {
+        if (LoadingVote) {
             addNotification("Transaction waiting", "Please see your wallet.", "loading");
         }
-        if (isSuccess) {
+        if (successVote) {
             addNotification("Vote submission succeed, waiting for transaction validation", `Hash: ${data.hash}`, "success");
         }
-        if (isError) {
+        if (errorVote) {
             addNotification("Transaction aborted", "User denied transaction.", "error");
         }
-    }, [isLoading, isSuccess, isError, data]);
+    }, [LoadingVote, successVote, errorVote, dataVote]);
+
+    useEffect(() => {
+        if (LoadingVote) {
+            addNotification("Transaction waiting", "Please see your wallet.", "loading");
+        }
+        if (successExec) {
+            addNotification("Vote submission succeed, waiting for transaction validation", `Hash: ${data.hash}`, "success");
+        }
+        if (errorExec) {
+            addNotification("Transaction aborted", "User denied transaction.", "error");
+        }
+    }, [LoadingExec, successExec, errorExec, dataExec]);
 
     const addNotification = (title, message, type) => {
         const id = new Date().getTime();
@@ -64,7 +84,7 @@ const Page = ({ params }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        write();
+        writeVote();
     };
 
     const handleVoteChange = (e) => {
@@ -96,6 +116,10 @@ const Page = ({ params }) => {
                             <p>Abstain (% of votes) : {(Number(articleData[8]) * 100) / totalVotes}</p>
                             <p>Unique voters : {Number(articleData[9])}</p>
                             <p>Voting end in : {calculateTimeDifference(Number(articleData[10]))}</p>
+                            {Math.floor(Date.now() / 1000) > Number(articleData[10]) && (
+                                <button className="btn btn-secondary mt-3 w-100" onClick={() => writeExec()}>Execute</button>
+                            )}
+ 
                         </div>
                         <hr className="my-3" />
                         <form onSubmit={handleSubmit} className="vote-form d-flex flex-column align-items-center">
