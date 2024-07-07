@@ -1,6 +1,6 @@
 "use client"
 
-import { useAccount } from "wagmi";
+import { useContractWrite, usePrepareContractWrite, useAccount } from "wagmi";
 import { useState, useEffect } from "react";
 import OwnedArticles from "./addressArticles";
 import tokenAbi from "../../../contracts/Liblock.json";
@@ -20,6 +20,7 @@ export default function Dashboard() {
   const [showLedger, setShowLedger] = useState(false);
   const connectedUserAddress = useAccount();
   const address = connectedUserAddress.address;
+  const [notifications, setNotifications] = useState([]);
   const [epoch, setEpoch] = useState(1);
   const [inherit, setInherit] = useState(0);
   const [liblockBalanceOf, setLiblockBalanceOf] = useState("loading");
@@ -32,24 +33,34 @@ export default function Dashboard() {
   const [claimable, setClaimable] = useState("loading");
   const [shares, setShares] = useState("loading");
   const [ledger, setLedger] = useState([]);
+  const [posIndex, setPosIndex] = useState(0);
+
+  const { config } = usePrepareContractWrite({
+    address: liblockedContract,
+    abi: liblockedAbi.abi,
+    functionName: "withdrawTokens",
+    args: [posIndex],
+  });
+
+  const { data, isLoading, isSuccess, isError, write } = useContractWrite(config);
 
   const counterData = ReadAny(proposalContract, proposalAbi.abi, 'balancingCount')
   counterData.then((val) => {
     const govVP = ReadAnyArgs(proposalContract, proposalAbi.abi, 'virtualPowerUsed', [address, val])
-    govVP.then((data) => setVirtualPower(BigInt(data) / (BigInt(10n) ** BigInt(18n))))
+    govVP.then((data) => setVirtualPower(Number(data) / 10 ** 18))
 
     const balancingData = ReadAnyArgs(proposalContract, proposalAbi.abi, 'balancing', [val])
     balancingData.then((data) => setBalancing(data))
   });
 
   const currentEpoch = ReadAny(distributorContract, distributorAbi.abi, 'getEpochHeight')
-  currentEpoch.then((data) => setEpoch(data))
+  currentEpoch.then((data) => setEpoch(Number(data)))
 
-  const currentInherit = ReadAnyArgs(distributorContract, distributorAbi.abi, 'getAddressEpochInheritance', [address, epoch])
+  const currentInherit = ReadAnyArgs(distributorContract, distributorAbi.abi, 'getAddressEpochInheritance', [address, epoch - 1])
   currentInherit.then((data) => setInherit(data))
 
   const currentShares = ReadAnyArgs(distributorContract, distributorAbi.abi, 'getAddressEpochShares', [address, epoch])
-  currentShares.then((data) => setShares(BigInt(data[0]) / (BigInt(10n) ** BigInt(18n))))
+  currentShares.then((data) => setShares(Number(data[0]) / 10 ** 18))
 
   const sNounce = ReadAnyArgs(liblockedContract, liblockedAbi.abi, 'getAddressNounce', [address])
   sNounce.then((data) => setStakeNounce(data))
@@ -60,11 +71,45 @@ export default function Dashboard() {
   const rLibVotesData = ReadAnyArgs(rLibContract, rTokenAbi.abi, 'getVotes', [address])
   const claimableTokens = ReadAnyArgs(distributorContract, distributorAbi.abi, 'getAddressClaimableTokens', [address])
 
-  libBalanceData.then((data) => setLiblockBalanceOf(BigInt(data) / (BigInt(10n) ** BigInt(18n))))
-  rLibBalanceData.then((data) => setrLiblockBalanceOf(BigInt(data) / (BigInt(10n) ** BigInt(18n))))
-  libVotesData.then((data) => setLiblockGetVotes(BigInt(data) / (BigInt(10n) ** BigInt(18n))))
-  rLibVotesData.then((data) => setrLiblockGetVotes(BigInt(data) / (BigInt(10n) ** BigInt(18n))))
-  claimableTokens.then((data) => setClaimable(BigInt(data) / (BigInt(10n) ** BigInt(18n))))
+  libBalanceData.then((data) => setLiblockBalanceOf(Number(data) / 10 ** 18))
+  rLibBalanceData.then((data) => setrLiblockBalanceOf(Number(data) / 10 ** 18))
+  libVotesData.then((data) => setLiblockGetVotes(Number(data) / 10 ** 18))
+  rLibVotesData.then((data) => setrLiblockGetVotes(Number(data) / 10 ** 18))
+  claimableTokens.then((data) => setClaimable(Number(data) / 10 ** 18))
+
+  const addNotification = (title, message, type) => {
+    const id = new Date().getTime();
+    setNotifications((prev) => [...prev, { id, title, message, type }]);
+
+    setTimeout(() => {
+      setNotifications((prev) => prev.filter((notification) => notification.id !== id));
+    }, 7000);
+  };
+
+  const handleToggleLedger = () => {
+    setShowLedger(!showLedger);
+  };
+
+  const handleSubmit = (index) => {
+    setPosIndex(index);
+    if (write) {
+      write();
+    } else {
+      addNotification("Withdraw function not initialized", "Please try again.", "error");
+    }
+  };
+
+  useEffect(() => {
+    if (isLoading) {
+      addNotification("Transaction waiting", "Please see your wallet.", "loading");
+    }
+    if (isSuccess) {
+      addNotification("Withdraw submission succeed, waiting for transaction validation", `Hash: ${data.hash}`, "success");
+    }
+    if (isError) {
+      addNotification("Transaction aborted", "User denied transaction.", "error");
+    }
+  }, [isLoading, isSuccess, isError, data]);
 
   useEffect(() => {
     const fetchLedger = async () => {
@@ -88,10 +133,6 @@ export default function Dashboard() {
       fetchLedger();
     }
   }, [stakeNounce, address, liblockedContract]);
-
-  const handleToggleLedger = () => {
-    setShowLedger(!showLedger);
-  };
 
   return (
     <section className="container mt-4">
@@ -129,12 +170,33 @@ export default function Dashboard() {
                   <p className="card-text">Lock timestamp = {String(result[3])}</p>
                   <p className="card-text">Unlock timestamp = {String(result[4])}</p>
                   <p className="card-text">Lock contract address = {result[5]}</p>
+                  {new Date(result[4]) < new Date() && (
+                    <button className="btn btn-success" onClick={() => {handleSubmit(index)}}>
+                      Withdraw
+                    </button>
+                  )}
                 </div>
               </div>
             ))}
           </div>
         )}
         <OwnedArticles authorAddress={address} />
+      </div>
+      <div className="toast-container position-fixed bottom-0 end-0 m-4">
+        {notifications.map((notif) => (
+          <div
+            key={notif.id}
+            className={`notif-pop-${notif.type} card p-2 mb-2`}
+            style={{ width: "400px" }}
+          >
+            <div className="toast-header">
+              <strong className="me-auto">{notif.title}</strong>
+            </div>
+            <div className="toast-body">
+              {notif.message}
+            </div>
+          </div>
+        ))}
       </div>
     </section >
   );
