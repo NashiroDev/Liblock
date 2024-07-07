@@ -32,7 +32,7 @@ export default function Delegate() {
   const counterData = ReadAny(proposalContract, proposalAbi.abi, 'balancingCount')
   counterData.then((val) => {
     const govVP = ReadAnyArgs(proposalContract, proposalAbi.abi, 'virtualPowerUsed', [connectedUserAddress.address, val])
-    govVP.then((data) => setVirtualPower(BigInt(data) / (BigInt(10n) ** BigInt(18n))))
+    govVP.then((data) => setVirtualPower(Number(data) / 10**18))
   });
 
   const libBalanceData = ReadAnyArgs(libContract, tokenAbi.abi, 'balanceOf', [connectedUserAddress.address])

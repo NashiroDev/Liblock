@@ -35,15 +35,6 @@ export default function Dashboard() {
   const [ledger, setLedger] = useState([]);
   const [posIndex, setPosIndex] = useState(0);
 
-  const { config } = usePrepareContractWrite({
-    address: liblockedContract,
-    abi: liblockedAbi.abi,
-    functionName: "withdrawTokens",
-    args: [posIndex],
-  });
-
-  const { data, isLoading, isSuccess, isError, write } = useContractWrite(config);
-
   const counterData = ReadAny(proposalContract, proposalAbi.abi, 'balancingCount')
   counterData.then((val) => {
     const govVP = ReadAnyArgs(proposalContract, proposalAbi.abi, 'virtualPowerUsed', [address, val])
@@ -77,6 +68,15 @@ export default function Dashboard() {
   rLibVotesData.then((data) => setrLiblockGetVotes(Number(data) / 10 ** 18))
   claimableTokens.then((data) => setClaimable(Number(data) / 10 ** 18))
 
+  const { config } = usePrepareContractWrite({
+    address: liblockedContract,
+    abi: liblockedAbi.abi,
+    functionName: "withdrawTokens",
+    args: [posIndex],
+  });
+
+  const { data, isLoading, isSuccess, isError, write } = useContractWrite(config);
+
   const addNotification = (title, message, type) => {
     const id = new Date().getTime();
     setNotifications((prev) => [...prev, { id, title, message, type }]);
@@ -84,19 +84,6 @@ export default function Dashboard() {
     setTimeout(() => {
       setNotifications((prev) => prev.filter((notification) => notification.id !== id));
     }, 7000);
-  };
-
-  const handleToggleLedger = () => {
-    setShowLedger(!showLedger);
-  };
-
-  const handleSubmit = (index) => {
-    setPosIndex(index);
-    if (write) {
-      write();
-    } else {
-      addNotification("Withdraw function not initialized", "Please try again.", "error");
-    }
   };
 
   useEffect(() => {
@@ -133,6 +120,19 @@ export default function Dashboard() {
       fetchLedger();
     }
   }, [stakeNounce, address, liblockedContract]);
+
+  const handleToggleLedger = () => {
+    setShowLedger(!showLedger);
+  };
+
+  const handleSubmit = (index) => {
+    setPosIndex(index);
+    if (write) {
+      write();
+    } else {
+      addNotification("Withdraw function not initialized", "Please try again.", "error");
+    }
+  };
 
   return (
     <section className="container mt-4">
@@ -171,7 +171,7 @@ export default function Dashboard() {
                   <p className="card-text">Unlock timestamp = {String(result[4])}</p>
                   <p className="card-text">Lock contract address = {result[5]}</p>
                   {new Date(result[4]) < new Date() && (
-                    <button className="btn btn-success" onClick={() => {handleSubmit(index)}}>
+                    <button className="btn btn-success" onClick={() => { handleSubmit(index) }}>
                       Withdraw
                     </button>
                   )}

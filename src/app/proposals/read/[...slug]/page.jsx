@@ -64,9 +64,7 @@ const Page = ({ params }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (write) {
-            write();
-        }
+        write();
     };
 
     const handleVoteChange = (e) => {
