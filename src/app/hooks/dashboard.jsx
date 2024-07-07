@@ -35,38 +35,54 @@ export default function Dashboard() {
   const [ledger, setLedger] = useState([]);
   const [posIndex, setPosIndex] = useState(0);
 
-  const counterData = ReadAny(proposalContract, proposalAbi.abi, 'balancingCount')
-  counterData.then((val) => {
-    const govVP = ReadAnyArgs(proposalContract, proposalAbi.abi, 'virtualPowerUsed', [address, val])
-    govVP.then((data) => setVirtualPower(Number(data) / 10 ** 18))
+  useEffect(() => {
+    ReadAny(proposalContract, proposalAbi.abi, 'balancingCount').then(val => {
+      ReadAnyArgs(proposalContract, proposalAbi.abi, 'virtualPowerUsed', [address, val])
+        .then(data => setVirtualPower(Number(data) / 10 ** 18));
 
-    const balancingData = ReadAnyArgs(proposalContract, proposalAbi.abi, 'balancing', [val])
-    balancingData.then((data) => setBalancing(data))
-  });
+      ReadAnyArgs(proposalContract, proposalAbi.abi, 'balancing', [val])
+        .then(data => setBalancing(data));
+    });
+  }, [address, proposalContract]);
 
-  const currentEpoch = ReadAny(distributorContract, distributorAbi.abi, 'getEpochHeight')
-  currentEpoch.then((data) => setEpoch(Number(data)))
+  useEffect(() => {
+    ReadAny(distributorContract, distributorAbi.abi, 'getEpochHeight')
+      .then(data => setEpoch(Number(data)));
+  }, [distributorContract]);
 
-  const currentInherit = ReadAnyArgs(distributorContract, distributorAbi.abi, 'getAddressEpochInheritance', [address, epoch - 1])
-  currentInherit.then((data) => setInherit(data))
+  useEffect(() => {
+    if (epoch > 1) {
+      ReadAnyArgs(distributorContract, distributorAbi.abi, 'getAddressEpochInheritance', [address, epoch - 1])
+        .then(data => setInherit(data));
+    }
+  }, [address, distributorContract, epoch]);
 
-  const currentShares = ReadAnyArgs(distributorContract, distributorAbi.abi, 'getAddressEpochShares', [address, epoch])
-  currentShares.then((data) => setShares(Number(data[0]) / 10 ** 18))
+  useEffect(() => {
+    ReadAnyArgs(distributorContract, distributorAbi.abi, 'getAddressEpochShares', [address, epoch])
+      .then(data => setShares(Number(data[0]) / 10 ** 18));
+  }, [address, distributorContract, epoch]);
 
-  const sNounce = ReadAnyArgs(liblockedContract, liblockedAbi.abi, 'getAddressNounce', [address])
-  sNounce.then((data) => setStakeNounce(data))
+  useEffect(() => {
+    ReadAnyArgs(liblockedContract, liblockedAbi.abi, 'getAddressNounce', [address])
+      .then(data => setStakeNounce(data));
+  }, [address, liblockedContract]);
 
-  const libBalanceData = ReadAnyArgs(libContract, tokenAbi.abi, 'balanceOf', [address])
-  const rLibBalanceData = ReadAnyArgs(rLibContract, rTokenAbi.abi, 'balanceOf', [address])
-  const libVotesData = ReadAnyArgs(libContract, tokenAbi.abi, 'getVotes', [address])
-  const rLibVotesData = ReadAnyArgs(rLibContract, rTokenAbi.abi, 'getVotes', [address])
-  const claimableTokens = ReadAnyArgs(distributorContract, distributorAbi.abi, 'getAddressClaimableTokens', [address])
+  useEffect(() => {
+    ReadAnyArgs(libContract, tokenAbi.abi, 'balanceOf', [address])
+      .then(data => setLiblockBalanceOf(Number(data) / 10 ** 18));
 
-  libBalanceData.then((data) => setLiblockBalanceOf(Number(data) / 10 ** 18))
-  rLibBalanceData.then((data) => setrLiblockBalanceOf(Number(data) / 10 ** 18))
-  libVotesData.then((data) => setLiblockGetVotes(Number(data) / 10 ** 18))
-  rLibVotesData.then((data) => setrLiblockGetVotes(Number(data) / 10 ** 18))
-  claimableTokens.then((data) => setClaimable(Number(data) / 10 ** 18))
+    ReadAnyArgs(rLibContract, rTokenAbi.abi, 'balanceOf', [address])
+      .then(data => setrLiblockBalanceOf(Number(data) / 10 ** 18));
+
+    ReadAnyArgs(libContract, tokenAbi.abi, 'getVotes', [address])
+      .then(data => setLiblockGetVotes(Number(data) / 10 ** 18));
+
+    ReadAnyArgs(rLibContract, rTokenAbi.abi, 'getVotes', [address])
+      .then(data => setrLiblockGetVotes(Number(data) / 10 ** 18));
+
+    ReadAnyArgs(distributorContract, distributorAbi.abi, 'getAddressClaimableTokens', [address])
+      .then(data => setClaimable(Number(data) / 10 ** 18));
+  }, [address, libContract, rLibContract, distributorContract]);
 
   const { config } = usePrepareContractWrite({
     address: liblockedContract,
