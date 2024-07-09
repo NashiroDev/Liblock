@@ -8,7 +8,6 @@ export default function GetProposals() {
     const [order, setOrder] = useState('');
     const [page, setPage] = useState(1);
     const [tags, setTags] = useState([]);
-    const [timeRemaining, setTimeRemaining] = useState('');
     const [selectedTags, setSelectedTags] = useState([]);
     const [proposalsList, setProposalsList] = useState([]);
 
