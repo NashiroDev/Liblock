@@ -104,7 +104,7 @@ const Page = ({ params }) => {
                         <p className="fs-6">Author : {articleData[3]}</p>
                     </div>
                     <div className="d-flex border text-center m-2 p-4 article-content">
-                        <p className="fs-5 mt-2 text-wrap">{articleData[2]}</p>
+                        <p className="fs-5 mt-2 text-wrap text-break">{articleData[2]}</p>
                     </div>
                 </div>
                 <div className="col-md-3">
