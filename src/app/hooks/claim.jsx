@@ -21,7 +21,7 @@ export default function Claim() {
   });
 
   const getAllocations = ReadAnyArgs(distributorContract, distributorAbi.abi, 'getAddressClaimableTokens', [connectedUserAddress.address])
-  getAllocations.then((data) => setAllocations(String(BigInt(data) / (BigInt(10n) ** BigInt(18n)))));
+  getAllocations.then((data) => setAllocations(Number(data) / 10 ** 18));
 
   const { data, isLoading, isSuccess, isError, write } = useContractWrite(config);
 
@@ -65,6 +65,9 @@ export default function Claim() {
             required
             className="form-control"
           />
+          <button type="button" className="btn btn-secondary" onClick={() => setAmount(allocations)}>
+            Max
+          </button>
           <button type="submit" disabled={!write} className="btn btn-primary">
             Claim
           </button>

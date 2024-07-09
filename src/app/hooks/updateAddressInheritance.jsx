@@ -1,6 +1,6 @@
 "use client"
 
-import { useContractWrite, usePrepareContractWrite } from "wagmi";
+import { useContractWrite, usePrepareContractWrite, useAccount  } from "wagmi";
 import distributorAbi from "../../../contracts/Distributor.json";
 import { useState, useEffect } from "react";
 import { ReadAnyArgs, ReadAny } from "./read";
@@ -8,19 +8,18 @@ import { ReadAnyArgs, ReadAny } from "./read";
 export default function UpdateEpochInheritance() {
     const distributorContract = process.env.NEXT_PUBLIC_DISTRIBUTOR_ADDRESS;
 
-    const [address, setAddress] = useState('0x00000000');
+    const { address: connectedAddress } = useAccount();
+    const [address, setAddress] = useState(connectedAddress || '0x0000000000000000000000000000000000000000');
     const [epoch, setEpoch] = useState();
     const [progress, setProgress] = useState('No data');
     const [notifications, setNotifications] = useState([]);
 
     const currentEpoch = ReadAny(distributorContract, distributorAbi.abi, 'getEpochHeight');
-    currentEpoch.then((data) => setEpoch(data));
+    currentEpoch.then((data) => setEpoch(Number(data)-1));
 
     useEffect(() => {
-        if (address.length == 42 && epoch) {
-            const currentProgress = ReadAnyArgs(distributorContract, distributorAbi.abi, "getAddressEpochInheritance", [address, epoch]);
-            currentProgress.then((data) => setProgress(data));
-        }
+        const currentProgress = ReadAnyArgs(distributorContract, distributorAbi.abi, "getAddressEpochInheritance", [address, epoch]);
+        currentProgress.then((data) => setProgress(data));
     }, [address, epoch])
 
     const { config } = usePrepareContractWrite({
@@ -61,7 +60,7 @@ export default function UpdateEpochInheritance() {
     return (
         <section className="container mt-4">
             <h3>Initiate address inheritance</h3>
-            <h5>Progress of {address} for epoch {String(epoch)} : {String(progress ? progress : 'invalid')}</h5>
+            <h5>Progress of {address} for epoch {epoch} (Done, To do) : {String(progress ? progress : 'invalid')}</h5>
             <form onSubmit={handleSubmit} className="d-flex justify-content-center">
                 <div className="input-group mb-3">
                     <input

@@ -1,5 +1,6 @@
 "use client"
 import React, { useState, useEffect } from "react";
+import calculateTimeDifference from "./heightToTime";
 import Link from "next/link";
 
 export default function GetProposals() {
@@ -124,7 +125,7 @@ export default function GetProposals() {
                             <p>
                                 Proposed by: <strong>{result.creator_address.slice(0, 6)}...{String(result.creator_address.slice(result.creator_address.length - 6))}</strong>
                             </p>
-                            <span className="badge bg-success text-light">Time left: not implemented</span>
+                            <span className="badge bg-success text-light">Time left: {calculateTimeDifference(Number(result.createdAt)+604800)}</span>
                         </div>
                         <Link href={`/proposals/read/${result.title.toLowerCase().replace(/[^a-zA-Z0-9- ]/g, '').replace(/\s+/g, '-')}/${result.id}`} passHref>
                             <div className="card-body">

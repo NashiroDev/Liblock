@@ -8,7 +8,7 @@ import { ReadAny } from "./read";
 export default function UpdateDistributionEpoch() {
     const distributorContract = process.env.NEXT_PUBLIC_DISTRIBUTOR_ADDRESS;
 
-    const [epochTime, setEpochTime] = useState(0);
+    const [epochTime, setEpochTime] = useState("unknown");
     const [notifications, setNotifications] = useState([]);
 
     const currentEpoch = ReadAny(distributorContract, distributorAbi.abi, 'getEpochTimeLeft');

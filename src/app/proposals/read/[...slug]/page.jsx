@@ -14,15 +14,40 @@ const Page = ({ params }) => {
     const [vote, setVote] = useState(-1);
     const [notifications, setNotifications] = useState([]);
     const [timeRemaining, setTimeRemaining] = useState('');
+    const [tags, setTags] = useState();
 
-    const { config } = usePrepareContractWrite({
+    const { config: configVote } = usePrepareContractWrite({
         address: proposalContract,
         abi: proposalAbi.abi,
         functionName: "vote",
         args: [Number(params.slug[1]), vote]
     });
 
-    const { data, isLoading, isSuccess, isError, write } = useContractWrite(config);
+    const { config: configExec } = usePrepareContractWrite({
+        address: proposalContract,
+        abi: proposalAbi.abi,
+        functionName: "executeProposal",
+        args: [Number(params.slug[1])]
+    });
+
+    const { data: dataVote, isLoading: LoadingVote, isSuccess: successVote, isError: errorVote, write: writeVote } = useContractWrite(configVote);
+    const { data: dataExec, isLoading: LoadingExec, isSuccess: successExec, isError: errorExec, write: writeExec } = useContractWrite(configExec);
+
+    useEffect(() => {
+        const fetchTags = async () => {
+            const response = await fetch("/api/articles/read", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ id: params.slug[1] }),
+            });
+            const data = await response.json();
+            console.log(data.data[0].linkedTags);
+            setTags(data.data[0].linkedTags);
+        };
+        fetchTags();
+    }, []);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -42,16 +67,28 @@ const Page = ({ params }) => {
     }, [articleData[10]]);
 
     useEffect(() => {
-        if (isLoading) {
+        if (LoadingVote) {
             addNotification("Transaction waiting", "Please see your wallet.", "loading");
         }
-        if (isSuccess) {
+        if (successVote) {
             addNotification("Vote submission succeed, waiting for transaction validation", `Hash: ${data.hash}`, "success");
         }
-        if (isError) {
+        if (errorVote) {
             addNotification("Transaction aborted", "User denied transaction.", "error");
         }
-    }, [isLoading, isSuccess, isError, data]);
+    }, [LoadingVote, successVote, errorVote, dataVote]);
+
+    useEffect(() => {
+        if (LoadingVote) {
+            addNotification("Transaction waiting", "Please see your wallet.", "loading");
+        }
+        if (successExec) {
+            addNotification("Vote submission succeed, waiting for transaction validation", `Hash: ${data.hash}`, "success");
+        }
+        if (errorExec) {
+            addNotification("Transaction aborted", "User denied transaction.", "error");
+        }
+    }, [LoadingExec, successExec, errorExec, dataExec]);
 
     const addNotification = (title, message, type) => {
         const id = new Date().getTime();
@@ -64,9 +101,7 @@ const Page = ({ params }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (write) {
-            write();
-        }
+        writeVote();
     };
 
     const handleVoteChange = (e) => {
@@ -86,7 +121,15 @@ const Page = ({ params }) => {
                         <p className="fs-6">Author : {articleData[3]}</p>
                     </div>
                     <div className="d-flex border text-center m-2 p-4 article-content">
-                        <p className="fs-5 mt-2 text-wrap">{articleData[2]}</p>
+                        <p className="fs-5 mt-2 text-wrap text-break">{articleData[2]}</p>
+                    </div>
+                    <div className="d-flex">
+                        {tags &&
+                            tags.split(",").map((tag, index) => (
+                                <span key={index} className="badge bg-primary text-light ms-2">
+                                    {tag}
+                                </span>
+                            ))}
                     </div>
                 </div>
                 <div className="col-md-3">
@@ -98,6 +141,10 @@ const Page = ({ params }) => {
                             <p>Abstain (% of votes) : {(Number(articleData[8]) * 100) / totalVotes}</p>
                             <p>Unique voters : {Number(articleData[9])}</p>
                             <p>Voting end in : {calculateTimeDifference(Number(articleData[10]))}</p>
+                            {Math.floor(Date.now() / 1000) > Number(articleData[10]) && (
+                                <button className="btn btn-secondary mt-3 w-100" onClick={() => writeExec()}>Execute</button>
+                            )}
+
                         </div>
                         <hr className="my-3" />
                         <form onSubmit={handleSubmit} className="vote-form d-flex flex-column align-items-center">
