@@ -166,9 +166,10 @@ export function GetFewProposals() {
                                 exit={{ opacity: 0, x: -100 }}
                             >
                                 <Link href={`/proposals/read/${result[11]}/${result[0]}`} passHref>
-                                    <div className="card-body">
-                                        <h5 className="card-title">{result[1].slice(0, 48)}</h5>
-                                        <p className="card-text">Proposer : {result[3].slice(0, 6)}...{result[3].slice(36, 42)}</p>
+                                    <div className="card-body d-flex flex-column align-items-center text-center">
+                                        <h5 className="card-title text-black">{result[1].slice(0, 48)}</h5>
+                                        <p className="card-text text-black text-break">{result[2].slice(0, 107)}...</p>
+                                        <p className="card-text text-black">Proposer : {result[3].slice(0, 6)}...{result[3].slice(36, 42)}</p>
                                     </div>
                                 </Link>
                             </motion.div>
