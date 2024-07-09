@@ -14,6 +14,7 @@ const Page = ({ params }) => {
     const [vote, setVote] = useState(-1);
     const [notifications, setNotifications] = useState([]);
     const [timeRemaining, setTimeRemaining] = useState('');
+    const [tags, setTags] = useState();
 
     const { config: configVote } = usePrepareContractWrite({
         address: proposalContract,
@@ -31,6 +32,22 @@ const Page = ({ params }) => {
 
     const { data: dataVote, isLoading: LoadingVote, isSuccess: successVote, isError: errorVote, write: writeVote } = useContractWrite(configVote);
     const { data: dataExec, isLoading: LoadingExec, isSuccess: successExec, isError: errorExec, write: writeExec } = useContractWrite(configExec);
+
+    useEffect(() => {
+        const fetchTags = async () => {
+            const response = await fetch("/api/articles/read", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ id: params.slug[1] }),
+            });
+            const data = await response.json();
+            console.log(data.data[0].linkedTags);
+            setTags(data.data[0].linkedTags);
+        };
+        fetchTags();
+    }, []);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -106,6 +123,14 @@ const Page = ({ params }) => {
                     <div className="d-flex border text-center m-2 p-4 article-content">
                         <p className="fs-5 mt-2 text-wrap text-break">{articleData[2]}</p>
                     </div>
+                    <div className="d-flex">
+                        {tags &&
+                            tags.split(",").map((tag, index) => (
+                                <span key={index} className="badge bg-primary text-light ms-2">
+                                    {tag}
+                                </span>
+                            ))}
+                    </div>
                 </div>
                 <div className="col-md-3">
                     <div className="sticky-top pt-4 sidebar">
@@ -119,7 +144,7 @@ const Page = ({ params }) => {
                             {Math.floor(Date.now() / 1000) > Number(articleData[10]) && (
                                 <button className="btn btn-secondary mt-3 w-100" onClick={() => writeExec()}>Execute</button>
                             )}
- 
+
                         </div>
                         <hr className="my-3" />
                         <form onSubmit={handleSubmit} className="vote-form d-flex flex-column align-items-center">
